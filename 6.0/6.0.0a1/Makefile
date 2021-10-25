@@ -22,7 +22,7 @@ RESET=`tput sgr0`
 YELLOW=`tput setaf 3`
 
 .PHONY: all
-all: build
+all: build-images
 
 # Add the following 'help' target to your Makefile
 # And add help text after each target name starting with '\#\#'
