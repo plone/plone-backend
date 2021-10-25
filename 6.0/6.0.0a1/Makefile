@@ -35,7 +35,7 @@ build-images:  ## Build Docker Images
 	@echo "Building $(IMAGE_NAME):$(IMAGE_TAG)"
 	$(foreach VARIATION,$(IMAGE_VARIATIONS),docker build . -t $(IMAGE_NAME):$(IMAGE_TAG)-${VARIATION} -f Dockerfile.${VARIATION};)
 
-.PHONY: push-images
+.PHONY: tag-images
 tag-images:  ## Tag images
 	@echo "Tag $(IMAGE_NAME):$(IMAGE_TAG)-${IMAGE_DEFAULT_VARIATION} as $(IMAGE_NAME):$(IMAGE_TAG)"
 	@docker tag $(IMAGE_NAME):$(IMAGE_TAG)-${IMAGE_DEFAULT_VARIATION} $(IMAGE_NAME):$(IMAGE_TAG)
