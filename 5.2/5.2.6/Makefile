@@ -10,7 +10,7 @@ MAKEFLAGS+=--no-builtin-rules
 
 IMAGE_NAME=plone/plone-backend
 IMAGE_TAG=5.2.6
-IMAGE_VARIATIONS=python37 python38
+IMAGE_VARIATIONS=python36 python37 python38
 IMAGE_DEFAULT_VARIATION=python38
 IMAGE_ADDITIONAL_TAGS=5.2 latest
 
