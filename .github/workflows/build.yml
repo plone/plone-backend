@@ -13,8 +13,9 @@ jobs:
       - id: set-matrix
         name: Collect plone versions to build
         run: |
+          # I understand this is quite unreadable. I apologize. It works.
           # list all directories at depth 2 and turn it into a JSON array (as a string)
-          JSON=$(find * -maxdepth 1 -mindepth 1  -type d -not -name '.git*' -not -name .| sed -Ez '$ s/\n+$//'  | jq -R -s -c 'split("\n")')
+          JSON=$(find * -maxdepth 1 -mindepth 1  -type d -not -name '.git*' -not -name .| sed -Ez '$ s/\n+$//' | jq -R -s -c 'split("\n")')
           # Output the string representing a JSON array of all versions present
           echo "::set-output name=plone-versions-matrix::${JSON//'%'/'%25'}"
 
@@ -42,11 +43,16 @@ jobs:
         with:
           files: ./${{ matrix.plone-version }}/Dockerfile.python${{ matrix.python-version }}
 
+      - name: Get tag from Makefile
+        id: get-tag
+        # I understand this is quite unreadable. I apologize. It works.
+        run: echo "::set-output name=tag::plone/plone-backend:$(grep IMAGE_TAG= ${{ matrix.plone-version }}/Makefile|sed -e 's/.*=//')-python${{ matrix.python-version }}"
+
       - name: Build ${{ matrix.plone-version }} in python ${{ matrix.python-version }}
         uses: docker/build-push-action@v2
         if: steps.check_dockerfile.outputs.files_exists == 'true'
         with:
           push: false
-          tags: user/app:latest
           context: ./${{ matrix.plone-version }}
           file: ./${{ matrix.plone-version }}/Dockerfile.python${{ matrix.python-version }}
+          tags: ${{ steps.get-tag.outputs.tag }}
