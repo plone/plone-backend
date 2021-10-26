@@ -25,12 +25,28 @@ jobs:
       fail-fast: false
       matrix:
         python-version:
-          - "3.6"
-          - "3.7"
-          - "3.8"
-          - "3.9"
+          - "36"
+          - "37"
+          - "38"
+          - "39"
         # Get the Plone versions from the previous step
         plone-version: ${{fromJson(needs.collect-versions.outputs.plone-versions-matrix)}}
     steps:
-      - name: Test matrix
-        run: echo This is job for python version ${{ matrix.python-version }} and Plone version ${{ matrix.plone-version }}
+      - uses: actions/checkout@v2
+
+      - uses: docker/setup-buildx-action@v1
+
+      - name: Check if we should build Plone ${{ matrix.plone-version }} in python ${{ matrix.python-version }}
+        id: check_dockerfile
+        uses: andstor/file-existence-action@v1
+        with:
+          files: ./${{ matrix.plone-version }}/Dockerfile.python${{ matrix.python-version }}
+
+      - name: Build ${{ matrix.plone-version }} in python ${{ matrix.python-version }}
+        uses: docker/build-push-action@v2
+        if: steps.check_dockerfile.outputs.files_exists == 'true'
+        with:
+          push: false
+          tags: user/app:latest
+          context: ./${{ matrix.plone-version }}
+          file: ./${{ matrix.plone-version }}/Dockerfile.python${{ matrix.python-version }}
