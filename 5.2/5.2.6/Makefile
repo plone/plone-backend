@@ -9,10 +9,10 @@ MAKEFLAGS+=--warn-undefined-variables
 MAKEFLAGS+=--no-builtin-rules
 
 IMAGE_NAME=plone/plone-backend
-IMAGE_TAG=6.0-dev
-IMAGE_VARIATIONS=python39 python38 python37
-IMAGE_DEFAULT_VARIATION=python39
-IMAGE_ADDITIONAL_TAGS=
+IMAGE_TAG=5.2.6
+IMAGE_VARIATIONS=python36 python37 python38
+IMAGE_DEFAULT_VARIATION=python38
+IMAGE_ADDITIONAL_TAGS=5.2 latest
 
 # We like colors
 # From: https://coderwall.com/p/izxssa/colored-makefile-for-golang-projects
@@ -35,7 +35,7 @@ build-images:  ## Build Docker Images
 	@echo "Building $(IMAGE_NAME):$(IMAGE_TAG)"
 	$(foreach VARIATION,$(IMAGE_VARIATIONS),docker build . -t $(IMAGE_NAME):$(IMAGE_TAG)-${VARIATION} -f Dockerfile.${VARIATION};)
 
-.PHONY: tag-images
+.PHONY: push-images
 tag-images:  ## Tag images
 	@echo "Tag $(IMAGE_NAME):$(IMAGE_TAG)-${IMAGE_DEFAULT_VARIATION} as $(IMAGE_NAME):$(IMAGE_TAG)"
 	@docker tag $(IMAGE_NAME):$(IMAGE_TAG)-${IMAGE_DEFAULT_VARIATION} $(IMAGE_NAME):$(IMAGE_TAG)
