@@ -1,0 +1,34 @@
+name: Build images
+
+on:
+  - push
+
+jobs:
+  collect-versions:
+    runs-on: ubuntu-latest
+    outputs:
+      plone-versions-matrix: ${{ steps.set-matrix.outputs.plone-versions-matrix }}
+    steps:
+      - uses: actions/checkout@v2
+      - id: set-matrix
+        name: Collect plone versions to build
+        run: |
+          find * -maxdepth 1 -mindepth 1  -type d -not -name '.git*' -not -name . | jq -R -s -c 'split("\n")' | tee plone-versions.json
+          JSON=$(cat plone-versions.json)
+          echo "::set-output name=plone-versions-matrix::${JSON//'%'/'%25'}"
+
+  build:
+    runs-on: ubuntu-latest
+    needs: collect-versions
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version:
+          - "3.6"
+          - "3.7"
+          - "3.8"
+          - "3.9"
+        plone-version: ${{fromJson(needs.collect-versions.outputs.plone-versions-matrix)}}
+    steps:
+      - name: Test matrix
+        run: echo This is job for python version ${{ matrix.python-version }} and Plone version ${{ matrix.plone-version }}
