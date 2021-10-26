@@ -13,8 +13,9 @@ jobs:
       - id: set-matrix
         name: Collect plone versions to build
         run: |
-          find * -maxdepth 1 -mindepth 1  -type d -not -name '.git*' -not -name . | jq -R -s -c 'split("\n")' | tee plone-versions.json
-          JSON=$(cat plone-versions.json)
+          # list all directories at depth 2 and turn it into a JSON array (as a string)
+          JSON=$(find * -maxdepth 1 -mindepth 1  -type d -not -name '.git*' -not -name .| sed -Ez '$ s/\n+$//'  | jq -R -s -c 'split("\n")')
+          # Output the string representing a JSON array of all versions present
           echo "::set-output name=plone-versions-matrix::${JSON//'%'/'%25'}"
 
   build:
@@ -28,6 +29,7 @@ jobs:
           - "3.7"
           - "3.8"
           - "3.9"
+        # Get the Plone versions from the previous step
         plone-version: ${{fromJson(needs.collect-versions.outputs.plone-versions-matrix)}}
     steps:
       - name: Test matrix
