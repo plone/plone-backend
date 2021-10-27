@@ -1,25 +1,22 @@
 name: Build images
 
 on:
-  push:
-    branches:
-      - master
+  - push
+
 
 jobs:
   collect-versions:
     runs-on: ubuntu-latest
     outputs:
-      plone-versions-matrix: ${{ steps.set-matrix.outputs.plone-versions-matrix }}
+      matrix-include: ${{ steps.set-matrix.outputs.matrix-include }}
     steps:
       - uses: actions/checkout@v2
       - id: set-matrix
-        name: Collect plone versions to build
+        name: Collect plone and python versions to build
         run: |
-          # I understand this is quite unreadable. I apologize. It works.
-          # list all directories at depth 2 and turn it into a JSON array (as a string)
-          JSON=$(find * -maxdepth 1 -mindepth 1  -type d -not -name '.git*' -not -name .| sed -Ez '$ s/\n+$//' | jq -R -s -c 'split("\n")')
+          JSON=$(.github/workflows/collect-matrix.py)
           # Output the string representing a JSON array of all versions present
-          echo "::set-output name=plone-versions-matrix::${JSON//'%'/'%25'}"
+          echo "::set-output name=matrix-include::${JSON//'%'/'%25'}"
 
   build:
     runs-on: ubuntu-latest
@@ -27,13 +24,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version:
-          - "36"
-          - "37"
-          - "38"
-          - "39"
-        # Get the Plone versions from the previous step
-        plone-version: ${{fromJson(needs.collect-versions.outputs.plone-versions-matrix)}}
+        include: ${{fromJson(needs.collect-versions.outputs.matrix-include)}}
     steps:
       - uses: actions/checkout@v2
 
