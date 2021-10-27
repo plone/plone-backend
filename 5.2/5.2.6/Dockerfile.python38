@@ -44,8 +44,8 @@ RUN python -m venv . \
     && ./bin/pip install "relstorage==3.4.5" "psycopg2-binary==2.9.1" ${PIP_PARAMS}\
     && find . \( -type f -a -name '*.pyc' -o -name '*.pyo' \) -exec rm -rf '{}' +
 
-COPY start-plone.sh /app/start-plone.sh
-COPY skeleton/etc /app/etc
+COPY skeleton/ /app
+
 RUN ln -s /data var
 
 EXPOSE 8080
@@ -53,4 +53,5 @@ VOLUME /data
 
 HEALTHCHECK --interval=10s --timeout=5s --start-period=30s CMD nc -z -w5 127.0.0.1 8080 || exit 1
 
-CMD ["/app/start-plone.sh"]
+ENTRYPOINT [ "/app/docker-entrypoint.sh" ]
+CMD ["start"]
