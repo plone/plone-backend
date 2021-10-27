@@ -38,8 +38,9 @@ jobs:
 
       - name: Get tag from Makefile
         id: get-tag
-        # I understand this is quite unreadable. I apologize. It works.
-        run: echo "::set-output name=tag::plone/plone-backend:$(grep IMAGE_TAG= ${{ matrix.plone-version }}/Makefile|sed -e 's/.*=//')-python${{ matrix.python-version }}"
+        run: echo "::set-output name=tag::$(.github/workflows/collect-tags.py ${{ matrix.plone-version }})"
+        env:
+          PYTHON_VERSION:  ${{ matrix.python-version }}
 
       - name: Build ${{ matrix.plone-version }} in python ${{ matrix.python-version }}
         uses: docker/build-push-action@v2
