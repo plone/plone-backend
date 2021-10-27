@@ -1,0 +1,52 @@
+name: Build images
+
+on:
+  - push
+
+
+jobs:
+  collect-versions:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix-include: ${{ steps.set-matrix.outputs.matrix-include }}
+    steps:
+      - uses: actions/checkout@v2
+      - id: set-matrix
+        name: Collect plone and python versions to build
+        run: |
+          JSON=$(.github/workflows/collect-matrix.py)
+          # Output the string representing a JSON array of all versions present
+          echo "::set-output name=matrix-include::${JSON//'%'/'%25'}"
+
+  build:
+    runs-on: ubuntu-latest
+    needs: collect-versions
+    strategy:
+      fail-fast: false
+      matrix:
+        include: ${{fromJson(needs.collect-versions.outputs.matrix-include)}}
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: docker/setup-buildx-action@v1
+
+      - name: Check if we should build Plone ${{ matrix.plone-version }} in python ${{ matrix.python-version }}
+        id: check_dockerfile
+        uses: andstor/file-existence-action@v1
+        with:
+          files: ./${{ matrix.plone-version }}/Dockerfile.python${{ matrix.python-version }}
+
+      - name: Get tag from Makefile
+        id: get-tag
+        run: echo "::set-output name=tag::$(.github/workflows/collect-tags.py ${{ matrix.plone-version }})"
+        env:
+          PYTHON_VERSION:  ${{ matrix.python-version }}
+
+      - name: Build ${{ matrix.plone-version }} in python ${{ matrix.python-version }}
+        uses: docker/build-push-action@v2
+        if: steps.check_dockerfile.outputs.files_exists == 'true'
+        with:
+          push: false
+          context: ./${{ matrix.plone-version }}
+          file: ./${{ matrix.plone-version }}/Dockerfile.python${{ matrix.python-version }}
+          tags: ${{ steps.get-tag.outputs.tag }}
