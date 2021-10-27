@@ -42,12 +42,6 @@ jobs:
 
       - uses: docker/setup-buildx-action@v1
 
-      - name: Check if we should build Plone ${{ matrix.plone-version }} in python ${{ matrix.python-version }}
-        id: check_dockerfile
-        uses: andstor/file-existence-action@v1
-        with:
-          files: ./${{ matrix.plone-version }}/Dockerfile.python${{ matrix.python-version }}
-
       - name: Get tag from Makefile
         id: get-tag
         run: echo "::set-output name=tag::$(.github/workflows/collect-tags.py ${{ matrix.plone-version }})"
