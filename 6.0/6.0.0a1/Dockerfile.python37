@@ -44,7 +44,6 @@ RUN python -m venv . \
     && find . \( -type f -a -name '*.pyc' -o -name '*.pyo' \) -exec rm -rf '{}' +
 
 COPY skeleton/ /app
-COPY docker-entrypoint.sh /app/docker-entrypoint.sh
 
 RUN ln -s /data var
 
