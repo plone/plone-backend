@@ -20,13 +20,15 @@ jobs:
           echo "::set-output name=matrix-include::${JSON//'%'/'%25'}"
 
       - id: set-environment
-        name: Collect plone and python versions to build
+        name: Select the environment to use (empty or DOCKER_HUB)
         run: |
           # If the branch is `main` or `main-test` we should use environment `DOCKER_HUB`
           if [[ "${{ github.ref }}" == "refs/heads/master" ]] || [[ "${{ github.ref }}" == "refs/heads/master-test" ]]; then
             echo "::set-output name=environment-to-use::DOCKER_HUB"
+            echo Running from ${{ github.ref }}: using DOCKER_HUB environment
           else
             echo "::set-output name=environment-to-use::empty"
+            echo Running from ${{ github.ref }}: using empty environment
           fi
 
   build:
