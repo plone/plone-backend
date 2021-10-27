@@ -20,25 +20,25 @@ jobs:
           echo "::set-output name=matrix-include::${JSON//'%'/'%25'}"
 
       - id: set-environment
-        name: Select the environment to use (empty or DOCKER_HUB)
+        name: Select the environment to use (null or "DOCKER_HUB")
         run: |
           # If the branch is `main` or `main-test` we should use environment `DOCKER_HUB`
           if [[ "${{ github.ref }}" == "refs/heads/main" ]] || [[ "${{ github.ref }}" == "refs/heads/main-test" ]]; then
-            echo "::set-output name=environment-to-use::DOCKER_HUB"
+            echo "::set-output name=environment-to-use::\"DOCKER_HUB\""
             echo Running from ${{ github.ref }}: using DOCKER_HUB environment
           else
-            echo "::set-output name=environment-to-use::empty"
-            echo Running from ${{ github.ref }}: using empty environment
+            echo "::set-output name=environment-to-use::null"
+            echo Running from ${{ github.ref }}: using no environment
           fi
 
   build:
     runs-on: ubuntu-latest
-    environment: ${{ needs.collect-versions.outputs.environment-to-use }}
+    environment: ${{ fromJson(needs.collect-versions.outputs.environment-to-use) }}
     needs: collect-versions
     strategy:
       fail-fast: false
       matrix:
-        include: ${{fromJson(needs.collect-versions.outputs.matrix-include)}}
+        include: ${{ fromJson(needs.collect-versions.outputs.matrix-include) }}
     steps:
       - uses: actions/checkout@v2
 
@@ -52,7 +52,7 @@ jobs:
 
       - name: Login to DockerHub
         uses: docker/login-action@v1
-        if: ${{ needs.collect-versions.outputs.environment-to-use == 'DOCKER_HUB' }}
+        if: ${{ needs.collect-versions.outputs.environment-to-use == '"DOCKER_HUB"' }}
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -60,7 +60,7 @@ jobs:
       - name: Build ${{ matrix.plone-version }} in python ${{ matrix.python-version }}
         uses: docker/build-push-action@v2
         with:
-          push: ${{ needs.collect-versions.outputs.environment-to-use == 'DOCKER_HUB' }}
+          push: ${{ needs.collect-versions.outputs.environment-to-use == '"DOCKER_HUB"' }}
           context: ./${{ matrix.plone-version }}
           file: ./${{ matrix.plone-version }}/Dockerfile.python${{ matrix.python-version }}
           tags: ${{ steps.get-tag.outputs.tag }}
