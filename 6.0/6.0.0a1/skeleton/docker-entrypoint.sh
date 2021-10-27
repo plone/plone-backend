@@ -50,11 +50,23 @@ fi
 
 # Handle ADDONS installation
 if [[ -v ADDONS ]]; then
-  echo "================================================="
+  echo "======================================================================================="
   echo "Installing ADDONS ${ADDONS}"
-  echo "THIS IS NOT MEANT TO BE USED IN PRODUCTION}"
-  echo "================================================="
+  echo "THIS IS NOT MEANT TO BE USED IN PRODUCTION"
+  echo "Read about it: https://github.com/plone/plone-backend/#extending-from-this-image"
+  echo "======================================================================================="
   /app/bin/pip install "${ADDONS}" ${PIP_PARAMS}
 fi
 
-/app/bin/runwsgi -v etc/zope.ini config_file=${CONF}
+if [[ "$1" == "start" ]]; then
+  /app/bin/runwsgi -v etc/zope.ini config_file=${CONF}
+elif  [[ "$1" == "create-classic" ]]; then
+  TYPE=classic /app/bin/zconsole run etc/${CONF} /app/scripts/create_site.py
+elif  [[ "$1" == "create-volto" ]]; then
+  TYPE=volto /app/bin/zconsole run etc/${CONF} /app/scripts/create_site.py
+elif  [[ "$1" == "create-site" ]]; then
+  TYPE=volto /app/bin/zconsole run etc/${CONF} /app/scripts/create_site.py
+else
+  # Custom
+  exec "$@"
+fi
