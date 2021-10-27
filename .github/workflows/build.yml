@@ -9,6 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       matrix-include: ${{ steps.set-matrix.outputs.matrix-include }}
+      environment-to-use: ${{ steps.set-environment.outputs.environment-to-use }}
     steps:
       - uses: actions/checkout@v2
       - id: set-matrix
@@ -18,9 +19,19 @@ jobs:
           # Output the string representing a JSON array of all versions present
           echo "::set-output name=matrix-include::${JSON//'%'/'%25'}"
 
+      - id: set-environment
+        name: Collect plone and python versions to build
+        run: |
+          # If the branch is `main` or `main-test` we should use environment `DOCKER_HUB`
+          if [[ "${{ github.ref }}" == "refs/heads/master" ]] || [[ "${{ github.ref }}" == "refs/heads/master-test" ]]; then
+            echo "::set-output name=environment-to-use::DOCKER_HUB"
+          else
+            echo "::set-output name=environment-to-use::empty"
+          fi
+
   build:
     runs-on: ubuntu-latest
-    environment: DOCKER_HUB
+    environment: ${{ needs.collect-versions.outputs.environment-to-use }}
     needs: collect-versions
     strategy:
       fail-fast: false
@@ -45,15 +56,15 @@ jobs:
 
       - name: Login to DockerHub
         uses: docker/login-action@v1
+        if: ${{ needs.collect-versions.outputs.environment-to-use == 'DOCKER_HUB' }}
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build ${{ matrix.plone-version }} in python ${{ matrix.python-version }}
         uses: docker/build-push-action@v2
-        if: steps.check_dockerfile.outputs.files_exists == 'true'
         with:
-          push: false
+          push: ${{ secrets.DOCKERHUB_USERNAME != '' }}
           context: ./${{ matrix.plone-version }}
           file: ./${{ matrix.plone-version }}/Dockerfile.python${{ matrix.python-version }}
           tags: ${{ steps.get-tag.outputs.tag }}
