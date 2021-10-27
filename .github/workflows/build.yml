@@ -23,7 +23,7 @@ jobs:
         name: Select the environment to use (empty or DOCKER_HUB)
         run: |
           # If the branch is `main` or `main-test` we should use environment `DOCKER_HUB`
-          if [[ "${{ github.ref }}" == "refs/heads/master" ]] || [[ "${{ github.ref }}" == "refs/heads/master-test" ]]; then
+          if [[ "${{ github.ref }}" == "refs/heads/main" ]] || [[ "${{ github.ref }}" == "refs/heads/main-test" ]]; then
             echo "::set-output name=environment-to-use::DOCKER_HUB"
             echo Running from ${{ github.ref }}: using DOCKER_HUB environment
           else
