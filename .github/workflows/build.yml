@@ -5,10 +5,12 @@ on:
 
 
 jobs:
-  collect-versions:
+  collect-build-info:
+    name: Collect build information
     runs-on: ubuntu-latest
     outputs:
       matrix-include: ${{ steps.set-matrix.outputs.matrix-include }}
+      environment-to-use: ${{ steps.set-environment.outputs.environment-to-use }}
     steps:
       - uses: actions/checkout@v2
       - id: set-matrix
@@ -17,24 +19,33 @@ jobs:
           JSON=$(.github/workflows/collect-matrix.py)
           # Output the string representing a JSON array of all versions present
           echo "::set-output name=matrix-include::${JSON//'%'/'%25'}"
+          echo Using build matrix:
+          echo "${JSON//'%'/'%25'}" | jq
+
+      - id: set-environment
+        name: Select the environment to use (null or "DOCKER_HUB")
+        run: |
+          # If the branch is `main` or `main-test` we should use environment `DOCKER_HUB`
+          if [[ "${{ github.ref }}" == "refs/heads/main" ]] || [[ "${{ github.ref }}" == "refs/heads/main-test" ]]; then
+            echo "::set-output name=environment-to-use::\"DOCKER_HUB\""
+            echo Running from ${{ github.ref }}: using DOCKER_HUB environment
+          else
+            echo "::set-output name=environment-to-use::null"
+            echo Running from ${{ github.ref }}: using no environment
+          fi
 
   build:
     runs-on: ubuntu-latest
-    needs: collect-versions
+    environment: ${{ fromJson(needs.collect-build-info.outputs.environment-to-use) }}
+    needs: collect-build-info
     strategy:
       fail-fast: false
       matrix:
-        include: ${{fromJson(needs.collect-versions.outputs.matrix-include)}}
+        include: ${{ fromJson(needs.collect-build-info.outputs.matrix-include) }}
     steps:
       - uses: actions/checkout@v2
 
       - uses: docker/setup-buildx-action@v1
-
-      - name: Check if we should build Plone ${{ matrix.plone-version }} in python ${{ matrix.python-version }}
-        id: check_dockerfile
-        uses: andstor/file-existence-action@v1
-        with:
-          files: ./${{ matrix.plone-version }}/Dockerfile.python${{ matrix.python-version }}
 
       - name: Get tag from Makefile
         id: get-tag
@@ -42,11 +53,17 @@ jobs:
         env:
           PYTHON_VERSION:  ${{ matrix.python-version }}
 
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        if: ${{ needs.collect-build-info.outputs.environment-to-use == '"DOCKER_HUB"' }}
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
       - name: Build ${{ matrix.plone-version }} in python ${{ matrix.python-version }}
         uses: docker/build-push-action@v2
-        if: steps.check_dockerfile.outputs.files_exists == 'true'
         with:
-          push: false
+          push: ${{ needs.collect-build-info.outputs.environment-to-use == '"DOCKER_HUB"' }}
           context: ./${{ matrix.plone-version }}
           file: ./${{ matrix.plone-version }}/Dockerfile.python${{ matrix.python-version }}
           tags: ${{ steps.get-tag.outputs.tag }}

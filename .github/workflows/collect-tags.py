@@ -11,7 +11,7 @@ def print_tags(path):
     makefile_contents = open(os.path.join(path, "Makefile")).read()
     python_version = os.environ.get("PYTHON_VERSION")
     image_tag = get_variable("IMAGE_TAG", makefile_contents)
-    print(f'plone-backend:{image_tag}-python{python_version}')
+    print(f'plone/plone-backend:{image_tag}-python{python_version}')
 
 
 def get_variable(variable_name, makefile_contents):
