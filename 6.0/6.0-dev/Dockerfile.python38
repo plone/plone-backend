@@ -28,9 +28,10 @@ LABEL maintainer="Plone Community <dev@plone.org>" \
 COPY --from=builder /wheelhouse /wheelhouse
 
 RUN useradd --system -m -d /app -U -u 500 plone \
-    && runDeps="git libjpeg62 libopenjp2-7 libpq5 libtiff5 libxml2 libxslt1.1 lynx netcat poppler-utils rsync wv" \
+    && runDeps="git libjpeg62 libopenjp2-7 libpq5 libtiff5 libxml2 libxslt1.1 lynx netcat poppler-utils rsync wv busybox" \
     && apt-get update \
     && apt-get install -y --no-install-recommends $runDeps \
+    && busybox --install -s \
     && rm -rf /var/lib/apt/lists/* /usr/share/doc \
     && mkdir -p /data/filestorage /data/blobstorage /data/log /data/cache \
     && chown -R plone:plone /data
