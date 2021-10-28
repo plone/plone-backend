@@ -16,7 +16,7 @@ jobs:
       - id: set-matrix
         name: Collect plone and python versions to build
         run: |
-          JSON=$(.github/workflows/collect-matrix.py)
+          JSON=$(.github/workflows/collect_matrix.py)
           # Output the string representing a JSON array of all versions present
           echo "::set-output name=matrix-include::${JSON//'%'/'%25'}"
           echo Using build matrix:
