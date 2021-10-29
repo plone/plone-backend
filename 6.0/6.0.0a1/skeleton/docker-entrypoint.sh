@@ -58,6 +58,16 @@ if [[ -v ADDONS ]]; then
   /app/bin/pip install "${ADDONS}" ${PIP_PARAMS}
 fi
 
+# Handle development addons
+if [[ -v DEVELOP ]]; then
+  echo "======================================================================================="
+  echo "Installing DEVELOPment addons ${DEVELOP}"
+  echo "THIS IS NOT MEANT TO BE USED IN PRODUCTION"
+  echo "Read about it: https://github.com/plone/plone-backend/#extending-from-this-image"
+  echo "======================================================================================="
+  /app/bin/pip install --editable "${DEVELOP}" ${PIP_PARAMS}
+fi
+
 if [[ "$1" == "start" ]]; then
   /app/bin/runwsgi -v etc/zope.ini config_file=${CONF}
 elif  [[ "$1" == "create-classic" ]]; then
