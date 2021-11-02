@@ -26,14 +26,14 @@ Plone backend [Docker](https://docker.com) images using Python 3 and [pip](https
 ### Simple usage
 
 ```shell
-docker run -p 8080:8080 plone/plone-backend:6.0.0a1
+docker run -p 8080:8080 plone/plone-backend:6.0.0a1 start
 ```
 
 Then point your browser at http://localhost:8080 and you should see the default Plone site creation page.
 
 ### ZEO Server
 
-This image supports ZEO clusters natively, and to use it 
+This image supports ZEO clusters natively, and to use it
 
 Create a directory for your project, and inside it create a `docker-compose.yml` file that starts your Plone instance and the ZEO instance with volume mounts for data persistence:
 
@@ -68,7 +68,7 @@ Now, run `docker-compose up -d` from your project directory.
 Point your browser at http://localhost:8080 and you should see the default Plone site creation page.
 
 
-### Persisting data 
+### Persisting data
 
 There are several ways to store data used by applications that run in Docker containers.
 
@@ -99,7 +99,7 @@ docker build . -t myproject:latest -f Dockerfile
 
 And start a container with
 ```shell
-docker run -p 8080:8080 myproject:latest
+docker run -p 8080:8080 myproject:latest start
 ```
 
 ## Configuration Variables
@@ -109,16 +109,34 @@ docker run -p 8080:8080 myproject:latest
 It is possible to install, during startup time, addons in a container created using this image. To do so, pass the **ADDONS** environment variable with a list (separated by space) of requirements to be added to the image:
 
 ```shell
-docker run -p 8080:8080 -e ADDONS="pas.plugins.authomatic" plone/plone-backend:6.0.0a1
+docker run -p 8080:8080 -e ADDONS="pas.plugins.authomatic" plone/plone-backend:6.0.0a1 start
 ```
 
 This approach also allows you to test Plone with a specific version of one of its core components
 
 ```shell
-docker run -p 8080:8080 -e ADDONS="plone.volto==3.1.0a3" plone/plone-backend:6.0.0a1
+docker run -p 8080:8080 -e ADDONS="plone.volto==3.1.0a3" plone/plone-backend:6.0.0a1 start
 ```
 
 > **NOTE**: We advise against using this feature on production environments. In this case, extend the image as explained before.
+
+### Developing packages
+
+It is possibile to install local packages instead of packages from pip. To do so, pass the **DEVELOP** environment variable with a list (separated by space) of paths to python packages to be installed.
+Those packages will be installed with ``pip install --editable``.
+
+
+```shell
+docker run -p 8080:8080 -e DEVELOP="/app/src/mysite.policy" plone/plone-backend:6.0.0a1 start
+```
+
+This approach also allows you to develop local packages by using a volume
+
+```shell
+docker run -p 8080:8080 -e DEVELOP="/app/src/mysite.policy" -v /path/to/mysite.policy:/app/src/mysite.policy plone/plone-backend:6.0.0a1 start
+```
+
+> **NOTE**: We advise against using this feature on production environments.
 
 
 ### Main variables
@@ -143,7 +161,7 @@ services:
     image: plone/plone-backend:6.0.0a1
     restart: always
     environment:
-      ZEO_ADDRESS: zeo:8100   
+      ZEO_ADDRESS: zeo:8100
     ports:
     - "8080:8080"
     depends_on:
