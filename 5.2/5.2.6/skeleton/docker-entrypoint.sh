@@ -73,13 +73,13 @@ fi
 if [[ "$1" == "start" ]]; then
   exec gosu plone /app/bin/runwsgi -v etc/zope.ini config_file=${CONF}
 elif  [[ "$1" == "create-classic" ]]; then
-  TYPE=classic
+  export TYPE=classic
   exec gosu plone /app/bin/zconsole run etc/${CONF} /app/scripts/create_site.py
 elif  [[ "$1" == "create-volto" ]]; then
-  TYPE=volto
+  export TYPE=volto
   exec gosu plone /app/bin/zconsole run etc/${CONF} /app/scripts/create_site.py
 elif  [[ "$1" == "create-site" ]]; then
-  TYPE=volto
+  export TYPE=volto
   exec gosu plone /app/bin/zconsole run etc/${CONF} /app/scripts/create_site.py
 else
   # Custom
