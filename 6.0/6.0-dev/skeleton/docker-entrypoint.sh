@@ -5,6 +5,8 @@ PIP_PARAMS="--use-deprecated legacy-resolver"
 
 # Create directories to be used by Plone
 mkdir -p /data/filestorage /data/blobstorage /data/cache /data/log /app/var_instance
+find /data -not -user plone -exec chown plone:plone {} \+
+find /app/var_instance  -not -user plone -exec chown plone:plone {} \+
 
 # MAIN ENV Vars
 [ -z ${SECURITY_POLICY_IMPLEMENTATION+x} ] && export SECURITY_POLICY_IMPLEMENTATION=C
@@ -55,7 +57,7 @@ if [[ -v ADDONS ]]; then
   echo "THIS IS NOT MEANT TO BE USED IN PRODUCTION"
   echo "Read about it: https://github.com/plone/plone-backend/#extending-from-this-image"
   echo "======================================================================================="
-  /app/bin/pip install "${ADDONS}" ${PIP_PARAMS}
+  gosu plone /app/bin/pip install "${ADDONS}" ${PIP_PARAMS}
 fi
 
 # Handle development addons
@@ -65,17 +67,20 @@ if [[ -v DEVELOP ]]; then
   echo "THIS IS NOT MEANT TO BE USED IN PRODUCTION"
   echo "Read about it: https://github.com/plone/plone-backend/#extending-from-this-image"
   echo "======================================================================================="
-  /app/bin/pip install --editable "${DEVELOP}" ${PIP_PARAMS}
+  gosu plone /app/bin/pip install --editable "${DEVELOP}" ${PIP_PARAMS}
 fi
 
 if [[ "$1" == "start" ]]; then
-  /app/bin/runwsgi -v etc/zope.ini config_file=${CONF}
+  exec gosu plone /app/bin/runwsgi -v etc/zope.ini config_file=${CONF}
 elif  [[ "$1" == "create-classic" ]]; then
-  TYPE=classic /app/bin/zconsole run etc/${CONF} /app/scripts/create_site.py
+  TYPE=classic
+  exec gosu plone /app/bin/zconsole run etc/${CONF} /app/scripts/create_site.py
 elif  [[ "$1" == "create-volto" ]]; then
-  TYPE=volto /app/bin/zconsole run etc/${CONF} /app/scripts/create_site.py
+  TYPE=volto
+  exec gosu plone /app/bin/zconsole run etc/${CONF} /app/scripts/create_site.py
 elif  [[ "$1" == "create-site" ]]; then
-  TYPE=volto /app/bin/zconsole run etc/${CONF} /app/scripts/create_site.py
+  TYPE=volto
+  exec gosu plone /app/bin/zconsole run etc/${CONF} /app/scripts/create_site.py
 else
   # Custom
   exec "$@"

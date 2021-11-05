@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e
 
+PIP_PARAMS="--use-deprecated legacy-resolver"
+
 # Create directories to be used by Plone
 mkdir -p /data/filestorage /data/blobstorage /data/cache /data/log /app/var_instance
 find /data -not -user plone -exec chown plone:plone {} \+
