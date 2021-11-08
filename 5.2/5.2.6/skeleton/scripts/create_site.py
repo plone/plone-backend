@@ -37,7 +37,7 @@ SETUP_CONTENT = asbool(os.getenv("SETUP_CONTENT"))
 DELETE_EXISTING = asbool(os.getenv("DELETE_EXISTING"))
 LANGUAGE = os.getenv("LANGUAGE", "en")
 TIMEZONE = os.getenv("TIMEZONE", "Europe/Berlin")
-ADDITIONAL_PROFILES = os.getenv("ADDITIONAL_PROFILES", "")
+ADDITIONAL_PROFILES = os.getenv("PROFILES", os.getenv("ADDITIONAL_PROFILES", ""))
 
 PROFILES = {
     "volto": [
@@ -80,6 +80,7 @@ if SITE_ID in app.objectIds() and DELETE_EXISTING:
     transaction.commit()
     app._p_jar.sync()
 
-site = addPloneSite(app, SITE_ID, **payload)
-transaction.commit()
-app._p_jar.sync()
+if SITE_ID not in app.objectIds():
+    site = addPloneSite(app, SITE_ID, **payload)
+    transaction.commit()
+    app._p_jar.sync()
