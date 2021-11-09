@@ -122,7 +122,7 @@ docker run -p 8080:8080 -e ADDONS="plone.volto==3.1.0a3" plone/plone-backend:6.0
 
 ### Developing packages
 
-It is possibile to install local packages instead of packages from pip. To do so, pass the **DEVELOP** environment variable with a list (separated by space) of paths to python packages to be installed.
+It is possible to install local packages instead of packages from pip. To do so, pass the **DEVELOP** environment variable with a list (separated by space) of paths to python packages to be installed.
 Those packages will be installed with ``pip install --editable``.
 
 
@@ -138,6 +138,24 @@ docker run -p 8080:8080 -e DEVELOP="/app/src/mysite.policy" -v /path/to/mysite.p
 
 > **NOTE**: We advise against using this feature on production environments.
 
+
+### Site creation
+
+It is possible to initialize your database with a Plone Site instance on first run. To do so, pass the **SITE** environment variable with the name of the Plone Site instance, e.g.: **SITE=Plone**. This will add a Volto ready Plone site. If you want a Plone classic instance, pass also **TYPE=classic** environment variable. To initialize it with additional profiles, just pass them, space separated, via **PROFILES** environment variable, e.g.: **PROFILES=eea.api.layout:default**. To recreate the Plone site on container restart you can pass the **DELETE_EXISTING** environment.
+
+Plone 6 example:
+
+```shell
+docker run -p 8080:8080 -e ADDONS="eea.api.layout" -e SITE="Plone" -e PROFILES="eea.api.layout:default" plone/plone-backend:6.0.0a1
+```
+
+Plone 6 Classic example:
+
+```shell
+docker run -p 8080:8080 -e ADDONS="eea.facetednavigation" -e SITE="Plone" -e TYPE="classic" -e PROFILES="eea.facetednavigation:default" plone/plone-backend:6.0.0a1
+```
+
+> **NOTE**: We advise against using this feature on production environments.
 
 ### Main variables
 

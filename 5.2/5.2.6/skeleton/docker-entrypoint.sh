@@ -78,6 +78,19 @@ if [[ -v DEVELOP ]]; then
   $sudo /app/bin/pip install --editable "${DEVELOP}" ${PIP_PARAMS}
 fi
 
+# Handle Site creation
+if [[ -v SITE ]]; then
+  export TYPE=${TYPE:-volto}
+  echo "======================================================================================="
+  echo "Creating Plone ${TYPE} SITE: ${SITE}"
+  echo "Aditional profiles: ${PROFILES}"
+  echo "THIS IS NOT MEANT TO BE USED IN PRODUCTION"
+  echo "Read about it: https://github.com/plone/plone-backend/#extending-from-this-image"
+  echo "======================================================================================="
+  export SITE_ID=${SITE}
+  gosu plone /app/bin/zconsole run etc/${CONF} /app/scripts/create_site.py
+fi
+
 if [[ "$1" == "start" ]]; then
   exec $sudo /app/bin/runwsgi -v etc/zope.ini config_file=${CONF}
 elif  [[ "$1" == "create-classic" ]]; then
