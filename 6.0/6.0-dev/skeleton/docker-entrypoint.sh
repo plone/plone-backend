@@ -12,13 +12,9 @@ if [ "$USER" = '0' ]; then
   find /app/var_instance  -not -user plone -exec chown plone:plone {} \+
   sudo="gosu plone"
 else
+  mkdir -p /data/filestorage /data/blobstorage /data/cache /data/log
   sudo=""
 fi
-
-# Create directories to be used by Plone
-mkdir -p /data/filestorage /data/blobstorage /data/cache /data/log /app/var_instance
-find /data -not -user plone -exec chown plone:plone {} \+
-find /app/var_instance  -not -user plone -exec chown plone:plone {} \+
 
 # MAIN ENV Vars
 [ -z ${SECURITY_POLICY_IMPLEMENTATION+x} ] && export SECURITY_POLICY_IMPLEMENTATION=C
