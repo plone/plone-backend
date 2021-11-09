@@ -41,13 +41,29 @@ Create a directory for your project, and inside it create a `docker-compose.yml`
 version: "3"
 services:
 
+  lb:
+    image: plone/plone-haproxy
+    depends_on:
+    - backend
+    ports:
+    - "8080:8080"
+    - "1936:1936"
+    environment:
+      FRONTEND_PORT: "8080"
+      BACKENDS: "backend"
+      BACKENDS_PORT: "8080"
+      DNS_ENABLED: "True"
+      HTTPCHK: "GET /"
+      INTER: "5s"
+      LOG_LEVEL: "info"
+
   backend:
     image: plone/plone-backend:6.0.0a1
     restart: always
     environment:
       ZEO_ADDRESS: zeo:8100
     ports:
-    - "8080:8080"
+    - "8080"
     depends_on:
       - zeo
 
@@ -57,13 +73,13 @@ services:
     volumes:
       - data:/data
     ports:
-    - "8100:8100"
+    - "8100"
 
 volumes:
   data: {}
 ```
 
-Now, run `docker-compose up -d` from your project directory.
+Now, run `docker-compose up -d --scale backend=4` from your project directory.
 
 Point your browser at http://localhost:8080 and you should see the default Plone site creation page.
 
