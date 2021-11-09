@@ -73,7 +73,9 @@ jobs:
 
       - name: Test
         run: |
-          ./test/run.sh ${{ steps.get-tag.outputs.tag }}
+          # The `steps.get-tag.outputs.tag` variable might contain more than one tag, separated by commas
+          TAG=$(echo "${{ steps.get-tag.outputs.tag }}" |sed -e "s/,.*//")
+          ./test/run.sh ${TAG}
 
       - name: Push ${{ matrix.plone-version }} python ${{ matrix.python-version }}
         uses: docker/build-push-action@v2
