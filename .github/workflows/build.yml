@@ -66,6 +66,17 @@ jobs:
       - name: Build ${{ matrix.plone-version }} in python ${{ matrix.python-version }}
         uses: docker/build-push-action@v2
         with:
+          context: ./${{ matrix.plone-version }}
+          file: ./${{ matrix.plone-version }}/Dockerfile.python${{ matrix.python-version }}
+          tags: ${{ steps.get-tag.outputs.tag }}
+
+      - name: Test
+        run: |
+          ./test/run.sh ${{ steps.get-tag.outputs.tag }}
+
+      - name: Push ${{ matrix.plone-version }} python ${{ matrix.python-version }}
+        uses: docker/build-push-action@v2
+        with:
           push: ${{ needs.collect-build-info.outputs.environment-to-use == '"DOCKER_HUB"' }}
           context: ./${{ matrix.plone-version }}
           file: ./${{ matrix.plone-version }}/Dockerfile.python${{ matrix.python-version }}
