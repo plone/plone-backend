@@ -69,6 +69,7 @@ jobs:
           context: ./${{ matrix.plone-version }}
           file: ./${{ matrix.plone-version }}/Dockerfile.python${{ matrix.python-version }}
           tags: ${{ steps.get-tag.outputs.tag }}
+          load: true
 
       - name: Test
         run: |
