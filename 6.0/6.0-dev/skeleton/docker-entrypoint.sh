@@ -3,6 +3,18 @@ set -e
 
 PIP_PARAMS="--use-deprecated legacy-resolver"
 
+USER="$(id -u)"
+
+# Create directories to be used by Plone
+if [ "$USER" = '0' ]; then
+  mkdir -p /data/filestorage /data/blobstorage /data/cache /data/log /app/var_instance
+  find /data -not -user plone -exec chown plone:plone {} \+
+  find /app/var_instance  -not -user plone -exec chown plone:plone {} \+
+  sudo="gosu plone"
+else
+  sudo=""
+fi
+
 # Create directories to be used by Plone
 mkdir -p /data/filestorage /data/blobstorage /data/cache /data/log /app/var_instance
 find /data -not -user plone -exec chown plone:plone {} \+
@@ -57,7 +69,7 @@ if [[ -v ADDONS ]]; then
   echo "THIS IS NOT MEANT TO BE USED IN PRODUCTION"
   echo "Read about it: https://github.com/plone/plone-backend/#extending-from-this-image"
   echo "======================================================================================="
-  gosu plone /app/bin/pip install "${ADDONS}" ${PIP_PARAMS}
+  $sudo /app/bin/pip install "${ADDONS}" ${PIP_PARAMS}
 fi
 
 # Handle development addons
@@ -67,20 +79,20 @@ if [[ -v DEVELOP ]]; then
   echo "THIS IS NOT MEANT TO BE USED IN PRODUCTION"
   echo "Read about it: https://github.com/plone/plone-backend/#extending-from-this-image"
   echo "======================================================================================="
-  gosu plone /app/bin/pip install --editable "${DEVELOP}" ${PIP_PARAMS}
+  $sudo /app/bin/pip install --editable "${DEVELOP}" ${PIP_PARAMS}
 fi
 
 if [[ "$1" == "start" ]]; then
-  exec gosu plone /app/bin/runwsgi -v etc/zope.ini config_file=${CONF}
+  exec $sudo /app/bin/runwsgi -v etc/zope.ini config_file=${CONF}
 elif  [[ "$1" == "create-classic" ]]; then
   export TYPE=classic
-  exec gosu plone /app/bin/zconsole run etc/${CONF} /app/scripts/create_site.py
+  exec $sudo /app/bin/zconsole run etc/${CONF} /app/scripts/create_site.py
 elif  [[ "$1" == "create-volto" ]]; then
   export TYPE=volto
-  exec gosu plone /app/bin/zconsole run etc/${CONF} /app/scripts/create_site.py
+  exec $sudo /app/bin/zconsole run etc/${CONF} /app/scripts/create_site.py
 elif  [[ "$1" == "create-site" ]]; then
   export TYPE=volto
-  exec gosu plone /app/bin/zconsole run etc/${CONF} /app/scripts/create_site.py
+  exec $sudo /app/bin/zconsole run etc/${CONF} /app/scripts/create_site.py
 else
   # Custom
   exec "$@"
