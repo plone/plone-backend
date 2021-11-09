@@ -81,8 +81,9 @@ volumes:
 
 Now, run `docker-compose up -d --scale backend=4` from your project directory.
 
-Point your browser at http://localhost:8080 and you should see the default Plone site creation page.
+Point your browser at http://localhost:8080 (login `admin:admin`) and you should see the default Plone site creation page.
 
+Point your browser at http://localhost:1936 (login `admin:admin`) and you should see HAProxy statistics for your Plone cluster.
 
 ### Persisting data
 
@@ -92,6 +93,20 @@ We encourage users of the `Plone` images to familiarize themselves with the opti
 
 [The Docker documentation](https://docs.docker.com/) is a good starting point for understanding the different storage options and variations.
 
+# Arbitrary `--user`
+
+This image supports running as a (mostly) arbitrary user via `--user` on `docker run` (as long as the owner of `/data` matches):
+
+```
+$ docker run --user="$(id -u)" -v $(pwd)/data:/data plone/plone-backend
+```
+The main caveat to note is that some environment variable, like `ADDONS` and `DEVELOP` will not work:
+
+```console
+$ docker run --user="$(id -u)" -v $(pwd)/data:/data -e ADDONS="eea.facetednavigation" plone/plone-backend
+...
+error: [Errno 13] Permission denied: '/app/lib/python3.9/site-packages/eea'
+```
 
 ## Extending from this image
 
