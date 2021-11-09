@@ -1,7 +1,9 @@
 #!/bin/bash
 set -e
 
-PIP_PARAMS="--use-deprecated legacy-resolver"
+if [ -z "${PIP_PARAMS}" ]; then
+  PIP_PARAMS="--use-deprecated legacy-resolver"
+fi
 
 USER="$(id -u)"
 
@@ -26,7 +28,7 @@ fi
 [ -z ${ZODB_CACHE_SIZE+x} ] && export ZODB_CACHE_SIZE=50000
 
 if [[ -v RELSTORAGE_DSN ]]; then
-  echo "Using Relstorage configuration"
+  MSG="Using Relstorage configuration"
   CONF=relstorage.conf
   # Relstorage ENV Vars
   [ -z ${RELSTORAGE_NAME+x} ] && export RELSTORAGE_NAME=storage
@@ -44,7 +46,7 @@ if [[ -v RELSTORAGE_DSN ]]; then
   [ -z ${RELSTORAGE_CACHE_LOCAL_COMPRESSION+x} ] && export RELSTORAGE_CACHE_LOCAL_COMPRESSION=none
   [ -z ${RELSTORAGE_CACHE_DELTA_SIZE_LIMIT+x} ] && export RELSTORAGE_CACHE_DELTA_SIZE_LIMIT=100000
 elif  [[ -v ZEO_ADDRESS ]]; then
-  echo "Using ZEO configuration"
+  MSG="Using ZEO configuration"
   CONF=zeo.conf
   # Check ZEO variables
   [ -z ${ZEO_SHARED_BLOB_DIR+x} ] && export ZEO_SHARED_BLOB_DIR=off
@@ -54,7 +56,7 @@ elif  [[ -v ZEO_ADDRESS ]]; then
   [ -z ${ZEO_CLIENT_CACHE_SIZE+x} ] && export ZEO_CLIENT_CACHE_SIZE=128MB
   [ -z ${ZEO_DROP_CACHE_RATHER_VERIFY+x} ] && export ZEO_DROP_CACHE_RATHER_VERIFY=false
 else
-  echo "Using default configuration"
+  MSG="Using default configuration"
   CONF=zope.conf
 fi
 
@@ -88,10 +90,11 @@ if [[ -v SITE ]]; then
   echo "Read about it: https://github.com/plone/plone-backend/#extending-from-this-image"
   echo "======================================================================================="
   export SITE_ID=${SITE}
-  gosu plone /app/bin/zconsole run etc/${CONF} /app/scripts/create_site.py
+  $sudo /app/bin/zconsole run etc/${CONF} /app/scripts/create_site.py
 fi
 
 if [[ "$1" == "start" ]]; then
+  echo $MSG
   exec $sudo /app/bin/runwsgi -v etc/zope.ini config_file=${CONF}
 elif  [[ "$1" == "create-classic" ]]; then
   export TYPE=classic
