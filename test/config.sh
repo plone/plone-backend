@@ -8,8 +8,11 @@ globalTests+=(
 imageTests+=(
 	[plone/plone-backend]='
 		plone-basics
+		plone-site
 		plone-addons
+		plone-arbitrary-user
 		plone-zeoclient
+		plone-relstorage
 	'
 )
 

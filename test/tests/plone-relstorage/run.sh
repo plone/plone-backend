@@ -8,14 +8,14 @@ image="$1"
 PLONE_TEST_SLEEP=3
 PLONE_TEST_TRIES=5
 
-# Start ZEO server
-zname="zeo-container-$RANDOM-$RANDOM"
-zpull="$(docker pull plone/plone-zeo)"
-zid="$(docker run -d --name "$zname" plone/plone-zeo)"
+# Start Postgres
+zname="relstorage-container-$RANDOM-$RANDOM"
+zpull="$(docker pull postgres:9-alpine)"
+zid="$(docker run -d --name "$zname" -e POSTGRES_USER=plone -e POSTGRES_PASSWORD=plone -e POSTGRES_DB=plone postgres:9-alpine)"
 
-# Start Plone as ZEO Client
+# Start Plone as RelStorage Client
 pname="plone-container-$RANDOM-$RANDOM"
-pid="$(docker run -d --name "$pname" --link=$zname:zeo -e ZEO_ADDRESS=zeo:8100 "$image")"
+pid="$(docker run -d --name "$pname" --link=$zname:db -e RELSTORAGE_DSN="dbname='plone' user='plone' host='db' password='plone'" "$image")"
 
 # Tear down
 trap "docker rm -vf $pid $zid > /dev/null" EXIT

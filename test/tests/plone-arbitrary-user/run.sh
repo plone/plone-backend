@@ -8,21 +8,15 @@ image="$1"
 PLONE_TEST_SLEEP=3
 PLONE_TEST_TRIES=5
 
-# Start ZEO server
-zname="zeo-container-$RANDOM-$RANDOM"
-zpull="$(docker pull plone/plone-zeo)"
-zid="$(docker run -d --name "$zname" plone/plone-zeo)"
-
-# Start Plone as ZEO Client
-pname="plone-container-$RANDOM-$RANDOM"
-pid="$(docker run -d --name "$pname" --link=$zname:zeo -e ZEO_ADDRESS=zeo:8100 "$image")"
-
-# Tear down
-trap "docker rm -vf $pid $zid > /dev/null" EXIT
+vname="/tmp/plone-data-$RANDOM-$RANDOM"
+cname="plone-container-$RANDOM-$RANDOM"
+vid="$(mkdir -p $vname)"
+cid="$(docker run -d --user=$(id -u) -v $vname:/data --name $cname $image)"
+trap "docker rm -vf $cid > /dev/null; rm -rf $vname > /dev/null" EXIT
 
 get() {
 	docker run --rm -i \
-		--link "$pname":plone \
+		--link "$cname":plone \
 		--entrypoint /app/bin/python \
 		"$image" \
 		-c "from six.moves.urllib.request import urlopen; con = urlopen('$1'); print(con.read())"
@@ -30,11 +24,12 @@ get() {
 
 get_auth() {
 	docker run --rm -i \
-		--link "$pname":plone \
+		--link "$cname":plone \
 		--entrypoint /app/bin/python \
 		"$image" \
 		-c "from six.moves.urllib.request import urlopen, Request; request = Request('$1'); request.add_header('Authorization', 'Basic $2'); print(urlopen(request).read())"
 }
+
 
 . "$dir/../../retry.sh" --tries "$PLONE_TEST_TRIES" --sleep "$PLONE_TEST_SLEEP" get "http://plone:8080"
 
