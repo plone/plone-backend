@@ -1,0 +1,6 @@
+=======================================================================================
+Installing DEVELOPment addons /app/src/helloworld
+THIS IS NOT MEANT TO BE USED IN PRODUCTION
+Read about it: https://github.com/plone/plone-backend/#extending-from-this-image
+=======================================================================================
+Hello World!
