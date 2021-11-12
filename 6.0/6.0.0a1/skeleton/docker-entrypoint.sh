@@ -5,10 +5,14 @@ if [ -z "${PIP_PARAMS}" ]; then
   PIP_PARAMS="--use-deprecated legacy-resolver"
 fi
 
+# CLIENT HOME
+CLIENT_HOME="/data/$(hostname)/$(hostid)"
+export CLIENT_HOME=$CLIENT_HOME
+
 USER="$(id -u)"
 
 # Create directories to be used by Plone
-mkdir -p /data/filestorage /data/blobstorage /data/cache /data/log
+mkdir -p /data/filestorage /data/blobstorage /data/cache /data/log $CLIENT_HOME
 if [ "$USER" = '0' ]; then
   find /data -not -user plone -exec chown plone:plone {} \+
   sudo="gosu plone"
