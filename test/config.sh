@@ -14,6 +14,7 @@ imageTests+=(
 		plone-arbitrary-user
 		plone-zeoclient
 		plone-relstorage
+		plone-shared-blob-dir
 	'
 )
 
