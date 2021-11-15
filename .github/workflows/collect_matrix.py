@@ -12,7 +12,7 @@ def directories_on_level_2():
     in the current hierarchy,
     """
     for directory in os.listdir("."):
-        if not directory.startswith('.') and os.path.isdir(directory):
+        if not directory.startswith(".") and os.path.isdir(directory):
             for subdirectory in os.listdir(directory):
                 path = os.path.join(directory, subdirectory)
                 if os.path.isdir(path):
@@ -20,9 +20,8 @@ def directories_on_level_2():
 
 
 def filter_out_directories_starting_with_dot(directories):
-    """Return a list of directories without those starting with a dot
-    """
-    return [directory for directory in directories if not directory.startswith('.')]
+    """Return a list of directories without those starting with a dot"""
+    return [directory for directory in directories if not directory.startswith(".")]
 
 
 def get_matrix():
@@ -31,10 +30,10 @@ def get_matrix():
         for file in os.listdir(directory):
             if file.startswith("Dockerfile."):
                 yield {
-                    "python-version": file[len("Dockerfile.python"):],
+                    "python-version": file[len("Dockerfile.python") :],
                     "plone-version": directory,
                 }
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     print(json.dumps(list(get_matrix())))
