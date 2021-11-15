@@ -21,6 +21,7 @@ python_versions = {
     "311": "311",
 }
 
+
 def sortable_pyv(version):
     return python_versions.get(version, version)
 
@@ -29,11 +30,11 @@ def get_available_versions():
     available_versions = []
     for el in collect_matrix.get_matrix():
         try:
-            version = StrictVersion(el['plone-version'].split("/")[1])
+            version = StrictVersion(el["plone-version"].split("/")[1])
         except ValueError:
             continue
         if not version.prerelease:
-            available_versions.append((version, sortable_pyv(el['python-version'])))
+            available_versions.append((version, sortable_pyv(el["python-version"])))
     return sorted(available_versions)
 
 
@@ -41,19 +42,21 @@ def is_latest(plone_version_to_examine: str, python_version_to_examine: str):
     available_versions = get_available_versions()
     latest_plone_version = str(available_versions[-1][0])
     latest_python_version = str(available_versions[-1][1])
-    if latest_plone_version == plone_version_to_examine and sortable_pyv(python_version_to_examine) == str(latest_python_version):
+    if latest_plone_version == plone_version_to_examine and sortable_pyv(
+        python_version_to_examine
+    ) == str(latest_python_version):
         return True
 
 
 def is_latest_supported_python(plone_version, python_version):
     available_versions = []
     for el in collect_matrix.get_matrix():
-        if el['plone-version'].split("/")[1] == plone_version:
-            available_versions.append(sortable_pyv(el['python-version']))
+        if el["plone-version"].split("/")[1] == plone_version:
+            available_versions.append(sortable_pyv(el["python-version"]))
     available_versions.sort()
     return sortable_pyv(python_version) == available_versions[-1]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     if is_latest(sys.argv[1].split("/")[1], sys.argv[2]):
         print(",latest", end="")
