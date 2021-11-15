@@ -20,23 +20,21 @@ ENV PIP_VERSION=21.3
 
 LABEL maintainer="Plone Community <dev@plone.org>" \
       org.label-schema.name="plone-backend" \
-      org.label-schema.description="Plone backend image image using Python 3.9" \
+      org.label-schema.description="Plone backend image image using Python 3.7" \
       org.label-schema.vendor="Plone Foundation" \
       org.label-schema.docker.cmd="docker run -d -p 8080:8080 plone/plone-backend:6.0.0a1-python37"
 
 COPY --from=builder /wheelhouse /wheelhouse
 
 RUN useradd --system -m -d /app -U -u 500 plone \
-    && runDeps="git libjpeg62 libopenjp2-7 libpq5 libtiff5 libxml2 libxslt1.1 lynx netcat poppler-utils rsync wv busybox" \
+    && runDeps="git libjpeg62 libopenjp2-7 libpq5 libtiff5 libxml2 libxslt1.1 lynx netcat poppler-utils rsync wv busybox gosu" \
     && apt-get update \
     && apt-get install -y --no-install-recommends $runDeps \
     && busybox --install -s \
     && rm -rf /var/lib/apt/lists/* /usr/share/doc \
-    && mkdir -p /data/filestorage /data/blobstorage /data/log /data/cache \
-    && chown -R plone:plone /data
+    && mkdir -p /data/filestorage /data/blobstorage /data/log /data/cache
 
 WORKDIR /app
-USER plone
 
 RUN python -m venv . \
     && ./bin/pip install -U "pip==${PIP_VERSION}" \
@@ -47,7 +45,9 @@ RUN python -m venv . \
 
 COPY skeleton/ /app
 
-RUN ln -s /data var
+RUN ln -s /data var \
+    && find /data  -not -user plone -exec chown plone:plone {} \+ \
+    && find /app -not -user plone -exec chown plone:plone {} \+
 
 EXPOSE 8080
 VOLUME /data
@@ -56,5 +56,3 @@ HEALTHCHECK --interval=10s --timeout=5s --start-period=30s CMD nc -z -w5 127.0.0
 
 ENTRYPOINT [ "/app/docker-entrypoint.sh" ]
 CMD ["start"]
-
-

@@ -1,10 +1,24 @@
 #!/bin/bash
 set -e
 
-PIP_PARAMS="--use-deprecated legacy-resolver"
+if [ -z "${PIP_PARAMS}" ]; then
+  PIP_PARAMS="--use-deprecated legacy-resolver"
+fi
+
+# CLIENT HOME
+CLIENT_HOME="/data/$(hostname)/$(hostid)"
+export CLIENT_HOME=$CLIENT_HOME
+
+USER="$(id -u)"
 
 # Create directories to be used by Plone
-mkdir -p /data/filestorage /data/blobstorage /data/cache /data/log /app/var_instance
+mkdir -p /data/filestorage /data/blobstorage /data/cache /data/log $CLIENT_HOME
+if [ "$USER" = '0' ]; then
+  find /data -not -user plone -exec chown plone:plone {} \+
+  sudo="gosu plone"
+else
+  sudo=""
+fi
 
 # MAIN ENV Vars
 [ -z ${SECURITY_POLICY_IMPLEMENTATION+x} ] && export SECURITY_POLICY_IMPLEMENTATION=C
@@ -16,7 +30,7 @@ mkdir -p /data/filestorage /data/blobstorage /data/cache /data/log /app/var_inst
 [ -z ${ZODB_CACHE_SIZE+x} ] && export ZODB_CACHE_SIZE=50000
 
 if [[ -v RELSTORAGE_DSN ]]; then
-  echo "Using Relstorage configuration"
+  MSG="Using Relstorage configuration"
   CONF=relstorage.conf
   # Relstorage ENV Vars
   [ -z ${RELSTORAGE_NAME+x} ] && export RELSTORAGE_NAME=storage
@@ -34,7 +48,7 @@ if [[ -v RELSTORAGE_DSN ]]; then
   [ -z ${RELSTORAGE_CACHE_LOCAL_COMPRESSION+x} ] && export RELSTORAGE_CACHE_LOCAL_COMPRESSION=none
   [ -z ${RELSTORAGE_CACHE_DELTA_SIZE_LIMIT+x} ] && export RELSTORAGE_CACHE_DELTA_SIZE_LIMIT=100000
 elif  [[ -v ZEO_ADDRESS ]]; then
-  echo "Using ZEO configuration"
+  MSG="Using ZEO configuration"
   CONF=zeo.conf
   # Check ZEO variables
   [ -z ${ZEO_SHARED_BLOB_DIR+x} ] && export ZEO_SHARED_BLOB_DIR=off
@@ -44,7 +58,7 @@ elif  [[ -v ZEO_ADDRESS ]]; then
   [ -z ${ZEO_CLIENT_CACHE_SIZE+x} ] && export ZEO_CLIENT_CACHE_SIZE=128MB
   [ -z ${ZEO_DROP_CACHE_RATHER_VERIFY+x} ] && export ZEO_DROP_CACHE_RATHER_VERIFY=false
 else
-  echo "Using default configuration"
+  MSG="Using default configuration"
   CONF=zope.conf
 fi
 
@@ -68,14 +82,31 @@ if [[ -v DEVELOP ]]; then
   /app/bin/pip install --editable "${DEVELOP}" ${PIP_PARAMS}
 fi
 
+# Handle Site creation
+if [[ -v SITE ]]; then
+  export TYPE=${TYPE:-volto}
+  echo "======================================================================================="
+  echo "Creating Plone ${TYPE} SITE: ${SITE}"
+  echo "Aditional profiles: ${PROFILES}"
+  echo "THIS IS NOT MEANT TO BE USED IN PRODUCTION"
+  echo "Read about it: https://github.com/plone/plone-backend/#extending-from-this-image"
+  echo "======================================================================================="
+  export SITE_ID=${SITE}
+  $sudo /app/bin/zconsole run etc/${CONF} /app/scripts/create_site.py
+fi
+
 if [[ "$1" == "start" ]]; then
-  /app/bin/runwsgi -v etc/zope.ini config_file=${CONF}
+  echo $MSG
+  exec $sudo /app/bin/runwsgi -v etc/zope.ini config_file=${CONF}
 elif  [[ "$1" == "create-classic" ]]; then
-  TYPE=classic /app/bin/zconsole run etc/${CONF} /app/scripts/create_site.py
+  export TYPE=classic
+  exec $sudo /app/bin/zconsole run etc/${CONF} /app/scripts/create_site.py
 elif  [[ "$1" == "create-volto" ]]; then
-  TYPE=volto /app/bin/zconsole run etc/${CONF} /app/scripts/create_site.py
+  export TYPE=volto
+  exec $sudo /app/bin/zconsole run etc/${CONF} /app/scripts/create_site.py
 elif  [[ "$1" == "create-site" ]]; then
-  TYPE=volto /app/bin/zconsole run etc/${CONF} /app/scripts/create_site.py
+  export TYPE=volto
+  exec $sudo /app/bin/zconsole run etc/${CONF} /app/scripts/create_site.py
 else
   # Custom
   exec "$@"

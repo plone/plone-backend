@@ -3,6 +3,7 @@ FROM base as builder
 
 ENV PIP_PARAMS="--use-deprecated legacy-resolver"
 ENV PLONE_VERSION=5.2.6
+ENV PLONE_VOLTO="plone.volto==3.1.0a4"
 
 RUN mkdir /wheelhouse
 
@@ -11,7 +12,7 @@ RUN apt-get update \
     && apt-get install -y --no-install-recommends $buildDeps\
     && rm -rf /var/lib/apt/lists/* /usr/share/doc
 
-RUN pip wheel Paste Plone plone.volto -c https://dist.plone.org/release/$PLONE_VERSION/constraints.txt  ${PIP_PARAMS} --wheel-dir=/wheelhouse
+RUN pip wheel Paste Plone ${PLONE_VOLTO} -c https://dist.plone.org/release/$PLONE_VERSION/constraints.txt  ${PIP_PARAMS} --wheel-dir=/wheelhouse
 
 FROM base
 
@@ -22,21 +23,19 @@ LABEL maintainer="Plone Community <dev@plone.org>" \
       org.label-schema.name="plone-backend" \
       org.label-schema.description="Plone backend image image using Python 3.7" \
       org.label-schema.vendor="Plone Foundation" \
-      org.label-schema.docker.cmd="docker run -d -p 8080:8080 plone/plone-backend:5.2.6-python39"
+      org.label-schema.docker.cmd="docker run -d -p 8080:8080 plone/plone-backend:5.2.6-python37"
 
 COPY --from=builder /wheelhouse /wheelhouse
 
 RUN useradd --system -m -d /app -U -u 500 plone \
-    && runDeps="git libjpeg62 libopenjp2-7 libpq5 libtiff5 libxml2 libxslt1.1 lynx netcat poppler-utils rsync wv busybox" \
+    && runDeps="git libjpeg62 libopenjp2-7 libpq5 libtiff5 libxml2 libxslt1.1 lynx netcat poppler-utils rsync wv busybox gosu" \
     && apt-get update \
     && apt-get install -y --no-install-recommends $runDeps \
     && busybox --install -s \
     && rm -rf /var/lib/apt/lists/* /usr/share/doc \
-    && mkdir -p /data/filestorage /data/blobstorage /data/log /data/cache \
-    && chown -R plone:plone /data
+    && mkdir -p /data/filestorage /data/blobstorage /data/log /data/cache
 
 WORKDIR /app
-USER plone
 
 RUN python -m venv . \
     && ./bin/pip install -U "pip==${PIP_VERSION}" \
@@ -47,7 +46,9 @@ RUN python -m venv . \
 
 COPY skeleton/ /app
 
-RUN ln -s /data var
+RUN ln -s /data var \
+    && find /data  -not -user plone -exec chown plone:plone {} \+ \
+    && find /app -not -user plone -exec chown plone:plone {} \+
 
 EXPOSE 8080
 VOLUME /data
