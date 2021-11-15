@@ -10,9 +10,7 @@ import collect_matrix
 from distutils.version import StrictVersion
 
 
-def main():
-    plone_version_to_examine = sys.argv[1].split("/")[1]
-    python_version_to_examine: str = sys.argv[2]
+def is_latest(plone_version_to_examine: str, python_version_to_examine: str):
     available_versions = []
     for el in collect_matrix.get_matrix():
         try:
@@ -25,7 +23,8 @@ def main():
     latest_plone_version = str(available_versions[-1][0])
     latest_python_version = str(available_versions[-1][1])
     if latest_plone_version == plone_version_to_examine and python_version_to_examine == str(latest_python_version):
-        print(",latest", end="")
+        return True
 
 if __name__ == '__main__':
-    main()
+    if is_latest(sys.argv[1].split("/")[1], sys.argv[2]):
+        print(",latest", end="")
