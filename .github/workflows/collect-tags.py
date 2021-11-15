@@ -5,14 +5,17 @@ collect all the tags in the images and print them as JSON.
 import os
 import sys
 import re
+from is_latest import is_latest
 
 
 def print_tags(path):
     makefile_contents = open(os.path.join(path, "Makefile")).read()
     python_version = os.environ.get("PYTHON_VERSION")
     image_tag = get_variable("IMAGE_TAG", makefile_contents)
-    print(f'plone/plone-backend:{image_tag}-python{python_version}')
-
+    print(f'plone/plone-backend:{image_tag}-python{python_version}', end="")
+    if is_latest(path.split("/")[1], python_version):
+        print(",plone/plone-backend:latest", end="")
+    print()
 
 def get_variable(variable_name, makefile_contents):
     """Naively extract a variable definition from a string representing a Makefile"""

@@ -50,7 +50,7 @@ jobs:
       - name: Get tag from Makefile
         id: get-tag
         run: |
-          TAG="$(.github/workflows/collect-tags.py ${{ matrix.plone-version }})$(.github/workflows/is_latest.py ${{ matrix.plone-version }} ${{ matrix.python-version }})"
+          TAG="$(.github/workflows/collect-tags.py ${{ matrix.plone-version }})"
           echo Using tag ${TAG}
           echo "::set-output name=tag::${TAG}"
         env:
