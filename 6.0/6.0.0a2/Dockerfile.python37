@@ -3,7 +3,7 @@ FROM base as builder
 
 ENV PIP_PARAMS="--use-deprecated legacy-resolver"
 ENV PLONE_VERSION=6.0.0a2
-ENV EXTRA_PACKAGES="relstorage==3.4.5 psycopg2-binary==2.9.1"
+ENV EXTRA_PACKAGES="relstorage==3.4.5 psycopg2==2.9.3"
 
 RUN mkdir /wheelhouse
 
