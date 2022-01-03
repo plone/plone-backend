@@ -69,7 +69,7 @@ if [[ -v ADDONS ]]; then
   echo "THIS IS NOT MEANT TO BE USED IN PRODUCTION"
   echo "Read about it: https://github.com/plone/plone-backend/#extending-from-this-image"
   echo "======================================================================================="
-  /app/bin/pip install "${ADDONS}" ${PIP_PARAMS}
+  /app/bin/pip install ${ADDONS} ${PIP_PARAMS}
 fi
 
 # Handle development addons
@@ -79,7 +79,7 @@ if [[ -v DEVELOP ]]; then
   echo "THIS IS NOT MEANT TO BE USED IN PRODUCTION"
   echo "Read about it: https://github.com/plone/plone-backend/#extending-from-this-image"
   echo "======================================================================================="
-  /app/bin/pip install --editable "${DEVELOP}" ${PIP_PARAMS}
+  /app/bin/pip install --editable ${DEVELOP} ${PIP_PARAMS}
 fi
 
 # Handle Site creation
