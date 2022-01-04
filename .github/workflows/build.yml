@@ -81,6 +81,9 @@ jobs:
           file: ./${{ matrix.plone-version }}/Dockerfile.python${{ matrix.python-version }}
           tags: ${{ steps.get-tag.outputs.tag }}
 
+      - name: Debugging
+        run: docker images
+
       - name: Test
         run: |
           # The `steps.get-tag.outputs.tag` variable might contain more than one tag, separated by commas
