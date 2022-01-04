@@ -63,9 +63,6 @@ jobs:
         id: buildx
         uses: docker/setup-buildx-action@v1
 
-      - name: Available platforms
-        run: echo ${{ steps.buildx.outputs.platforms }}
-
       - name: Login to DockerHub
         uses: docker/login-action@v1
         if: ${{ needs.collect-build-info.outputs.environment-to-use == '"DOCKER_HUB"' }}
@@ -76,19 +73,24 @@ jobs:
       - name: Build ${{ matrix.plone-version }} in python ${{ matrix.python-version }}
         uses: docker/build-push-action@v2
         with:
-          platforms: linux/amd64,linux/arm64
           context: ./${{ matrix.plone-version }}
           file: ./${{ matrix.plone-version }}/Dockerfile.python${{ matrix.python-version }}
           tags: ${{ steps.get-tag.outputs.tag }}
-
-      - name: Debugging
-        run: docker images
+          load: true
 
       - name: Test
         run: |
           # The `steps.get-tag.outputs.tag` variable might contain more than one tag, separated by commas
           TAG=$(echo "${{ steps.get-tag.outputs.tag }}" |sed -e "s/,.*//")
           ./test/run.sh ${TAG}
+
+      - name: Build multiplatform ${{ matrix.plone-version }} in python ${{ matrix.python-version }}
+        uses: docker/build-push-action@v2
+        with:
+          platforms: linux/amd64,linux/arm64
+          context: ./${{ matrix.plone-version }}
+          file: ./${{ matrix.plone-version }}/Dockerfile.python${{ matrix.python-version }}
+          tags: ${{ steps.get-tag.outputs.tag }}
 
       - name: Push ${{ matrix.plone-version }} python ${{ matrix.python-version }}
         uses: docker/build-push-action@v2
