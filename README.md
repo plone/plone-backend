@@ -9,20 +9,13 @@ Plone backend [Docker](https://docker.com) images using Python 3 and [pip](https
 ### Plone 5.2 (Stable Plone)
 
 - `latest, 5.2, 5.2.6, 5.2.6-python38` [(5.2/5.2.6/Dockerfile.python38)](https://github.com/plone/plone-backend/blob/main/5.2/5.2.6/Dockerfile.python38)
-- `5.2.6-python37` [(5.2/5.2.6/Dockerfile.python37)](https://github.com/plone/plone-backend/blob/main/5.2/5.2.6/Dockerfile.python37)
-- `5.2.6-python36` [(5.2/5.2.6/Dockerfile.python36)](https://github.com/plone/plone-backend/blob/main/5.2/5.2.6/Dockerfile.python36)
 
 ### Plone 6 (Next Plone Release)
 
 - `6.0.0a2, 6.0.0a2-python39` [(6.0/6.0.0a2/Dockerfile.python39)](https://github.com/plone/plone-backend/blob/main/6.0/6.0.0a2/Dockerfile.python39)
-- `6.0.0a2-python38` [(6.0/6.0.0a2/Dockerfile.python38)](https://github.com/plone/plone-backend/blob/main/6.0/6.0.0a2/Dockerfile.python38)
-- `6.0.0a2-python37` [(6.0/6.0.0a2/Dockerfile.python37)](https://github.com/plone/plone-backend/blob/main/6.0/6.0.0a2/Dockerfile.python37)
 - `6.0.0a1, 6.0.0a1-python39` [(6.0/6.0.0a1/Dockerfile.python39)](https://github.com/plone/plone-backend/blob/main/6.0/6.0.0a1/Dockerfile.python39)
-- `6.0.0a1-python38` [(6.0/6.0.0a1/Dockerfile.python38)](https://github.com/plone/plone-backend/blob/main/6.0/6.0.0a1/Dockerfile.python38)
-- `6.0.0a1-python37` [(6.0/6.0.0a1/Dockerfile.python37)](https://github.com/plone/plone-backend/blob/main/6.0/6.0.0a1/Dockerfile.python37)
 - `6.0-dev, 6.0-dev-python39` [(6.0/6.0-dev/Dockerfile.python39)](https://github.com/plone/plone-backend/blob/main/6.0/6.0-dev/Dockerfile.python39)
-- `6.0-dev-python38` [(6.0/6.0-dev/Dockerfile.python38)](https://github.com/plone/plone-backend/blob/main/6.0/6.0-dev/Dockerfile.python38)
-- `6.0-dev-python37` [(6.0/6.0-dev/Dockerfile.python37)](https://github.com/plone/plone-backend/blob/main/6.0/6.0-dev/Dockerfile.python37)
+
 
 ## Using this image
 
@@ -117,7 +110,7 @@ In a directory create a  `Dockerfile` file:
 ```Dockerfile
 FROM plone/plone-backend:6.0.0a1
 
-RUN ./bin/pip install "relstorage==3.4.5" "psycopg[binary]==3.0.1 --use-deprecated legacy-resolver"
+RUN ./bin/pip install "relstorage==3.4.5" "psycopg2==2.9.3 --use-deprecated legacy-resolver"
 ```
 
 Also create a `requirements.txt` file, with packages to be installed:
@@ -294,6 +287,24 @@ A list of supported environment variables for Relstorage:
 | RELSTORAGE_CACHE_LOCAL_COMPRESSION        | cache-local-compressione       | none                            |
 | RELSTORAGE_CACHE_DELTA_SIZE_LIMIT         | cache-delta-size-limit         | 100000                          |
 
+
+## Legacy images (not supported)
+
+Only images using latest supported Python are built and supported. If for any reason you still need them, `Dockerfile`s are available in `legacy` folder for each build for local/custom builds.
+
+### Plone 5.2 (Stable Plone)
+
+- `5.2.6-python37` [(5.2/5.2.6/Dockerfile.python37)](https://github.com/plone/plone-backend/blob/main/5.2/5.2.6/Dockerfile.python37)
+- `5.2.6-python36` [(5.2/5.2.6/Dockerfile.python36)](https://github.com/plone/plone-backend/blob/main/5.2/5.2.6/Dockerfile.python36)
+
+### Plone 6 (Next Plone Release)
+
+- `6.0.0a2-python38` [(6.0/6.0.0a2/Dockerfile.python38)](https://github.com/plone/plone-backend/blob/main/6.0/6.0.0a2/Dockerfile.python38)
+- `6.0.0a2-python37` [(6.0/6.0.0a2/Dockerfile.python37)](https://github.com/plone/plone-backend/blob/main/6.0/6.0.0a2/Dockerfile.python37)
+- `6.0.0a1-python38` [(6.0/6.0.0a1/Dockerfile.python38)](https://github.com/plone/plone-backend/blob/main/6.0/6.0.0a1/Dockerfile.python38)
+- `6.0.0a1-python37` [(6.0/6.0.0a1/Dockerfile.python37)](https://github.com/plone/plone-backend/blob/main/6.0/6.0.0a1/Dockerfile.python37)
+- `6.0-dev-python38` [(6.0/6.0-dev/Dockerfile.python38)](https://github.com/plone/plone-backend/blob/main/6.0/6.0-dev/Dockerfile.python38)
+- `6.0-dev-python37` [(6.0/6.0-dev/Dockerfile.python37)](https://github.com/plone/plone-backend/blob/main/6.0/6.0-dev/Dockerfile.python37)
 
 ## Contribute
 
