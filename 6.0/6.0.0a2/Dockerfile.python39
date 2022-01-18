@@ -3,7 +3,7 @@ FROM base as builder
 
 ENV PIP_PARAMS="--use-deprecated legacy-resolver"
 ENV PLONE_VERSION=6.0.0a2
-ENV EXTRA_PACKAGES="relstorage==3.4.5 psycopg2==2.9.3"
+ENV EXTRA_PACKAGES="relstorage==3.4.5 psycopg2==2.9.3 python-ldap==3.4.0"
 
 RUN mkdir /wheelhouse
 
@@ -28,7 +28,7 @@ LABEL maintainer="Plone Community <dev@plone.org>" \
 COPY --from=builder /wheelhouse /wheelhouse
 
 RUN useradd --system -m -d /app -U -u 500 plone \
-    && runDeps="git libjpeg62 libopenjp2-7 libpq5 libtiff5 libxml2 libxslt1.1 lynx poppler-utils rsync wv busybox gosu" \
+    && runDeps="git libjpeg62 libopenjp2-7 libpq5 libtiff5 libxml2 libxslt1.1 lynx poppler-utils rsync wv busybox gosu make" \
     && apt-get update \
     && apt-get install -y --no-install-recommends $runDeps \
     && busybox --install -s \
