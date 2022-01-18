@@ -28,7 +28,7 @@ LABEL maintainer="Plone Community <dev@plone.org>" \
 COPY --from=builder /wheelhouse /wheelhouse
 
 RUN useradd --system -m -d /app -U -u 500 plone \
-    && runDeps="git libjpeg62 libopenjp2-7 libpq5 libtiff5 libxml2 libxslt1.1 lynx netcat poppler-utils rsync wv busybox gosu make" \
+    && runDeps="git libjpeg62 libopenjp2-7 libpq5 libtiff5 libxml2 libxslt1.1 lynx poppler-utils rsync wv busybox gosu make" \
     && apt-get update \
     && apt-get install -y --no-install-recommends $runDeps \
     && busybox --install -s \
@@ -52,7 +52,7 @@ RUN ln -s /data var \
 EXPOSE 8080
 VOLUME /data
 
-HEALTHCHECK --interval=10s --timeout=5s --start-period=30s CMD nc -z -w5 127.0.0.1 8080 || exit 1
+HEALTHCHECK --interval=10s --timeout=5s --start-period=30s CMD wget -q -T 5 http://127.0.0.1:8080/ok -O - | grep OK || exit 1
 
 ENTRYPOINT [ "/app/docker-entrypoint.sh" ]
 CMD ["start"]
