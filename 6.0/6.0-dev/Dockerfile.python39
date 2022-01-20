@@ -54,7 +54,7 @@ RUN ln -s /data var \
 EXPOSE 8080
 VOLUME /data
 
-HEALTHCHECK --interval=10s --timeout=5s --start-period=30s CMD wget -q -T 5 http://127.0.0.1:8080/ok -O - | grep OK || exit 1
+HEALTHCHECK --interval=10s --timeout=5s --start-period=30s CMD wget -q http://127.0.0.1:8080/ok -O - | grep OK || exit 1
 
 ENTRYPOINT [ "/app/docker-entrypoint.sh" ]
 CMD ["start"]
