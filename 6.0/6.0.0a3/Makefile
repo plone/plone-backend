@@ -9,7 +9,7 @@ MAKEFLAGS+=--warn-undefined-variables
 MAKEFLAGS+=--no-builtin-rules
 
 IMAGE_NAME=plone/plone-backend
-IMAGE_TAG=6.0.0a2
+IMAGE_TAG=6.0.0a3
 IMAGE_VARIATIONS=python39 python38 python37
 IMAGE_DEFAULT_VARIATION=python39
 IMAGE_ADDITIONAL_TAGS=
