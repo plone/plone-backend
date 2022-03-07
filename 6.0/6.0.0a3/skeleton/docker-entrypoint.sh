@@ -62,6 +62,9 @@ else
   CONF=zope.conf
 fi
 
+# Handle CORS
+$sudo /app/bin/python /app/scripts/cors.py
+
 # Handle ADDONS installation
 if [[ -v ADDONS ]]; then
   echo "======================================================================================="

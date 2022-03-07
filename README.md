@@ -298,6 +298,15 @@ A list of supported environment variables for Relstorage:
 | RELSTORAGE_CACHE_LOCAL_COMPRESSION        | cache-local-compression        | none                            |
 | RELSTORAGE_CACHE_DELTA_SIZE_LIMIT         | cache-delta-size-limit         | 100000                          |
 
+### CORS
+
+* `CORS_ALLOW_ORIGIN` - Origins that are allowed access to the resource. Either a comma separated list of origins, for example `http://example.net,http://mydomain.com` or `*`. Defaults to `http://localhost:3000,http://127.0.0.1:3000`
+* `CORS_ALLOW_METHODS` - A comma separated list of HTTP method names that are allowed by this CORS policy, for example `DELETE,GET,OPTIONS,PATCH,POST,PUT`. Defaults to `DELETE,GET,OPTIONS,PATCH,POST,PUT`
+* `CORS_ALLOW_CREDENTIALS` - Indicates whether the resource supports user credentials in the request. Defaults to `true`
+* `CORS_EXPOSE_HEADERS` - A comma separated list of response headers clients can access, for example `Content-Length,X-My-Header`. Defaults to `Content-Length,X-My-Header`
+* `CORS_ALLOW_HEADERS` - A comma separated list of request headers allowed to be sent by the client, for example `X-My-Header`. Defaults to `Accept,Authorization,Content-Type,X-Custom-Header`
+* `CORS_MAX_AGE` - Indicates how long the results of a preflight request can be cached. Defaults to `3600`
+
 ## Legacy images (not supported)
 
 Only images using latest supported Python are built and supported.
