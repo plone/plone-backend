@@ -15,10 +15,7 @@ Plone backend [Docker](https://docker.com) images using Python 3 and [pip](https
 
 ### Plone 6 (Next Plone Release)
 
-- `6.0.0a3`, `6.0.0a3-python39` [(6.0/6.0.0a3/Dockerfile.python39)](https://github.com/plone/plone-backend/blob/main/6.0/6.0.0a3/Dockerfile.python39)
-- `6.0.0a2`, `6.0.0a2-python39` [(6.0/6.0.0a2/Dockerfile.python39)](https://github.com/plone/plone-backend/blob/main/6.0/6.0.0a2/Dockerfile.python39)
-- `6.0.0a1`, `6.0.0a1-python39` [(6.0/6.0.0a1/Dockerfile.python39)](https://github.com/plone/plone-backend/blob/main/6.0/6.0.0a1/Dockerfile.python39)
-- `6.0-dev`, `6.0-dev-python39` [(6.0/6.0-dev/Dockerfile.python39)](https://github.com/plone/plone-backend/blob/main/6.0/6.0-dev/Dockerfile.python39)
+- `6.0.0a4`, `6.0.0a4-python39` [(6.0/6.0.0a4/Dockerfile.python39)](https://github.com/plone/plone-backend/blob/main/6.0/6.0.0a4/Dockerfile.python39)
 
 ## Using this image
 
