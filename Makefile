@@ -31,6 +31,10 @@ help: ## This help message
 current-version: # Print current version
 	@echo "Current version: $(IMAGE_TAG)"
 
+create-tag: # Create a new tag using git
+	@echo "Creating new tag $(VERSION)"
+	if git show-ref --tags v$(IMAGE_TAG) --quiet; then echo "$(IMAGE_TAG) already exists";else git tag -a v$(IMAGE_TAG) -m "Release $(IMAGE_TAG)" && git push && git push --tags;fi
+
 .PHONY: build-image
 build-image:  ## Build Docker Image
 	@echo "Building $(IMAGE_NAME):$(IMAGE_TAG)"
