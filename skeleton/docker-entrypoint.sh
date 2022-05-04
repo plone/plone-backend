@@ -2,7 +2,7 @@
 set -e
 
 if [ -z "${PIP_PARAMS}" ]; then
-  PIP_PARAMS="--use-deprecated legacy-resolver"
+  PIP_PARAMS=""
 fi
 
 # CLIENT HOME
