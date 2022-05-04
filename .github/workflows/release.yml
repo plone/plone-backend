@@ -10,11 +10,6 @@ jobs:
   release:
     runs-on: ubuntu-latest
     environment: DOCKER_HUB
-    strategy:
-      matrix:
-        platform:
-          - linux/amd64
-          - linux/arm64
 
     steps:
 
@@ -35,9 +30,9 @@ jobs:
           tags: |
             type=ref,event=branch
             type=ref,event=pr
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=semver,pattern={{major}}
+            type=pep440,pattern={{version}}
+            type=pep440,pattern={{major}}.{{minor}}
+            type=pep440,pattern={{major}}
             type=sha
             type=raw,value=latest,enable=${{ github.ref == format('refs/heads/{0}', github.event.repository.default_branch) }}
 
@@ -56,7 +51,7 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v2
         with:
-          platforms: ${{ matrix.platform }}
+          platforms: linux/amd64,linux/arm64
           context: .
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}

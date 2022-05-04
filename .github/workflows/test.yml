@@ -1,7 +1,9 @@
 name: Test generated image
 
 on:
-  - push
+  push:
+    branches:
+      "6.0.x"
 
 jobs:
 
