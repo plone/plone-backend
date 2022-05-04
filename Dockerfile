@@ -2,7 +2,7 @@ FROM python:3.8-slim-buster as base
 FROM base as builder
 
 ENV PIP_PARAMS="--use-deprecated legacy-resolver"
-ENV PLONE_VERSION=5.2.6
+ENV PLONE_VERSION=5.2.7
 ENV PLONE_VOLTO="plone.volto==3.1.0a4"
 ENV EXTRA_PACKAGES="relstorage==3.4.5 psycopg2==2.9.3 python-ldap==3.4.0"
 
