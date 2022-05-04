@@ -2,7 +2,7 @@ FROM python:3.9-slim-bullseye as base
 FROM base as builder
 
 ENV PIP_PARAMS="--use-deprecated legacy-resolver"
-ENV PLONE_VERSION=6.0.0a1
+ENV PLONE_VERSION=6.0.0a2
 ENV EXTRA_PACKAGES="relstorage==3.4.5 psycopg2==2.9.3 python-ldap==3.4.0"
 
 RUN mkdir /wheelhouse
