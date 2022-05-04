@@ -1,9 +1,10 @@
-FROM python:3.7-slim-buster as base
+FROM python:3.8-slim-buster as base
 FROM base as builder
 
 ENV PIP_PARAMS="--use-deprecated legacy-resolver"
-ENV PLONE_VERSION=6.0-dev
-ENV EXTRA_PACKAGES="relstorage==3.4.5 psycopg2==2.9.3"
+ENV PLONE_VERSION=5.2.6
+ENV PLONE_VOLTO="plone.volto==3.1.0a4"
+ENV EXTRA_PACKAGES="relstorage==3.4.5 psycopg2==2.9.3 python-ldap==3.4.0"
 
 RUN mkdir /wheelhouse
 
@@ -12,24 +13,22 @@ RUN apt-get update \
     && apt-get install -y --no-install-recommends $buildDeps\
     && rm -rf /var/lib/apt/lists/* /usr/share/doc
 
-RUN pip wheel Plone ${EXTRA_PACKAGES} -c https://dist.plone.org/release/$PLONE_VERSION/constraints.txt  ${PIP_PARAMS} --wheel-dir=/wheelhouse
+RUN pip wheel Paste Plone ${PLONE_VOLTO} ${EXTRA_PACKAGES} -c https://dist.plone.org/release/$PLONE_VERSION/constraints.txt  ${PIP_PARAMS} --wheel-dir=/wheelhouse
 
 FROM base
 
 ENV PIP_PARAMS="--use-deprecated legacy-resolver"
-ENV PLONE_VOLTO_VERSION=3.1.0a4
 ENV PIP_VERSION=21.3
 
 LABEL maintainer="Plone Community <dev@plone.org>" \
       org.label-schema.name="plone-backend" \
-      org.label-schema.description="Plone backend image image using Python 3.7" \
-      org.label-schema.vendor="Plone Foundation" \
-      org.label-schema.docker.cmd="docker run -d -p 8080:8080 plone/plone-backend:6.0-dev-python37"
+      org.label-schema.description="Plone backend image image using Python 3.8" \
+      org.label-schema.vendor="Plone Foundation"
 
 COPY --from=builder /wheelhouse /wheelhouse
 
 RUN useradd --system -m -d /app -U -u 500 plone \
-    && runDeps="git libjpeg62 libopenjp2-7 libpq5 libtiff5 libxml2 libxslt1.1 lynx netcat poppler-utils rsync wv busybox gosu" \
+    && runDeps="git libjpeg62 libopenjp2-7 libpq5 libtiff5 libxml2 libxslt1.1 lynx poppler-utils rsync wv busybox gosu" \
     && apt-get update \
     && apt-get install -y --no-install-recommends $runDeps \
     && busybox --install -s \
@@ -41,7 +40,6 @@ WORKDIR /app
 RUN python -m venv . \
     && ./bin/pip install -U "pip==${PIP_VERSION}" \
     && ./bin/pip install --force-reinstall --no-index --no-deps ${PIP_PARAMS} /wheelhouse/* \
-    && ./bin/pip install "plone.volto==${PLONE_VOLTO_VERSION}" ${PIP_PARAMS} \
     && find . \( -type f -a -name '*.pyc' -o -name '*.pyo' \) -exec rm -rf '{}' + \
     && rm -rf .cache
 
@@ -54,7 +52,7 @@ RUN ln -s /data var \
 EXPOSE 8080
 VOLUME /data
 
-HEALTHCHECK --interval=10s --timeout=5s --start-period=30s CMD nc -z -w5 127.0.0.1 8080 || exit 1
+HEALTHCHECK --interval=10s --timeout=5s --start-period=30s CMD wget -q http://127.0.0.1:8080/ok -O - | grep OK || exit 1
 
 ENTRYPOINT [ "/app/docker-entrypoint.sh" ]
 CMD ["start"]

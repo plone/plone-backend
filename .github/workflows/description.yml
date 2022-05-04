@@ -1,0 +1,28 @@
+name: Update Docker Hub Description
+
+on:
+  push:
+    branches:
+      - 'main'
+    paths:
+      - "README.md"
+      - .github/workflows/description.yml
+
+jobs:
+  update-description:
+    runs-on: ubuntu-latest
+    environment: DOCKER_HUB
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+
+      - name: Update repo description
+        uses: peter-evans/dockerhub-description@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+          repository: plone/plone-backend
+          readme-filepath: README.md
