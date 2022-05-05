@@ -11,6 +11,7 @@ MAKEFLAGS+=--no-builtin-rules
 IMAGE_NAME=plone/plone-backend
 # Current version
 IMAGE_TAG=`python helpers/version.py`
+NIGHTLY_IMAGE_TAG=nightly
 
 # We like colors
 # From: https://coderwall.com/p/izxssa/colored-makefile-for-golang-projects
@@ -48,3 +49,8 @@ push-image:  ## Push docker image to dockerhub
 .PHONY: release
 release: build-image push-image ## Build and push the image to docker hub
 	@echo "Released $(IMAGE_NAME):$(IMAGE_TAG)"
+
+.PHONY: build-image-edge
+build-image-edge:  ## Build Docker Image Edge
+	@echo "Building $(IMAGE_NAME):$(NIGHTLY_IMAGE_TAG)"
+	@docker build . -t $(IMAGE_NAME):$(NIGHTLY_IMAGE_TAG) -f Dockerfile.nightly
