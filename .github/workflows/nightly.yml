@@ -1,8 +1,9 @@
 name: Generate Nightly Image
 
 on:
+  workflow_dispatch:
   schedule:
-    - cron:  '15 16 * * *'
+    - cron:  '15 22 * * *'
 
 jobs:
 
