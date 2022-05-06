@@ -50,7 +50,7 @@ push-image:  ## Push docker image to dockerhub
 release: build-image push-image ## Build and push the image to docker hub
 	@echo "Released $(IMAGE_NAME):$(IMAGE_TAG)"
 
-.PHONY: build-image-edge
-build-image-edge:  ## Build Docker Image Edge
+.PHONY: build-image-nightly
+build-image-nightly:  ## Build Docker Image Nightly
 	@echo "Building $(IMAGE_NAME):$(NIGHTLY_IMAGE_TAG)"
 	@docker build . -t $(IMAGE_NAME):$(NIGHTLY_IMAGE_TAG) -f Dockerfile.nightly
