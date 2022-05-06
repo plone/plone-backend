@@ -53,4 +53,4 @@ release: build-image push-image ## Build and push the image to docker hub
 .PHONY: build-image-nightly
 build-image-nightly:  ## Build Docker Image Nightly
 	@echo "Building $(IMAGE_NAME):$(NIGHTLY_IMAGE_TAG)"
-	@docker build . -t $(IMAGE_NAME):$(NIGHTLY_IMAGE_TAG) -f Dockerfile.nightly
+	@docker build . -t $(IMAGE_NAME):$(NIGHTLY_IMAGE_TAG) -f Dockerfile.nightly --no-cache
