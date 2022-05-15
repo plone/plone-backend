@@ -11,7 +11,7 @@ Plone backend [Docker](https://docker.com) images using Python 3 and [pip](https
 
 ### Plone 5.2 (Stable Plone)
 
-- `latest, 5, 5.2, 5.2.7` [(5.2.x/Dockerfile)](https://github.com/plone/plone-backend/blob/v5.2.7/Dockerfile)
+- `latest, 5, 5.2, 5.2.8` [(5.2.x/Dockerfile)](https://github.com/plone/plone-backend/blob/v5.2.8/Dockerfile)
 
 ### Plone 6 (Next Plone Release)
 
