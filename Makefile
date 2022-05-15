@@ -36,6 +36,11 @@ create-tag: # Create a new tag using git
 	@echo "Creating new tag $(VERSION)"
 	if git show-ref --tags v$(IMAGE_TAG) --quiet; then echo "$(IMAGE_TAG) already exists";else git tag -a v$(IMAGE_TAG) -m "Release $(IMAGE_TAG)" && git push && git push --tags;fi
 
+commit-release: # Commit new version change and create tag
+	@echo "Commiting changes"
+	@git commit -am "Use Plone $(VERSION)"
+	make create-tag
+
 .PHONY: build-image
 build-image:  ## Build Docker Image
 	@echo "Building $(IMAGE_NAME):$(IMAGE_TAG)"
