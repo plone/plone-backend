@@ -3,7 +3,7 @@ FROM base as builder
 
 ENV PIP_PARAMS=""
 ENV PIP_VERSION=22.0.4
-ENV PLONE_VERSION=6.0.0a4
+ENV PLONE_VERSION=6.0.0a6
 ENV EXTRA_PACKAGES="relstorage==3.4.5 psycopg2==2.9.3 python-ldap==3.4.0"
 
 RUN mkdir /wheelhouse
