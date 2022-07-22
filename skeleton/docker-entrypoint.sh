@@ -109,6 +109,8 @@ elif  [[ "$1" == "create-volto" ]]; then
 elif  [[ "$1" == "create-site" ]]; then
   export TYPE=volto
   exec $sudo /app/bin/zconsole run etc/${CONF} /app/scripts/create_site.py
+elif  [[ "$1" == "console" ]]; then
+  exec $sudo /app/bin/zconsole debug etc/${CONF}
 else
   # Custom
   exec "$@"
