@@ -15,7 +15,7 @@ Plone backend [Docker](https://docker.com) images using Python 3 and [pip](https
 
 ### Plone 6 (Next Plone Release)
 
-- `6.0.0a6` [(6.0.x/Dockerfile)](https://github.com/plone/plone-backend/blob/v6.0.0a6/Dockerfile)
+- `6.0.0b1` [(6.0.x/Dockerfile)](https://github.com/plone/plone-backend/blob/v6.0.0b1/Dockerfile)
 
 ### Plone 6 (Nightly build)
 
@@ -30,10 +30,17 @@ Please refer to the [Official Plone Documentation](https://6.dev-docs.plone.org/
 
 - [Issue Tracker](https://github.com/plone/plone-backend/issues)
 - [Source Code](https://github.com/plone/plone-backend/)
-- [Documentation](https://github.com/plone/plone-backend/tree/main/docs)
+- [Documentation](https://6.dev-docs.plone.org/install/containers/images/backend.html)
 
 Please **DO NOT** commit to version branches directly. Even for the smallest and most trivial fix.
 **ALWAYS** open a pull request and ask somebody else to merge your code. **NEVER** merge it yourself.
+
+
+## Credits
+
+This project is supported by:
+
+[![Plone Foundation](https://raw.githubusercontent.com/plone/.github/main/plone-foundation.png)](https://plone.org/)
 
 ## License
 
