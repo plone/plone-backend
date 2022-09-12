@@ -2,8 +2,8 @@ FROM python:3.9-slim-bullseye as base
 FROM base as builder
 
 ENV PIP_PARAMS=""
-ENV PIP_VERSION=22.1.2
-ENV PLONE_VERSION=6.0.0b1
+ENV PIP_VERSION=22.2.2
+ENV PLONE_VERSION=6.0.0b2
 ENV EXTRA_PACKAGES="relstorage==3.4.5 psycopg2==2.9.3 python-ldap==3.4.0"
 
 RUN mkdir /wheelhouse
@@ -19,7 +19,7 @@ RUN pip wheel Plone plone.volto ${EXTRA_PACKAGES} -c https://dist.plone.org/rele
 FROM base
 
 ENV PIP_PARAMS=""
-ENV PIP_VERSION=22.1.2
+ENV PIP_VERSION=22.2.2
 
 LABEL maintainer="Plone Community <dev@plone.org>" \
       org.label-schema.name="plone-backend" \
