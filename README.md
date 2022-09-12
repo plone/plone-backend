@@ -115,16 +115,27 @@ FROM plone/plone-backend:6.0.0b2
 RUN ./bin/pip install "relstorage==3.4.5" "psycopg2==2.9.3 --use-deprecated legacy-resolver"
 ```
 
-Also create a `requirements.txt` file, with packages to be installed:
+Make sure any Plone add-ons you are adding via `pip install` have their corresponding entry
+points declared in `setup.py` — otherwise they will not be loaded by Plone:
 
-```plain
-pas.plugin.authomatic
+```
+...
+    entry_points="""
+    [z3c.autoinclude.plugin]
+    target = plone
+    """,
+...
+
 ```
 
-Build your new image
+Also make sure that your add-ons do not use `zc3.autoinclude` in their `configure.zcml`
+configuration file.
+
+Now build your new image:
 
 ```shell
 docker build . -t myproject:latest -f Dockerfile
+# buildah build works too
 ```
 
 And start a container with
