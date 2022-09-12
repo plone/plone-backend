@@ -130,7 +130,7 @@ points declared in `setup.py` — otherwise they will not be loaded by Plone:
 
 Also make sure that your add-ons do not use `zc3.autoinclude` in their `configure.zcml`
 configuration file.  Instead, list the packages to include in your add-on's
-configure.zcml` explicitly:
+`configure.zcml`, explicitly:
 
 ```
 ...
