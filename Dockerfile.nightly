@@ -11,7 +11,7 @@ RUN apt-get update \
     && buildDeps="dpkg-dev curl unzip gcc git libbz2-dev libc6-dev libffi-dev libjpeg62-turbo-dev libldap2-dev libopenjp2-7-dev libpcre3-dev libpq-dev libsasl2-dev libssl-dev libtiff5-dev libxml2-dev libxslt1-dev wget zlib1g-dev python3-dev build-essential" \
     && apt-get install -y --no-install-recommends $buildDeps\
     && pip install -U "pip==${PIP_VERSION}" \
-    && pip install -U "zc.buildout" "wheel" \
+    && pip install -U "zc.buildout>=3.0.0rc1" "wheel" \
     && rm -rf /var/lib/apt/lists/* /usr/share/doc
 
 RUN curl -L -o workspace.zip https://github.com/plone/buildout.coredev/archive/refs/heads/6.0.zip \
