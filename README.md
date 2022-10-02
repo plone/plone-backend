@@ -143,7 +143,6 @@ Now build your new image:
 
 ```shell
 docker build . -t myproject:latest -f Dockerfile
-# buildah build works too
 ```
 
 And start a container with
