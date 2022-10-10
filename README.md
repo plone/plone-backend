@@ -118,7 +118,7 @@ RUN ./bin/pip install "relstorage==3.4.5" "psycopg2==2.9.3 --use-deprecated lega
 Make sure any Plone add-ons you are adding via `pip install` have their corresponding entry
 points declared in `setup.py` — otherwise they will not be loaded by Plone:
 
-```
+```python
 # ...
     entry_points="""
     [z3c.autoinclude.plugin]
