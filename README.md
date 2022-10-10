@@ -124,7 +124,7 @@ points declared in `setup.py` — otherwise they will not be loaded by Plone:
     [z3c.autoinclude.plugin]
     target = plone
     """,
-...
+# ...
 
 ```
 
