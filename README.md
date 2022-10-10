@@ -119,7 +119,7 @@ Make sure any Plone add-ons you are adding via `pip install` have their correspo
 points declared in `setup.py` — otherwise they will not be loaded by Plone:
 
 ```
-...
+# ...
     entry_points="""
     [z3c.autoinclude.plugin]
     target = plone
