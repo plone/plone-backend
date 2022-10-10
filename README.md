@@ -133,7 +133,6 @@ configuration file.  Instead, list the packages to include in your add-on's
 `configure.zcml`, explicitly:
 
 ```xml
-...
   <!-- -*- include dependencies / sync me with setup.py -*- -->
   <include package="z3c.jbot" />
 ```
