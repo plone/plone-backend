@@ -136,7 +136,6 @@ configuration file.  Instead, list the packages to include in your add-on's
 ...
   <!-- -*- include dependencies / sync me with setup.py -*- -->
   <include package="z3c.jbot" />
-...
 ```
 
 Now build your new image:
