@@ -34,7 +34,7 @@ jobs:
             latest=auto
             prefix=coredev
           tags: |
-            type=ref
+            type=ref,event=branch
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
