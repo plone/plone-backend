@@ -15,14 +15,14 @@ Plone backend [Docker](https://docker.com) images using Python 3 and [pip](https
 
 ### Plone 6 (Next Plone Release)
 
-- `6.0.0b2` [(6.0.x/Dockerfile)](https://github.com/plone/plone-backend/blob/v6.0.0b2/Dockerfile)
+- `6.0.0b3` [(6.0.x/Dockerfile)](https://github.com/plone/plone-backend/blob/v6.0.0b3/Dockerfile)
 
 ## Using this image
 
 ### Simple usage
 
 ```shell
-docker run -p 8080:8080 plone/plone-backend:6.0.0b2 start
+docker run -p 8080:8080 plone/plone-backend:6.0.0b3 start
 ```
 
 Then point your browser at `http://localhost:8080` and you should see the default Plone site creation page.
@@ -54,7 +54,7 @@ services:
       LOG_LEVEL: "info"
 
   backend:
-    image: plone/plone-backend:6.0.0b2
+    image: plone/plone-backend:6.0.0b3
     restart: always
     environment:
       ZEO_ADDRESS: zeo:8100
@@ -110,7 +110,7 @@ error: [Errno 13] Permission denied: '/app/lib/python3.9/site-packages/eea'
 In a directory create a  `Dockerfile` file:
 
 ```Dockerfile
-FROM plone/plone-backend:6.0.0b2
+FROM plone/plone-backend:6.0.0b3
 
 RUN ./bin/pip install "relstorage==3.4.5" "psycopg2==2.9.3 --use-deprecated legacy-resolver"
 ```
@@ -141,13 +141,13 @@ It is possible to install, during startup time, add-ons in a container created u
 To do so, pass the `ADDONS` environment variable with a list (separated by space) of requirements to be added to the image:
 
 ```shell
-docker run -p 8080:8080 -e ADDONS="pas.plugins.authomatic" plone/plone-backend:6.0.0b2 start
+docker run -p 8080:8080 -e ADDONS="pas.plugins.authomatic" plone/plone-backend:6.0.0b3 start
 ```
 
 This approach also allows you to test Plone with a specific version of one of its core components
 
 ```shell
-docker run -p 8080:8080 -e ADDONS="plone.volto==3.1.0a3" plone/plone-backend:6.0.0b2 start
+docker run -p 8080:8080 -e ADDONS="plone.volto==3.1.0a3" plone/plone-backend:6.0.0b3 start
 ```
 
 > **NOTE**:
@@ -160,13 +160,13 @@ It is possible to install local packages instead of packages from pip. To do so,
 Those packages will be installed with `pip install --editable`.
 
 ```shell
-docker run -p 8080:8080 -e DEVELOP="/app/src/mysite.policy" plone/plone-backend:6.0.0b2 start
+docker run -p 8080:8080 -e DEVELOP="/app/src/mysite.policy" plone/plone-backend:6.0.0b3 start
 ```
 
 This approach also allows you to develop local packages by using a volume
 
 ```shell
-docker run -p 8080:8080 -e DEVELOP="/app/src/mysite.policy" -v /path/to/mysite.policy:/app/src/mysite.policy plone/plone-backend:6.0.0b2 start
+docker run -p 8080:8080 -e DEVELOP="/app/src/mysite.policy" -v /path/to/mysite.policy:/app/src/mysite.policy plone/plone-backend:6.0.0b3 start
 ```
 
 > **NOTE**: We advise against using this feature on production environments.
@@ -182,13 +182,13 @@ To recreate the Plone site on container restart you can pass the `DELETE_EXISTIN
 Plone 6 example:
 
 ```shell
-docker run -p 8080:8080 -e ADDONS="eea.api.layout" -e SITE="Plone" -e PROFILES="eea.api.layout:default" plone/plone-backend:6.0.0b2
+docker run -p 8080:8080 -e ADDONS="eea.api.layout" -e SITE="Plone" -e PROFILES="eea.api.layout:default" plone/plone-backend:6.0.0b3
 ```
 
 Plone 6 Classic example:
 
 ```shell
-docker run -p 8080:8080 -e ADDONS="eea.facetednavigation" -e SITE="Plone" -e TYPE="classic" -e PROFILES="eea.facetednavigation:default" plone/plone-backend:6.0.0b2
+docker run -p 8080:8080 -e ADDONS="eea.facetednavigation" -e SITE="Plone" -e TYPE="classic" -e PROFILES="eea.facetednavigation:default" plone/plone-backend:6.0.0b3
 ```
 
 > **NOTE**:
@@ -212,7 +212,7 @@ version: "3"
 services:
 
   backend:
-    image: plone/plone-backend:6.0.0b2
+    image: plone/plone-backend:6.0.0b3
     restart: always
     environment:
       ZEO_ADDRESS: zeo:8100
@@ -256,7 +256,7 @@ version: "3"
 services:
 
   backend:
-    image: plone/plone-backend:6.0.0b2
+    image: plone/plone-backend:6.0.0b3
     environment:
       RELSTORAGE_DSN: "dbname='plone' user='plone' host='db' password='plone'"
     ports:
