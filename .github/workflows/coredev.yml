@@ -1,0 +1,59 @@
+name: Create coredev image for testing of core packages and addons
+
+on:
+  workflow_dispatch:
+  repository_dispatch:
+    types: ["on-update-to-coredev"]
+  push:
+    branches:
+      - "coredev"
+      # - "6.0.x"
+
+jobs:
+
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          # list of Docker images to use as base name for tags
+          images: |
+            ghcr.io/plone/plone-backend
+          # update label with proper version number
+          labels: |
+            org.label-schema.docker.cmd=docker run -d -p 8080:8080 ghcr.io/plone-backend:{{version}}
+          # generate Docker tags based on the following events/attributes
+          flavor: |
+            latest=auto
+            prefix=coredev
+          tags: |
+            type=ref
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v3
+        with:
+          platforms: linux/amd64,linux/arm64
+          context: .
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
