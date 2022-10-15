@@ -6,13 +6,20 @@ on:
     types: ["on-update-to-coredev"]
   push:
     branches:
-      - "coredev"
       # - "6.0.x"
+      - "coredev"
 
 jobs:
 
   coredev:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - base-image: 'python:3.8-slim-bullseye'
+          - base-image: 'python:3.9-slim-bullseye'
+          - base-image: 'python:3.10-slim-bullseye'
 
     steps:
 
