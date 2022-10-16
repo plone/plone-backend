@@ -1,5 +1,6 @@
 #!/bin/bash
 set -e
+export VENVBIN=/app/bin
 
 if [ -z "${PIP_PARAMS}" ]; then
   PIP_PARAMS=""
@@ -63,7 +64,7 @@ else
 fi
 
 # Handle CORS
-$sudo /app/bin/python /app/scripts/cors.py
+$sudo $VENVBIN/python /app/scripts/cors.py
 
 # Handle ADDONS installation
 if [[ -v ADDONS ]]; then
@@ -72,7 +73,7 @@ if [[ -v ADDONS ]]; then
   echo "THIS IS NOT MEANT TO BE USED IN PRODUCTION"
   echo "Read about it: https://github.com/plone/plone-backend/#extending-from-this-image"
   echo "======================================================================================="
-  /app/bin/pip install ${ADDONS} ${PIP_PARAMS}
+  $VENVBIN/pip install ${ADDONS} ${PIP_PARAMS}
 fi
 
 # Handle development addons
@@ -82,7 +83,7 @@ if [[ -v DEVELOP ]]; then
   echo "THIS IS NOT MEANT TO BE USED IN PRODUCTION"
   echo "Read about it: https://github.com/plone/plone-backend/#extending-from-this-image"
   echo "======================================================================================="
-  /app/bin/pip install --editable ${DEVELOP} ${PIP_PARAMS}
+  $VENVBIN/pip install --editable ${DEVELOP} ${PIP_PARAMS}
 fi
 
 if [[ "$1" == "start" ]]; then
@@ -96,21 +97,21 @@ if [[ "$1" == "start" ]]; then
     echo "Read about it: https://github.com/plone/plone-backend/#extending-from-this-image"
     echo "======================================================================================="
     export SITE_ID=${SITE}
-    $sudo /app/bin/zconsole run etc/${CONF} /app/scripts/create_site.py
+    $sudo $VENVBIN/zconsole run etc/${CONF} /app/scripts/create_site.py
   fi
   echo $MSG
-  exec $sudo /app/bin/runwsgi -v etc/zope.ini config_file=${CONF}
+  exec $sudo $VENVBIN/runwsgi -v etc/zope.ini config_file=${CONF}
 elif  [[ "$1" == "create-classic" ]]; then
   export TYPE=classic
-  exec $sudo /app/bin/zconsole run etc/${CONF} /app/scripts/create_site.py
+  exec $sudo $VENVBIN/zconsole run etc/${CONF} /app/scripts/create_site.py
 elif  [[ "$1" == "create-volto" ]]; then
   export TYPE=volto
-  exec $sudo /app/bin/zconsole run etc/${CONF} /app/scripts/create_site.py
+  exec $sudo $VENVBIN/zconsole run etc/${CONF} /app/scripts/create_site.py
 elif  [[ "$1" == "create-site" ]]; then
   export TYPE=volto
-  exec $sudo /app/bin/zconsole run etc/${CONF} /app/scripts/create_site.py
+  exec $sudo $VENVBIN/zconsole run etc/${CONF} /app/scripts/create_site.py
 elif  [[ "$1" == "console" ]]; then
-  exec $sudo /app/bin/zconsole debug etc/${CONF}
+  exec $sudo $VENVBIN/zconsole debug etc/${CONF}
 else
   # Custom
   exec "$@"
