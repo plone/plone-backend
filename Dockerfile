@@ -39,6 +39,7 @@ RUN <<EOT
     runDeps="git libjpeg62 libopenjp2-7 libpq5 libtiff5 libxml2 libxslt1.1 lynx netcat poppler-utils rsync wv busybox gosu libmagic1 make"
     apt-get update
     apt-get install -y --no-install-recommends $runDeps
+    apt-get clean -y
     busybox --install -s
     rm -rf /var/lib/apt/lists/* /usr/share/doc
     mkdir -p /data/filestorage /data/blobstorage /data/log /data/cache
