@@ -26,14 +26,12 @@ COPY --chown=500:500 /skeleton/inituser /app/
 
 FROM base
 
-ENV PIP_PARAMS=""
-ENV PIP_VERSION=22.2.2
-
 LABEL maintainer="Plone Community <dev@plone.org>" \
       org.label-schema.name="plone-backend" \
       org.label-schema.description="Plone backend image image using Python 3.9" \
       org.label-schema.vendor="Plone Foundation"
 
+WORKDIR /app
 COPY --from=builder --chown=500:500 /app /app
 
 RUN <<EOT
@@ -48,7 +46,6 @@ RUN <<EOT
     ln -s /data /app/var
 EOT
 
-WORKDIR /app
 EXPOSE 8080
 VOLUME /data
 
