@@ -15,7 +15,7 @@ RUN <<EOT
     python -m venv /app
     /app/bin/pip install -U "pip==${PIP_VERSION}"
     /app/bin/pip install Plone plone.volto ${EXTRA_PACKAGES} -c https://dist.plone.org/release/$PLONE_VERSION/constraints.txt  ${PIP_PARAMS}
-    find /app \( -type f -a -name '*.pyc' -o -name '*.pyo' \) -exec rm -rf '{}' +
+    find . -name *.py -and -not -path */*skins/* -and -not -name *_2.py -and -not -name badsyntax.py -exec /app/bin/python -m compileall {} +
 EOT
 
 COPY --chown=500:500 /skeleton/etc /app/etc
