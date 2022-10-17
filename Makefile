@@ -43,7 +43,7 @@ commit-release: # Commit new version change and create tag
 .PHONY: build-image
 build-image:  ## Build Docker Image
 	@echo "Building $(IMAGE_NAME):$(IMAGE_TAG)"
-	@docker build . -t $(IMAGE_NAME):$(IMAGE_TAG) -f Dockerfile
+	@docker buildx build . -t $(IMAGE_NAME):$(IMAGE_TAG) -f Dockerfile
 
 .PHONY: push-image
 push-image:  ## Push docker image to dockerhub
