@@ -47,6 +47,8 @@ jobs:
           file: Dockerfile
           tags: ${{ steps.meta.outputs.tags }}
           load: true
+          cache-from: type=gha,scope=${{ github.ref_name }}
+          cache-to: type=gha,scope=${{ github.ref_name }},mode=max
 
       - name: Test
         run: |
