@@ -28,7 +28,7 @@ FROM base
 
 LABEL maintainer="Plone Community <dev@plone.org>" \
       org.label-schema.name="plone-backend" \
-      org.label-schema.description="Plone backend image image using Python 3.9" \
+      org.label-schema.description="Plone backend image image using Python 3.10" \
       org.label-schema.vendor="Plone Foundation"
 
 WORKDIR /app
