@@ -71,7 +71,7 @@ if [[ -v ADDONS ]]; then
   echo "======================================================================================="
   echo "Installing ADDONS ${ADDONS}"
   echo "THIS IS NOT MEANT TO BE USED IN PRODUCTION"
-  echo "Read about it: https://github.com/plone/plone-backend/#extending-from-this-image"
+  echo "Read about it: https://6.dev-docs.plone.org/install/containers/images/backend.html"
   echo "======================================================================================="
   $VENVBIN/pip install ${ADDONS} ${PIP_PARAMS}
 fi
@@ -81,7 +81,7 @@ if [[ -v DEVELOP ]]; then
   echo "======================================================================================="
   echo "Installing DEVELOPment addons ${DEVELOP}"
   echo "THIS IS NOT MEANT TO BE USED IN PRODUCTION"
-  echo "Read about it: https://github.com/plone/plone-backend/#extending-from-this-image"
+  echo "Read about it: https://6.dev-docs.plone.org/install/containers/images/backend.html"
   echo "======================================================================================="
   $VENVBIN/pip install --editable ${DEVELOP} ${PIP_PARAMS}
 fi
@@ -94,7 +94,7 @@ if [[ "$1" == "start" ]]; then
     echo "Creating Plone ${TYPE} SITE: ${SITE}"
     echo "Aditional profiles: ${PROFILES}"
     echo "THIS IS NOT MEANT TO BE USED IN PRODUCTION"
-    echo "Read about it: https://github.com/plone/plone-backend/#extending-from-this-image"
+    echo "Read about it: https://6.dev-docs.plone.org/install/containers/images/backend.html"
     echo "======================================================================================="
     export SITE_ID=${SITE}
     $sudo $VENVBIN/zconsole run etc/${CONF} /app/scripts/create_site.py
