@@ -1,5 +1,6 @@
 # syntax=docker/dockerfile:1
-FROM python:3.10-slim-bullseye as base
+ARG PYTHON_VERSION=3.10
+FROM python:${PYTHON_VERSION}-slim-bullseye as base
 FROM base as builder
 
 ENV PIP_PARAMS=""
@@ -25,10 +26,11 @@ COPY --chown=500:500 /skeleton/inituser /app/
 
 
 FROM base
+ARG PYTHON_VERSION
 
 LABEL maintainer="Plone Community <dev@plone.org>" \
       org.label-schema.name="plone-backend" \
-      org.label-schema.description="Plone backend image image using Python 3.10" \
+      org.label-schema.description="Plone backend image image using Python $PYTHON_VERSION" \
       org.label-schema.vendor="Plone Foundation"
 
 WORKDIR /app
