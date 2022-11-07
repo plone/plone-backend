@@ -100,6 +100,11 @@ if [[ "$1" == "start" ]]; then
     $sudo $VENVBIN/zconsole run etc/${CONF} /app/scripts/create_site.py
   fi
   echo $MSG
+  if [ -n ${LISTEN_PORT} ] ; then
+    # Ensure the listen port can be set via container --environment.
+    # Necessary to run multiple backends in a single Podman / Kubernetes pod.
+    sed -i "s/port = 8080/port = $LISTEN_PORT/" etc/zope.ini
+  fi
   exec $sudo $VENVBIN/runwsgi -v etc/zope.ini config_file=${CONF}
 elif  [[ "$1" == "create-classic" ]]; then
   export TYPE=classic
