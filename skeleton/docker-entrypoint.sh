@@ -103,7 +103,7 @@ if [[ "$1" == "start" ]]; then
   if [[ -v LISTEN_PORT ]] ; then
     # Ensure the listen port can be set via container --environment.
     # Necessary to run multiple backends in a single Podman / Kubernetes pod.
-    sed -i "s/port = 8080/port = $LISTEN_PORT/" etc/zope.ini
+    sed -i "s/port = 8080/port = ${LISTEN_PORT}/" etc/zope.ini
   fi
   exec $sudo $VENVBIN/runwsgi -v etc/zope.ini config_file=${CONF}
 elif  [[ "$1" == "create-classic" ]]; then
