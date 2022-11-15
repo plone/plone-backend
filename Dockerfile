@@ -49,10 +49,9 @@ RUN <<EOT
     ln -s /data /app/var
 EOT
 
-EXPOSE 8080
 VOLUME /data
 
-HEALTHCHECK --interval=10s --timeout=5s --start-period=30s CMD wget -q http://127.0.0.1:8080/ok -O - | grep OK || exit 1
+HEALTHCHECK --interval=10s --timeout=5s --start-period=30s CMD [ -n "$LISTEN_PORT" ] || LISTEN_PORT=8080 ; wget -q http://127.0.0.1:$LISTEN_PORT/ok -O - | grep OK || exit 1
 
 ENTRYPOINT [ "/app/docker-entrypoint.sh" ]
 CMD ["start"]
