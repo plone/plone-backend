@@ -69,8 +69,8 @@ fi
 # functionality, but for Zope configuration snippets.
 for f in etc/zope.conf.d/*.conf ; do
   test -f ${f} || continue
-  echo >> ${CONF}
-  cat ${f} >> ${CONF}
+  echo >> etc/${CONF}
+  cat ${f} >> etc/${CONF}
 done
 
 # Handle CORS
