@@ -63,6 +63,16 @@ else
   CONF=zope.conf
 fi
 
+# Add anything inside etc/zope.conf.d to the configuration file
+# prior to starting the respective Zope server.
+# This provides a counterpart for the ZCML package-includes
+# functionality, but for Zope configuration snippets.
+for f in etc/zope.conf.d/*.conf ; do
+  test -f ${f} || continue
+  echo >> etc/${CONF}
+  cat ${f} >> etc/${CONF}
+done
+
 # Handle CORS
 $sudo $VENVBIN/python /app/scripts/cors.py
 
