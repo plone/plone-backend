@@ -44,7 +44,7 @@ commit-release: # Commit new version change and create tag
 .PHONY: build-image
 build-image:  ## Build Docker Image
 	@echo "Building $(IMAGE_NAME):$(IMAGE_TAG)"
-	@docker buildx build . -t $(IMAGE_NAME):$(IMAGE_TAG) -f Dockerfile
+	@docker buildx build . -t $(IMAGE_NAME):$(IMAGE_TAG) -f Dockerfile --load
 
 .PHONY: build-image-nightly
 build-image-nightly:  ## Build Docker Image Nightly

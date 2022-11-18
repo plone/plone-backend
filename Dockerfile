@@ -5,7 +5,7 @@ FROM base as builder
 
 ENV PIP_PARAMS=""
 ENV PIP_VERSION=22.2.2
-ENV PLONE_VERSION=6.0.0b3
+ENV PLONE_VERSION=6.0.0rc1
 ENV EXTRA_PACKAGES="relstorage==3.4.5 psycopg2==2.9.3 python-ldap==3.4.0"
 
 RUN <<EOT
