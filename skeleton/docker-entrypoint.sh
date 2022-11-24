@@ -82,6 +82,7 @@ else
     # Oh, it looks like there is at least one customization.
     if [[ -v zope_conf_vanilla ]] ; then
       # Make a note both in the file and in the log.
+      echo >> etc/${CONF}
       echo "# Runtime customizations:" >> etc/${CONF}
       MSG="${MSG} -- with customizations"
       # We don't need to rerun the same snippet twice here.
