@@ -67,11 +67,31 @@ fi
 # prior to starting the respective Zope server.
 # This provides a counterpart for the ZCML package-includes
 # functionality, but for Zope configuration snippets.
-for f in etc/zope.conf.d/*.conf ; do
-  test -f ${f} || continue
-  echo >> etc/${CONF}
-  cat ${f} >> etc/${CONF}
-done
+#
+# This must be executed only once during the container lifetime,
+# as container can be stopped and then restarted... double-additions
+# of the same snippet cause the Zope server not to start.
+if grep -q '# Runtime customizations:' etc/${CONF} ; then
+  # Note in the log this was customized.  Useful for bug reports.
+  MSG="${MSG} -- with customizations"
+else
+  # Assume there will be no customizations.
+  zope_conf_vanilla=true
+  for f in etc/zope.conf.d/*.conf ; do
+    test -f ${f} || continue
+    # Oh, it looks like there is at least one customization.
+    if [[ -v zope_conf_vanilla ]] ; then
+      # Make a note both in the file and in the log.
+      echo >> etc/${CONF}
+      echo "# Runtime customizations:" >> etc/${CONF}
+      MSG="${MSG} -- with customizations"
+      # We don't need to rerun the same snippet twice here.
+      unset zope_conf_vanilla
+    fi
+    echo >> etc/${CONF}
+    cat ${f} >> etc/${CONF}
+  done
+fi
 
 # Handle CORS
 $sudo $VENVBIN/python /app/scripts/cors.py
