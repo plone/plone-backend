@@ -34,12 +34,12 @@ These images are **not** Buildout based!
 
 ### Plone 5.2 (Previous Stable Plone)
 
-> **NOTE**:
-> These images are **not** officially supported by the Plone Community for Plone 5.
+**Note:**
+These images for Plone 5 are **not** officially supported by the Plone community.
 
-- `latest, 5, 5.2, 5.2.9` [(5.2.x/Dockerfile)](https://github.com/plone/plone-backend/blob/v5.2.9/Dockerfile)
+`latest, 5, 5.2, 5.2.9` [(5.2.x/Dockerfile)](https://github.com/plone/plone-backend/blob/v5.2.9/Dockerfile)
 
-There are official [Buildout based Plone 5 images](https://hub.docker.com/_/plone) available too.
+See also official [Buildout based Plone 5 images](https://hub.docker.com/_/plone).
 
 ## Usage
 
