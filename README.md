@@ -19,7 +19,7 @@
 Plone backend [Docker](https://docker.com) images using Python 3 and [pip](https://pip.pypa.io/en/stable/).
 
 **Note:**
-> These images are the official ones for the Plone 6 release (together with [plone.frontend](https://github.com/plone/plone-frontend)).
+These are the official images for the Plone 6 release, together with [plone.frontend](https://github.com/plone/plone-frontend).
 > These image are **not** Buildout based!
 
 ## Supported tags and respective Dockerfile links
