@@ -17,7 +17,7 @@ get() {
 		--link "$cname":plone \
 		--entrypoint /app/bin/python \
 		"$image" \
-		-c "from six.moves.urllib.request import urlopen; con = urlopen('$1'); print(con.read())"
+		-c "from urllib.request import urlopen; con = urlopen('$1'); print(con.read())"
 }
 
 . "$dir/../../retry.sh" --tries "$PLONE_TEST_TRIES" --sleep "$PLONE_TEST_SLEEP" get "http://plone:8081"
