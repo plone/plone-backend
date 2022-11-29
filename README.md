@@ -30,7 +30,7 @@ These images are **not** Buildout based!
 
 ### Plone 6 (Nightly build)
 
-- `nightly` [(Dockerfile.nightly)](https://github.com/plone/plone-backend/blob/v5.2.7/Dockerfile.nightly)
+`nightly` [(Dockerfile.nightly)](https://github.com/plone/plone-backend/blob/v5.2.7/Dockerfile.nightly)
 
 ### Plone 5.2 (Previous Stable Plone)
 
