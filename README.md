@@ -18,25 +18,28 @@
 
 Plone backend [Docker](https://docker.com) images using Python 3 and [pip](https://pip.pypa.io/en/stable/).
 
-> **NOTE**:
-> These images are not officially supported by the Plone Community for Plone 5.
-> They will become the official ones for the upcoming Plone 6 release (together with [plone.frontend](https://github.com/plone/plone-frontend)).
-> These image are **not** buildout based!
+**Note:**
+These are the official images for the Plone 6 release, together with [plone-frontend](https://github.com/plone/plone-frontend).
+These images are **not** Buildout based!
 
 ## Supported tags and respective Dockerfile links
 
-### Plone 5.2 (Stable Plone)
-
-- `latest, 5, 5.2, 5.2.9` [(5.2.x/Dockerfile)](https://github.com/plone/plone-backend/blob/v5.2.9/Dockerfile)
-
 ### Plone 6 (Next Plone Release)
 
-- `6.0.0rc1` [(6.0.x/Dockerfile)](https://github.com/plone/plone-backend/blob/v6.0.0rc1/Dockerfile)
+`6.0.0rc1` [(6.0.x/Dockerfile)](https://github.com/plone/plone-backend/blob/v6.0.0rc1/Dockerfile)
 
 ### Plone 6 (Nightly build)
 
-- `nightly` [(Dockerfile.nightly)](https://github.com/plone/plone-backend/blob/v5.2.7/Dockerfile.nightly)
+`nightly` [(Dockerfile.nightly)](https://github.com/plone/plone-backend/blob/v5.2.7/Dockerfile.nightly)
 
+### Plone 5.2 (Previous Stable Plone)
+
+**Note:**
+These images for Plone 5 are **not** officially supported by the Plone community.
+
+`latest`, `5`, `5.2`, `5.2.9` [(5.2.x/Dockerfile)](https://github.com/plone/plone-backend/blob/v5.2.9/Dockerfile)
+
+See also official [Buildout based Plone 5 images](https://hub.docker.com/_/plone).
 
 ## Usage
 
