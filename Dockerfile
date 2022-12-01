@@ -39,7 +39,7 @@ COPY --from=builder --chown=500:500 /app /app
 RUN <<EOT
     ls -la /app/bin
     useradd --system -m -d /app -U -u 500 plone
-    runDeps="git libjpeg62 libopenjp2-7 libpq5 libtiff5 libxml2 libxslt1.1 lynx netcat poppler-utils rsync wv busybox gosu libmagic1 build-essential"
+    runDeps="git libjpeg62 libopenjp2-7 libpq5 libtiff5 libxml2 libxslt1.1 lynx netcat poppler-utils rsync wv busybox gosu libmagic1"
     apt-get update
     apt-get install -y --no-install-recommends $runDeps
     apt-get clean -y
