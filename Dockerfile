@@ -1,10 +1,11 @@
 # syntax=docker/dockerfile:1
-FROM python:3.10-slim-bullseye as base
+ARG PYTHON_VERSION=3.10
+FROM python:${PYTHON_VERSION}-slim-bullseye as base
 FROM base as builder
 
 ENV PIP_PARAMS=""
 ENV PIP_VERSION=22.2.2
-ENV PLONE_VERSION=6.0.0b3
+ENV PLONE_VERSION=6.0.0rc1
 ENV EXTRA_PACKAGES="relstorage==3.4.5 psycopg2==2.9.3 python-ldap==3.4.0"
 
 RUN <<EOT
@@ -25,10 +26,11 @@ COPY --chown=500:500 /skeleton/inituser /app/
 
 
 FROM base
+ARG PYTHON_VERSION
 
 LABEL maintainer="Plone Community <dev@plone.org>" \
       org.label-schema.name="plone-backend" \
-      org.label-schema.description="Plone backend image image using Python 3.9" \
+      org.label-schema.description="Plone backend image image using Python $PYTHON_VERSION" \
       org.label-schema.vendor="Plone Foundation"
 
 WORKDIR /app
@@ -43,14 +45,13 @@ RUN <<EOT
     busybox --install -s
     rm -rf /var/lib/apt/lists/* /usr/share/doc
     mkdir -p /data/filestorage /data/blobstorage /data/log /data/cache
-    chown -R /data plone:plone
+    chown -R plone:plone /data
     ln -s /data /app/var
 EOT
 
-EXPOSE 8080
 VOLUME /data
 
-HEALTHCHECK --interval=10s --timeout=5s --start-period=30s CMD wget -q http://127.0.0.1:8080/ok -O - | grep OK || exit 1
+HEALTHCHECK --interval=10s --timeout=5s --start-period=30s CMD [ -n "$LISTEN_PORT" ] || LISTEN_PORT=8080 ; wget -q http://127.0.0.1:"$LISTEN_PORT"/ok -O - | grep OK || exit 1
 
 ENTRYPOINT [ "/app/docker-entrypoint.sh" ]
 CMD ["start"]

@@ -63,6 +63,36 @@ else
   CONF=zope.conf
 fi
 
+# Add anything inside etc/zope.conf.d to the configuration file
+# prior to starting the respective Zope server.
+# This provides a counterpart for the ZCML package-includes
+# functionality, but for Zope configuration snippets.
+#
+# This must be executed only once during the container lifetime,
+# as container can be stopped and then restarted... double-additions
+# of the same snippet cause the Zope server not to start.
+if grep -q '# Runtime customizations:' etc/${CONF} ; then
+  # Note in the log this was customized.  Useful for bug reports.
+  MSG="${MSG} -- with customizations"
+else
+  # Assume there will be no customizations.
+  zope_conf_vanilla=true
+  for f in etc/zope.conf.d/*.conf ; do
+    test -f ${f} || continue
+    # Oh, it looks like there is at least one customization.
+    if [[ -v zope_conf_vanilla ]] ; then
+      # Make a note both in the file and in the log.
+      echo >> etc/${CONF}
+      echo "# Runtime customizations:" >> etc/${CONF}
+      MSG="${MSG} -- with customizations"
+      # We don't need to rerun the same snippet twice here.
+      unset zope_conf_vanilla
+    fi
+    echo >> etc/${CONF}
+    cat ${f} >> etc/${CONF}
+  done
+fi
+
 # Handle CORS
 $sudo $VENVBIN/python /app/scripts/cors.py
 
@@ -71,7 +101,7 @@ if [[ -v ADDONS ]]; then
   echo "======================================================================================="
   echo "Installing ADDONS ${ADDONS}"
   echo "THIS IS NOT MEANT TO BE USED IN PRODUCTION"
-  echo "Read about it: https://github.com/plone/plone-backend/#extending-from-this-image"
+  echo "Read about it: https://6.dev-docs.plone.org/install/containers/images/backend.html"
   echo "======================================================================================="
   $VENVBIN/pip install ${ADDONS} ${PIP_PARAMS}
 fi
@@ -81,7 +111,7 @@ if [[ -v DEVELOP ]]; then
   echo "======================================================================================="
   echo "Installing DEVELOPment addons ${DEVELOP}"
   echo "THIS IS NOT MEANT TO BE USED IN PRODUCTION"
-  echo "Read about it: https://github.com/plone/plone-backend/#extending-from-this-image"
+  echo "Read about it: https://6.dev-docs.plone.org/install/containers/images/backend.html"
   echo "======================================================================================="
   $VENVBIN/pip install --editable ${DEVELOP} ${PIP_PARAMS}
 fi
@@ -94,12 +124,17 @@ if [[ "$1" == "start" ]]; then
     echo "Creating Plone ${TYPE} SITE: ${SITE}"
     echo "Aditional profiles: ${PROFILES}"
     echo "THIS IS NOT MEANT TO BE USED IN PRODUCTION"
-    echo "Read about it: https://github.com/plone/plone-backend/#extending-from-this-image"
+    echo "Read about it: https://6.dev-docs.plone.org/install/containers/images/backend.html"
     echo "======================================================================================="
     export SITE_ID=${SITE}
     $sudo $VENVBIN/zconsole run etc/${CONF} /app/scripts/create_site.py
   fi
   echo $MSG
+  if [[ -v LISTEN_PORT ]] ; then
+    # Ensure the listen port can be set via container --environment.
+    # Necessary to run multiple backends in a single Podman / Kubernetes pod.
+    sed -i "s/port = 8080/port = ${LISTEN_PORT}/" etc/zope.ini
+  fi
   exec $sudo $VENVBIN/runwsgi -v etc/zope.ini config_file=${CONF}
 elif  [[ "$1" == "create-classic" ]]; then
   export TYPE=classic

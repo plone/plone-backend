@@ -1,16 +1,13 @@
-name: Test generated image
+name: Generate Nightly Image
 
 on:
-  push:
-    branches:
-      - "6.0.x"
-  pull_request:
-    branches:
-      - "6.0.x"
+  workflow_dispatch:
+  schedule:
+    - cron:  '15 22 * * *'
 
 jobs:
 
-  test:
+  release:
     runs-on: ubuntu-latest
     environment: DOCKER_HUB
 
@@ -23,10 +20,16 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
+          # list of Docker images to use as base name for tags
           images: |
             plone/plone-backend
+          # update label with proper version number
+          labels: |
+            org.label-schema.docker.cmd=docker run -d -p 8080:8080 plone/plone-backend:nightly
+          # generate Docker tags based on the following events/attributes
           tags: |
-            type=raw,value=test
+            type=raw,value=nightly
+            type=schedule,pattern=nightly-{{date 'YYYYMMDD'}}
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
@@ -40,16 +43,12 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build image for testing
+      - name: Build and push
         uses: docker/build-push-action@v3
         with:
-          context: ./
-          file: Dockerfile
+          platforms: linux/amd64,linux/arm64
+          context: .
+          file: Dockerfile.nightly
+          push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
-          load: true
-          cache-from: type=gha,scope=${{ github.ref_name }}
-          cache-to: type=gha,scope=${{ github.ref_name }},mode=max
-
-      - name: Test
-        run: |
-          ./test/run.sh plone/plone-backend:test
+          labels: ${{ steps.meta.outputs.labels }}

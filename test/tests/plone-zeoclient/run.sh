@@ -25,7 +25,7 @@ get() {
 		--link "$pname":plone \
 		--entrypoint /app/bin/python \
 		"$image" \
-		-c "from six.moves.urllib.request import urlopen; con = urlopen('$1'); print(con.read())"
+		-c "from urllib.request import urlopen; con = urlopen('$1'); print(con.read())"
 }
 
 get_auth() {
@@ -33,7 +33,7 @@ get_auth() {
 		--link "$pname":plone \
 		--entrypoint /app/bin/python \
 		"$image" \
-		-c "from six.moves.urllib.request import urlopen, Request; request = Request('$1'); request.add_header('Authorization', 'Basic $2'); print(urlopen(request).read())"
+		-c "from urllib.request import urlopen, Request; request = Request('$1'); request.add_header('Authorization', 'Basic $2'); print(urlopen(request).read())"
 }
 
 . "$dir/../../retry.sh" --tries "$PLONE_TEST_TRIES" --sleep "$PLONE_TEST_SLEEP" get "http://plone:8080"
