@@ -97,7 +97,7 @@ fi
 $sudo $VENVBIN/python /app/scripts/cors.py
 
 # Handle ADDONS installation
-if [[ -v ADDONS ]]; then
+if [[ -z "${ADDONS}" ]]; then
   echo "======================================================================================="
   echo "Installing ADDONS ${ADDONS}"
   echo "THIS IS NOT MEANT TO BE USED IN PRODUCTION"
