@@ -10,6 +10,7 @@ ENV EXTRA_PACKAGES="relstorage==3.4.5 psycopg2==2.9.3 python-ldap==3.4.0"
 
 RUN <<EOT
     apt-get update
+    apt-get -y upgrade
     buildDeps="dpkg-dev gcc libbz2-dev libc6-dev libffi-dev libjpeg62-turbo-dev libldap2-dev libopenjp2-7-dev libpcre3-dev libpq-dev libsasl2-dev libssl-dev libtiff5-dev libxml2-dev libxslt1-dev wget zlib1g-dev python3-dev build-essential"
     apt-get install -y --no-install-recommends $buildDeps
     rm -rf /var/lib/apt/lists/* /usr/share/doc
@@ -40,6 +41,7 @@ RUN <<EOT
     useradd --system -m -d /app -U -u 500 plone
     runDeps="git libjpeg62 libopenjp2-7 libpq5 libtiff5 libxml2 libxslt1.1 lynx netcat poppler-utils rsync wv busybox gosu libmagic1 make"
     apt-get update
+    apt-get -y upgrade
     apt-get install -y --no-install-recommends $runDeps
     apt-get clean -y
     busybox --install -s
