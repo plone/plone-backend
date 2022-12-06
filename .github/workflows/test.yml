@@ -24,9 +24,9 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: |
-            plone/plone-backend
+            ghcr.io/plone/plone-backend
           tags: |
-            type=raw,value=test
+            type=sha
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
@@ -37,8 +37,9 @@ jobs:
       - name: Login to DockerHub
         uses: docker/login-action@v2
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build image for testing
         uses: docker/build-push-action@v3
@@ -50,4 +51,4 @@ jobs:
 
       - name: Test
         run: |
-          ./test/run.sh plone/plone-backend:test
+          ./test/run.sh  ${{ steps.meta.outputs.tags }}
