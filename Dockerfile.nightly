@@ -1,19 +1,20 @@
 # syntax=docker/dockerfile:1
-FROM python:3.10-slim-bullseye as base
+ARG PYTHON_VERSION=3.11
+FROM python:${PYTHON_VERSION}-slim-bullseye as base
 FROM base as builder
 
 ENV PIP_PARAMS=""
-ENV PIP_VERSION=22.2.2
-ENV EXTRA_PACKAGES="relstorage==3.4.5 psycopg2==2.9.3 python-ldap==3.4.0"
+ENV PIP_VERSION=22.3.1
+ENV EXTRA_PACKAGES="relstorage==3.5.0 psycopg2==2.9.5 python-ldap==3.4.3"
 
 RUN mkdir /wheelhouse
 
-RUN <<EOT 
+RUN <<EOT
     apt-get update
-    buildDeps="dpkg-dev curl unzip gcc git libbz2-dev libc6-dev libffi-dev libjpeg62-turbo-dev libldap2-dev libopenjp2-7-dev libpcre3-dev libpq-dev libsasl2-dev libssl-dev libtiff5-dev libxml2-dev libxslt1-dev wget zlib1g-dev python3-dev build-essential"
+    buildDeps="build-essential curl libbz2-dev libffi-dev libjpeg62-turbo-dev libldap2-dev libopenjp2-7-dev libpcre3-dev libpq-dev libsasl2-dev libssl-dev libtiff5-dev libxml2-dev libxslt1-dev wget unzip zlib1g-dev"
     apt-get install -y --no-install-recommends $buildDeps
-    pip install -U "pip==${PIP_VERSION}" 
-    pip install -U "zc.buildout>=3.0.0rc1" "wheel" 
+    pip install -U "pip==${PIP_VERSION}"
+    pip install -U "zc.buildout>=3.0.0rc1" "wheel"
     rm -rf /var/lib/apt/lists/* /usr/share/doc
     curl -L -o workspace.zip https://github.com/plone/buildout.coredev/archive/refs/heads/6.0.zip
     unzip workspace.zip
@@ -24,10 +25,10 @@ WORKDIR /workspace
 COPY --chown=500:500 /helpers/pip-from-buildout-coredev.py ./
 
 # Generate pip-requirements.txt
-RUN <<EOT 
+RUN <<EOT
     python pip-from-buildout-coredev.py
     pip wheel -r pip-requirements.txt -c pip-constraints.txt --wheel-dir=/wheelhouse
-    pip wheel "relstorage==3.4.5" "psycopg2==2.9.3" -c pip-constraints.txt --wheel-dir=/wheelhouse
+    pip wheel $EXTRA_PACKAGES -c pip-constraints.txt --wheel-dir=/wheelhouse
 EOT
 
 FROM base
@@ -42,7 +43,7 @@ LABEL maintainer="Plone Community <dev@plone.org>" \
 
 COPY --from=builder /wheelhouse /wheelhouse
 
-RUN <<EOT 
+RUN <<EOT
     useradd --system -m -d /app -U -u 500 plone
     runDeps="git libjpeg62 libopenjp2-7 libpq5 libtiff5 libxml2 libxslt1.1 lynx netcat poppler-utils rsync wv busybox libmagic1 gosu make"
     apt-get update
