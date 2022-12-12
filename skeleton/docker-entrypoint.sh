@@ -124,7 +124,7 @@ if [[ "$1" == "start" ]]; then
     echo "Creating Plone ${TYPE} SITE: ${SITE}"
     echo "Aditional profiles: ${PROFILES}"
     echo "THIS IS NOT MEANT TO BE USED IN PRODUCTION"
-    echo "Read about it: https://6.dev-docs.plone.org/install/containers/images/backend.html"
+    echo "Read about it: https://6.docs.plone.org/install/containers/images/backend.html"
     echo "======================================================================================="
     export SITE_ID=${SITE}
     $sudo $VENVBIN/zconsole run etc/${CONF} /app/scripts/create_site.py

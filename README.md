@@ -24,9 +24,9 @@ These images are **not** Buildout based!
 
 ## Supported tags and respective Dockerfile links
 
-### Plone 6 (Next Plone Release)
+### Plone 6
 
-`6.0.0rc2` [(6.0.x/Dockerfile)](https://github.com/plone/plone-backend/blob/v6.0.0rc2/Dockerfile)
+`6.0.0` [(6.0.x/Dockerfile)](https://github.com/plone/plone-backend/blob/v6.0.0/Dockerfile)
 
 ### Plone 6 (Nightly build)
 
@@ -43,13 +43,13 @@ See also official [Buildout based Plone 5 images](https://hub.docker.com/_/plone
 
 ## Usage
 
-Please refer to the [Official Plone Documentation](https://6.dev-docs.plone.org/install/containers/images/backend.html) for further documentation and examples.
+Please refer to the [Official Plone Documentation](https://6.docs.plone.org/install/containers/images/backend.html) for further documentation and examples.
 
 ## Contribute
 
 - [Issue Tracker](https://github.com/plone/plone-backend/issues)
 - [Source Code](https://github.com/plone/plone-backend/)
-- [Documentation](https://6.dev-docs.plone.org/install/containers/images/backend.html)
+- [Documentation](https://6.docs.plone.org/install/containers/images/backend.html)
 
 Please **DO NOT** commit to version branches directly. Even for the smallest and most trivial fix.
 **ALWAYS** open a pull request and ask somebody else to merge your code. **NEVER** merge it yourself.
