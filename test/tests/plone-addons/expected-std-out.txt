@@ -1,6 +1,6 @@
 =======================================================================================
 Installing ADDONS eea.facetednavigation
 THIS IS NOT MEANT TO BE USED IN PRODUCTION
-Read about it: https://6.dev-docs.plone.org/install/containers/images/backend.html
+Read about it: https://6.docs.plone.org/install/containers/images/backend.html
 =======================================================================================
 eea.facetednavigation
