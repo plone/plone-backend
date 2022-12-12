@@ -22,6 +22,7 @@ jobs:
         with:
           # list of Docker images to use as base name for tags
           images: |
+            ghcr.io/plone/server
             ghcr.io/plone/plone-backend
             plone/plone-backend
           # update label with proper version number
