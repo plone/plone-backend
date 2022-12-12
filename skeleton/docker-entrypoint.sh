@@ -101,7 +101,7 @@ if [[ -n "${ADDONS}" ]]; then
   echo "======================================================================================="
   echo "Installing ADDONS ${ADDONS}"
   echo "THIS IS NOT MEANT TO BE USED IN PRODUCTION"
-  echo "Read about it: https://6.dev-docs.plone.org/install/containers/images/backend.html"
+  echo "Read about it: https://6.docs.plone.org/install/containers/images/backend.html"
   echo "======================================================================================="
   $VENVBIN/pip install ${ADDONS} ${PIP_PARAMS}
 fi
@@ -111,7 +111,7 @@ if [[ -v DEVELOP ]]; then
   echo "======================================================================================="
   echo "Installing DEVELOPment addons ${DEVELOP}"
   echo "THIS IS NOT MEANT TO BE USED IN PRODUCTION"
-  echo "Read about it: https://6.dev-docs.plone.org/install/containers/images/backend.html"
+  echo "Read about it: https://6.docs.plone.org/install/containers/images/backend.html"
   echo "======================================================================================="
   $VENVBIN/pip install --editable ${DEVELOP} ${PIP_PARAMS}
 fi
