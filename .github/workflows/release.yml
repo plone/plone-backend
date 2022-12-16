@@ -3,7 +3,7 @@ name: Release new Docker image
 on:
   push:
     tags:
-      - 'v*.*.*'
+      - 'v*'
 
 jobs:
 
@@ -33,6 +33,7 @@ jobs:
             type=ref,event=branch
             type=ref,event=pr
             type=pep440,pattern={{version}}
+            type=pep440,pattern={{major}}.{{minor}}.{{patch}}
             type=pep440,pattern={{major}}.{{minor}}
             type=pep440,pattern={{major}}
             type=sha
