@@ -3,7 +3,6 @@ ARG PYTHON_VERSION=3.11
 FROM python:${PYTHON_VERSION}-slim-bullseye as base
 FROM base as builder
 
-ENV PIP_PARAMS=""
 ENV PIP_VERSION=22.3.1
 ENV PLONE_VERSION=6.0.0.1
 ENV EXTRA_PACKAGES="relstorage==3.5.0 psycopg2==2.9.5 python-ldap==3.4.3"
@@ -16,7 +15,7 @@ RUN <<EOT
     rm -rf /var/lib/apt/lists/* /usr/share/doc
     python -m venv /app
     /app/bin/pip install -U "pip==${PIP_VERSION}" wheel
-    /app/bin/pip install Plone ${EXTRA_PACKAGES} -c https://dist.plone.org/release/$PLONE_VERSION/constraints.txt  ${PIP_PARAMS}
+    /app/bin/pip install Plone ${EXTRA_PACKAGES} -c https://dist.plone.org/release/$PLONE_VERSION/constraints.txt
     find /app \( -type f -a -name '*.pyc' -o -name '*.pyo' \) -exec rm -rf '{}' +
 EOT
 
