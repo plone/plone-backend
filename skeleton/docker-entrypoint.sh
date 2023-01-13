@@ -113,7 +113,13 @@ if [[ -v DEVELOP ]]; then
   echo "THIS IS NOT MEANT TO BE USED IN PRODUCTION"
   echo "Read about it: https://6.docs.plone.org/install/containers/images/backend.html"
   echo "======================================================================================="
-  $VENVBIN/pip install --editable ${DEVELOP} ${PIP_PARAMS}
+  PACKAGES=""
+  while read -ra DEVADDONS; do
+    for a in "${DEVADDONS[@]}"; do
+      PACKAGES+=" --editable ${a}"
+    done
+  done <<< "$DEVELOP"
+  $VENVBIN/pip install ${PACKAGES} ${PIP_PARAMS}
 fi
 
 if [[ "$1" == "start" ]]; then
