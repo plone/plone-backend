@@ -28,6 +28,8 @@ jobs:
           # update label with proper version number
           labels: |
             org.label-schema.docker.cmd=docker run -d -p 8080:8080 plone/plone-backend:{{version}}
+          flavor: |
+            latest=false
           # generate Docker tags based on the following events/attributes
           tags: |
             type=ref,event=branch
@@ -37,7 +39,7 @@ jobs:
             type=pep440,pattern={{major}}.{{minor}}
             type=pep440,pattern={{major}}
             type=sha
-            type=raw,value=latest,enable=${{ github.ref == format('refs/heads/{0}', github.event.repository.default_branch) }}
+            type=raw,value=latest,enable={{is_default_branch}}
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
