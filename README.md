@@ -26,11 +26,11 @@ These images are **not** Buildout based!
 
 ### Plone 6
 
-`6.0.0` [(6.0.x/Dockerfile)](https://github.com/plone/plone-backend/blob/v6.0.0/Dockerfile)
+`6.0.1`,`6.0`,`6`,`latest` [(6.0.x/Dockerfile)](https://github.com/plone/plone-backend/blob/v6.0.1/Dockerfile)
 
 ### Plone 6 (Nightly build)
 
-`nightly` [(Dockerfile.nightly)](https://github.com/plone/plone-backend/blob/v6.0.0/Dockerfile.nightly)
+`nightly` [(Dockerfile.nightly)](https://github.com/plone/plone-backend/blob/6.0.x/Dockerfile.nightly)
 
 ### Plone 5.2 (Previous Stable Plone)
 
@@ -40,10 +40,6 @@ These images for Plone 5 are **not** officially supported by the Plone community
 `latest`, `5`, `5.2`, `5.2.11` [(5.2.x/Dockerfile)](https://github.com/plone/plone-backend/blob/v5.2.11/Dockerfile)
 
 See also official [Buildout based Plone 5 images](https://hub.docker.com/_/plone).
-
-### Plone 5.2 (Nightly build)
-
-`nightly` [(Dockerfile.nightly)](https://github.com/plone/plone-backend/blob/v5.2.9/Dockerfile.nightly)
 
 ## Usage
 
