@@ -1,0 +1,27 @@
+# syntax=docker/dockerfile:1
+ARG PYTHON_VERSION=3.11
+FROM python:${PYTHON_VERSION}-slim-bullseye
+
+WORKDIR /app
+
+RUN <<EOT
+    useradd --system -m -d /app -U -u 500 plone
+    runDeps="git libjpeg62 libopenjp2-7 libpq5 libtiff5 libxml2 libxslt1.1 lynx netcat poppler-utils rsync wv busybox gosu libmagic1"
+    apt-get update
+    apt-get -y upgrade
+    apt-get install -y --no-install-recommends $runDeps
+    apt-get clean -y
+    busybox --install -s
+    rm -rf /var/lib/apt/lists/* /usr/share/doc
+    mkdir -p /data/filestorage /data/blobstorage /data/log /data/cache
+    chown -R 500:500 /data
+EOT
+
+VOLUME /data
+
+EXPOSE 8080
+
+HEALTHCHECK --interval=10s --timeout=5s --start-period=30s CMD [ -n "$LISTEN_PORT" ] || LISTEN_PORT=8080 ; wget -q http://127.0.0.1:"$LISTEN_PORT"/ok -O - | grep OK || exit 1
+
+ENTRYPOINT [ "/app/docker-entrypoint.sh" ]
+CMD ["start"]

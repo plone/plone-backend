@@ -1,0 +1,32 @@
+# syntax=docker/dockerfile:1
+ARG PYTHON_VERSION=3.11
+ARG PLONE_VERSION
+FROM python:${PYTHON_VERSION}-slim-bullseye as base
+FROM plone/server-builder:${PLONE_VERSION} as builder
+
+RUN <<EOT
+    /app/bin/pip install plone.app.robotframework>=2.0.0
+EOT
+
+FROM plone/server-prod-config:${PLONE_VERSION}
+
+LABEL maintainer="Plone Community <dev@plone.org>" \
+      org.label-schema.name="server-acceptance" \
+      org.label-schema.description="Plone backend acceptance image using Python $PYTHON_VERSION" \
+      org.label-schema.vendor="Plone Foundation"
+
+WORKDIR /app
+
+COPY --from=builder --chown=500:500 /app /app
+
+EXPOSE 55001
+
+ENV ZSERVER_HOST=0.0.0.0
+ENV ZSERVER_PORT=55001
+ENV LISTEN_PORT=${ZSERVER_PORT}
+
+ENV APPLY_PROFILES=plone.app.contenttypes:plone-content,plone.restapi:default,plone.volto:default-homepage
+ENV CONFIGURE_PACKAGES=plone.app.contenttypes,plone.restapi,plone.volto,plone.volto.cors
+
+ENTRYPOINT [ "/app/bin/robot-server" ]
+CMD ["plone.app.robotframework.testing.VOLTO_ROBOT_TESTING"]
