@@ -1,7 +1,6 @@
 # syntax=docker/dockerfile:1
 ARG PYTHON_VERSION=3.11
 ARG PLONE_VERSION
-FROM python:${PYTHON_VERSION}-slim-bullseye as base
 FROM plone/server-builder:${PLONE_VERSION} as builder
 
 RUN <<EOT

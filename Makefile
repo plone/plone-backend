@@ -19,6 +19,7 @@ YELLOW=`tput setaf 3`
 
 # Current version
 MAIN_IMAGE_NAME=plone/plone-backend
+CLASSICUI_IMAGE_NAME=plone/plone-classicui
 BASE_IMAGE_NAME=plone/server
 PLONE_VERSION=$$(cat version.txt)
 IMAGE_TAG=${PLONE_VERSION}
@@ -62,6 +63,7 @@ show-image: ## Print Version
 	@echo "$(MAIN_IMAGE_NAME):$(IMAGE_TAG)"
 	@echo "$(MAIN_IMAGE_NAME):$(NIGHTLY_IMAGE_TAG)"
 	@echo "$(BASE_IMAGE_NAME)-(builder|dev|prod-config|acceptance):$(IMAGE_TAG)"
+	@echo "$(CLASSICUI_IMAGE_NAME):$(IMAGE_TAG)"
 
 .PHONY: image-builder
 image-builder:  ## Build Base Image
@@ -77,6 +79,11 @@ image-dev:  ## Build Dev Image
 image-prod-config:  ## Build Prod Image
 	@echo "Building $(BASE_IMAGE_NAME)-prod-config:$(IMAGE_TAG)"
 	@docker buildx build . --build-arg PLONE_VERSION=${PLONE_VERSION} -t $(BASE_IMAGE_NAME)-prod-config:$(IMAGE_TAG) -f Dockerfile.prod --load
+
+.PHONY: image-classicui
+image-classicui:  ## Build Classic UI
+	@echo "Building $(CLASSICUI_IMAGE_NAME):$(IMAGE_TAG)"
+	@docker buildx build . --build-arg PLONE_VERSION=${PLONE_VERSION} -t $(CLASSICUI_IMAGE_NAME):$(IMAGE_TAG) -f Dockerfile.classicui --load
 
 .PHONY: image-acceptance
 image-acceptance:  ## Build Acceptance Image
@@ -102,6 +109,8 @@ build-images:  ## Build Images
 	$(MAKE) image-acceptance
 	@echo "Building $(MAIN_IMAGE_NAME):$(IMAGE_TAG)"
 	$(MAKE) image-main
+	@echo "Building $(CLASSICUI_IMAGE_NAME):$(IMAGE_TAG)"
+	$(MAKE) image-classicui
 
 create-tag: # Create a new tag using git
 	@echo "Creating new tag $(PLONE_VERSION)"
