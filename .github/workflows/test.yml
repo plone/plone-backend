@@ -79,5 +79,5 @@ jobs:
 
       - name: Test
         run: |
-          docker build . --build-arg PLONE_VERSION=${{ needs.base-tag.outputs.SHA }} -t plone/plone-backend:${{ needs.base-tag.outputs.SHA }} -f Dockerfile --load
+          docker buildx build . --build-arg PLONE_VERSION=${{ needs.base-tag.outputs.SHA }} -t plone/plone-backend:${{ needs.base-tag.outputs.SHA }} -f Dockerfile --load
           ./test/run.sh plone/plone-backend:${{ needs.base-tag.outputs.SHA }}
