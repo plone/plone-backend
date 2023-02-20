@@ -53,12 +53,11 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
-      - name: Login to GitHub Container Registry
+      - name: Login to Docker Hub Container Registry
         uses: docker/login-action@v2
         with:
-          registry: ghcr.io
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build builder image for testing
         uses: docker/build-push-action@v3
@@ -80,5 +79,6 @@ jobs:
 
       - name: Test
         run: |
+          docker images
           docker buildx build . --build-arg PLONE_VERSION=${{ needs.base-tag.outputs.SHA }} -t ghcr.io/plone/plone-backend:${{ needs.base-tag.outputs.SHA }} -f Dockerfile --load
           ./test/run.sh ghcr.io/plone/plone-backend:${{ needs.base-tag.outputs.SHA }}
