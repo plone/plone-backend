@@ -80,5 +80,5 @@ jobs:
       - name: Test
         run: |
           docker images
-          docker buildx build . --build-arg PLONE_VERSION=${{ needs.base-tag.outputs.SHA }} -t ghcr.io/plone/plone-backend:${{ needs.base-tag.outputs.SHA }} -f Dockerfile --load
-          ./test/run.sh ghcr.io/plone/plone-backend:${{ needs.base-tag.outputs.SHA }}
+          docker build . --build-arg PLONE_VERSION=${{ needs.base-tag.outputs.SHA }} -t plone/plone-backend:${{ needs.base-tag.outputs.SHA }} -f Dockerfile
+          ./test/run.sh plone/plone-backend:${{ needs.base-tag.outputs.SHA }}
