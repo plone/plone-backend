@@ -50,15 +50,6 @@ jobs:
           tags: |
             type=sha
 
-      - name: Main Image
-        id: meta-main
-        uses: docker/metadata-action@v4
-        with:
-          images: |
-            ghcr.io/plone/plone-backend
-          tags: |
-            type=sha
-
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
@@ -87,20 +78,7 @@ jobs:
           tags: ${{ steps.meta-prod-config.outputs.tags }}
           load: true
 
-      - name: List available images
-        run: |
-          docker images
-
-      - name: Build main image for testing
-        uses: docker/build-push-action@v3
-        with:
-          context: ./
-          file: Dockerfile
-          tags: ${{ steps.meta-main.outputs.tags }}
-          load: true
-          build-args: |
-            PLONE_VERSION=${{ needs.base-tag.outputs.SHA }}
-
       - name: Test
         run: |
-          ./test/run.sh ${{ steps.meta.outputs.tags }}
+          docker buildx build . --build-arg PLONE_VERSION=${{ needs.base-tag.outputs.SHA }} ghcr.io/plone/plone-backend:${{ needs.base-tag.outputs.SHA }} -f Dockerfile --load
+          ./test/run.sh plone/plone-backend:${{ needs.base-tag.outputs.SHA }}
