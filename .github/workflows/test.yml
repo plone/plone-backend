@@ -65,7 +65,7 @@ jobs:
           context: ./
           file: Dockerfile.builder
           tags: ${{ steps.meta-builder.outputs.tags }}
-          load: true
+          push: true
           build-args: |
             PLONE_VERSION=${{ inputs.plone-version }}
 
@@ -75,10 +75,9 @@ jobs:
           context: ./
           file: Dockerfile.prod
           tags: ${{ steps.meta-prod-config.outputs.tags }}
-          load: true
+          push: true
 
       - name: Test
         run: |
-          docker images
-          docker build . --build-arg PLONE_VERSION=${{ needs.base-tag.outputs.SHA }} -t plone/plone-backend:${{ needs.base-tag.outputs.SHA }} -f Dockerfile
+          docker build . --build-arg PLONE_VERSION=${{ needs.base-tag.outputs.SHA }} -t plone/plone-backend:${{ needs.base-tag.outputs.SHA }} -f Dockerfile --load
           ./test/run.sh plone/plone-backend:${{ needs.base-tag.outputs.SHA }}
