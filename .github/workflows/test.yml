@@ -17,10 +17,28 @@ jobs:
     steps:
 
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
-      - name: Docker meta
-        id: meta
+      - name: Builder Image
+        id: meta-builder
+        uses: docker/metadata-action@v4
+        with:
+          images: |
+            plone/server-builder
+          tags: |
+            type=sha
+
+      - name: Prod Config Image
+        id: meta-prod-config
+        uses: docker/metadata-action@v4
+        with:
+          images: |
+            plone/server-prod-config
+          tags: |
+            type=sha
+
+      - name: Main Image
+        id: meta-main
         uses: docker/metadata-action@v4
         with:
           images: |
@@ -28,25 +46,38 @@ jobs:
           tags: |
             type=sha
 
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
-
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
-      - name: Login to DockerHub
+      - name: Login to GitHub Container Registry
         uses: docker/login-action@v2
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build image for testing
+      - name: Build builder image for testing
+        uses: docker/build-push-action@v3
+        with:
+          context: ./
+          file: Dockerfile.builder
+          tags: ${{ steps.meta-builder.outputs.tags }}
+          load: true
+
+      - name: Build prod-config image for testing
+        uses: docker/build-push-action@v3
+        with:
+          context: ./
+          file: Dockerfile.prod
+          tags: ${{ steps.meta-prod-config.outputs.tags }}
+          load: true
+
+      - name: Build main image for testing
         uses: docker/build-push-action@v3
         with:
           context: ./
           file: Dockerfile
-          tags: ${{ steps.meta.outputs.tags }}
+          tags: ${{ steps.meta-main.outputs.tags }}
           load: true
 
       - name: Test
