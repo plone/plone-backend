@@ -87,6 +87,10 @@ jobs:
           tags: ${{ steps.meta-prod-config.outputs.tags }}
           load: true
 
+      - name: List available images
+        run: |
+          docker images
+
       - name: Build main image for testing
         uses: docker/build-push-action@v3
         with:
