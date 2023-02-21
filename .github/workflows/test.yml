@@ -10,23 +10,26 @@ on:
 
 jobs:
 
-  base-tag:
+  meta:
     runs-on: ubuntu-latest
     outputs:
       SHA: ${{ steps.vars.outputs.SHA }}
+      PLONE_VERSION: ${{ steps.vars.outputs.PLONE_VERSION }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
       - name: Compute SHA value to be used in building the main image
         id: vars
-        run: echo "SHA=sha-$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+        run: |
+          echo "SHA=sha-$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+          echo "PLONE_VERSION=$(cat version.txt)" >> $GITHUB_OUTPUT
 
   test:
     runs-on: ubuntu-latest
     environment: DOCKER_HUB
     needs:
-      - base-tag
+      - meta
     steps:
 
       - name: Checkout
@@ -76,7 +79,7 @@ jobs:
           tags: ${{ steps.meta-builder.outputs.tags }}
           push: true
           build-args: |
-            PLONE_VERSION=${{ inputs.plone-version }}
+            PLONE_VERSION=${{ needs.meta.outputs.PLONE_VERSION }}
 
       - name: Build prod-config image for testing
         uses: docker/build-push-action@v3
@@ -94,7 +97,7 @@ jobs:
           tags: ${{ steps.meta-main.outputs.tags }}
           push: true
           build-args: |
-            PLONE_VERSION=${{ needs.base-tag.outputs.SHA }}
+            PLONE_VERSION=${{ needs.meta.outputs.SHA }}
 
       - name: Test
         run: |
