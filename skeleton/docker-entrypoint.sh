@@ -149,7 +149,7 @@ elif  [[ "$1" == "create-volto" ]]; then
   export TYPE=volto
   exec $sudo $VENVBIN/zconsole run etc/${CONF} /app/scripts/create_site.py
 elif  [[ "$1" == "create-site" ]]; then
-  export TYPE=volto
+  export TYPE=${TYPE:-volto}
   exec $sudo $VENVBIN/zconsole run etc/${CONF} /app/scripts/create_site.py
 elif  [[ "$1" == "console" ]]; then
   exec $sudo $VENVBIN/zconsole debug etc/${CONF}
