@@ -93,6 +93,8 @@ jobs:
           file: Dockerfile
           tags: ${{ steps.meta-main.outputs.tags }}
           push: true
+          build-args: |
+            PLONE_VERSION=${{ needs.base-tag.outputs.SHA }}
 
       - name: Test
         run: |
