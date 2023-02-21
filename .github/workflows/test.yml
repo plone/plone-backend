@@ -98,4 +98,5 @@ jobs:
 
       - name: Test
         run: |
+          docker pull ${{ steps.meta-main.outputs.tags }}
           ./test/run.sh  ${{ steps.meta-main.outputs.tags }}
