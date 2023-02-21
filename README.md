@@ -63,4 +63,4 @@ This project is supported by:
 
 ## License
 
-The project is licensed under the GPLv2.
+The project is licensed under GPLv2.
