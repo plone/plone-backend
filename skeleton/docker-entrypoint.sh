@@ -12,12 +12,13 @@ export CLIENT_HOME=$CLIENT_HOME
 
 USER="$(id -u)"
 
-# Create directories to be used by Plone
-mkdir -p /data/filestorage /data/blobstorage /data/cache /data/log $CLIENT_HOME
 if [ "$USER" = '0' ]; then
+  # Create directories to be used by Plone
+  mkdir -p /data/filestorage /data/blobstorage /data/cache /data/log $CLIENT_HOME
   find /data -not -user plone -exec chown plone:plone {} \+
   sudo="gosu plone"
 else
+  # When explicitly setting a user, first create /data directories
   sudo=""
 fi
 
