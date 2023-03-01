@@ -20,7 +20,7 @@ RUN <<EOT
     find /app \( -type f -a -name '*.pyc' -o -name '*.pyo' \) -exec rm -rf '{}' +
 EOT
 
-COPY --chown=500:500 /skeleton/etc /app/etc
-COPY --chown=500:500 /skeleton/scripts /app/scripts
-COPY --chown=500:500 /skeleton/docker-entrypoint.sh /app/
-COPY --chown=500:500 /skeleton/inituser /app/
+COPY /skeleton/etc /app/etc
+COPY /skeleton/scripts /app/scripts
+COPY /skeleton/docker-entrypoint.sh /app/
+COPY /skeleton/inituser /app/
