@@ -26,7 +26,7 @@ These images are **not** Buildout based!
 
 ### Plone 6
 
-`6.0.1`,`6.0`,`6`,`latest` [(6.0.x/Dockerfile)](https://github.com/plone/plone-backend/blob/v6.0.1/Dockerfile)
+`6.0.2`,`6.0`,`6`,`latest` [(6.0.x/Dockerfile)](https://github.com/plone/plone-backend/blob/v6.0.2/Dockerfile)
 
 ### Plone 6 (Nightly build)
 
