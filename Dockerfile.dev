@@ -13,8 +13,8 @@ LABEL maintainer="Plone Community <dev@plone.org>" \
 RUN <<EOT
     /app/bin/pip install plone.reload -c /app/constraints.txt
     useradd --system -m -d /app -U -u 500 plone
-    bash -c 'mkdir -p /data/{filestorage,blobstorage,cache,logs} /app/var/{filestorage,blobstorage,cache,logs}'
     chown -R 500:500 /data /app
+    ln -s /data /app/var
 EOT
 
 # Turns off buffering

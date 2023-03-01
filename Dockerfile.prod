@@ -12,7 +12,7 @@ RUN <<EOT
     apt-get clean -y
     busybox --install -s
     rm -rf /var/lib/apt/lists/* /usr/share/doc
-    bash -c 'mkdir -p /data/{filestorage,blobstorage,cache,logs} /app/var/{filestorage,blobstorage,cache,logs}'
+    bash -c 'mkdir -p /data/{filestorage,blobstorage,cache,logs}'
     chown -R 500:500 /data
 EOT
 
