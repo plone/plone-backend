@@ -3,6 +3,7 @@ ARG PYTHON_VERSION=3.11
 ARG PLONE_VERSION
 FROM plone/server-builder:${PLONE_VERSION} as builder
 
+# Remove Volto support from builder image
 RUN <<EOT
     /app/bin/pip uninstall -y plone.volto
 EOT
@@ -14,13 +15,16 @@ LABEL maintainer="Plone Community <dev@plone.org>" \
       org.label-schema.description="Plone Classic UI image using Python $PYTHON_VERSION" \
       org.label-schema.vendor="Plone Foundation"
 
+# Use /app as the workdir
 WORKDIR /app
+
+# Copy /app from builder
 COPY --from=builder --chown=500:500 /app /app
 
+# Link /data (the exposed volume) into /app/var
 RUN <<EOT
     ln -s /data /app/var
 EOT
 
+# Setup default type for site creation to be classic
 ENV TYPE=classic
-
-VOLUME /data

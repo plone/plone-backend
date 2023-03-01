@@ -9,11 +9,13 @@ LABEL maintainer="Plone Community <dev@plone.org>" \
       org.label-schema.description="Plone backend image using Python $PYTHON_VERSION" \
       org.label-schema.vendor="Plone Foundation"
 
+# Use /app as the workdir
 WORKDIR /app
+
+# Copy /app from builder
 COPY --from=builder --chown=500:500 /app /app
 
+# Link /data (the exposed volume) into /app/var
 RUN <<EOT
     ln -s /data /app/var
 EOT
-
-VOLUME /data

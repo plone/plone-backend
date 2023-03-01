@@ -3,6 +3,7 @@ ARG PYTHON_VERSION=3.11
 ARG PLONE_VERSION
 FROM plone/server-builder:${PLONE_VERSION} as builder
 
+# Install robotframework support
 RUN <<EOT
     /app/bin/pip install plone.app.robotframework>=2.0.0
 EOT
@@ -14,18 +15,26 @@ LABEL maintainer="Plone Community <dev@plone.org>" \
       org.label-schema.description="Plone backend acceptance image using Python $PYTHON_VERSION" \
       org.label-schema.vendor="Plone Foundation"
 
-WORKDIR /app
 
+# Copy /app from builder
 COPY --from=builder --chown=500:500 /app /app
 
-EXPOSE 55001
-
+# Zope listens to all ip addresses
 ENV ZSERVER_HOST=0.0.0.0
+# Zope port to be 55001
 ENV ZSERVER_PORT=55001
+# This fixes the healthcheck defined in server-prod-config
 ENV LISTEN_PORT=${ZSERVER_PORT}
-
+# Profiles to be added to the created site
 ENV APPLY_PROFILES=plone.app.contenttypes:plone-content,plone.restapi:default,plone.volto:default-homepage
+# Packages to be used in configuration
 ENV CONFIGURE_PACKAGES=plone.app.contenttypes,plone.restapi,plone.volto,plone.volto.cors
 
+# Also expose port 55001
+EXPOSE 55001
+
+# Entrypoint is robot-server
 ENTRYPOINT [ "/app/bin/robot-server" ]
+
+# Run VOLTO_ROBOT_TESTING by default
 CMD ["plone.app.robotframework.testing.VOLTO_ROBOT_TESTING"]
