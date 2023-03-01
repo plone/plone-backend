@@ -14,8 +14,9 @@ RUN <<EOT
     apt-get install -y --no-install-recommends $buildDeps
     busybox --install -s
     python -m venv /app
+    curl -L -o /app/constraints.txt https://dist.plone.org/release/$PLONE_VERSION/constraints.txt
     /app/bin/pip install -U "pip==${PIP_VERSION}" wheel
-    /app/bin/pip install Plone ${EXTRA_PACKAGES} -c https://dist.plone.org/release/$PLONE_VERSION/constraints.txt
+    /app/bin/pip install Plone ${EXTRA_PACKAGES} -c /app/constraints.txt
     find /app \( -type f -a -name '*.pyc' -o -name '*.pyo' \) -exec rm -rf '{}' +
 EOT
 
