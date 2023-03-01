@@ -8,8 +8,32 @@ LABEL maintainer="Plone Community <dev@plone.org>" \
       org.label-schema.description="Plone development image using Python $PYTHON_VERSION" \
       org.label-schema.vendor="Plone Foundation"
 
+
+# Install plone.reload, create plone user
+RUN <<EOT
+    /app/bin/pip install plone.reload -c /app/constraints.txt
+    useradd --system -m -d /app -U -u 500 plone
+    chown -R 500:500 /data /app
+    ln -s /data /app/var
+EOT
+
+# Turns off buffering
+ENV PYTHONUNBUFFERED 1
+# Keeps Python from generating .pyc files
+ENV PYTHONDONTWRITEBYTECODE 1
+# Enable Application server in debug mode
+ENV DEBUG_MODE on
+# Disable compilation of po files into mo files
+ENV zope_i18n_compile_mo_files false
+# Set chameleon cache directory
+ENV CHAMELEON_CACHE /app/var/cache
+
+# Expose Zope Port
+EXPOSE 8080
+
+# Use /app as the workdir
 WORKDIR /app
-# COPY --from=builder --chown=500:500 /app /app
+
 
 ENTRYPOINT [ "/app/docker-entrypoint.sh" ]
 CMD ["start"]
