@@ -54,7 +54,6 @@ Please refer to the [Official Plone Documentation](https://6.docs.plone.org/inst
 Please **DO NOT** commit to version branches directly. Even for the smallest and most trivial fix.
 **ALWAYS** open a pull request and ask somebody else to merge your code. **NEVER** merge it yourself.
 
-
 ## Credits
 
 This project is supported by:
