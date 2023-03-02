@@ -19,6 +19,8 @@ LABEL maintainer="Plone Community <dev@plone.org>" \
 # Copy /app from builder
 COPY --from=builder --chown=500:500 /app /app
 
+# Set chameleon cache directory
+ENV CHAMELEON_CACHE /app/var/cache
 # Zope listens to all ip addresses
 ENV ZSERVER_HOST=0.0.0.0
 # Zope port to be 55001
