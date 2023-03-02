@@ -19,6 +19,8 @@ LABEL maintainer="Plone Community <dev@plone.org>" \
 # Copy /app from builder
 COPY --from=builder --chown=500:500 /app /app
 
+# Set chameleon cache directory
+ENV CHAMELEON_CACHE /app/var/cache
 # Zope listens to all ip addresses
 ENV ZSERVER_HOST=0.0.0.0
 # Zope port to be 55001
@@ -29,6 +31,10 @@ ENV LISTEN_PORT=${ZSERVER_PORT}
 ENV APPLY_PROFILES=plone.app.contenttypes:plone-content,plone.restapi:default,plone.volto:default-homepage
 # Packages to be used in configuration
 ENV CONFIGURE_PACKAGES=plone.app.contenttypes,plone.restapi,plone.volto,plone.volto.cors
+
+RUN <<EOT
+    ln -s /data /app/var
+EOT
 
 # Also expose port 55001
 EXPOSE 55001
