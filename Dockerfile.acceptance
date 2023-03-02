@@ -32,6 +32,10 @@ ENV APPLY_PROFILES=plone.app.contenttypes:plone-content,plone.restapi:default,pl
 # Packages to be used in configuration
 ENV CONFIGURE_PACKAGES=plone.app.contenttypes,plone.restapi,plone.volto,plone.volto.cors
 
+RUN <<EOT
+    ln -s /data /app/var
+EOT
+
 # Also expose port 55001
 EXPOSE 55001
 
