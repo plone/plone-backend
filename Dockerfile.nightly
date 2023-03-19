@@ -63,7 +63,7 @@ RUN <<EOT
     rm -rf .cache
 EOT
 
-COPY skeleton/ /app
+COPY app /app/
 
 RUN <<EOT
     ln -s /data var
