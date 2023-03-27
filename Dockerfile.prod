@@ -2,10 +2,15 @@
 ARG PYTHON_VERSION=3.11
 FROM python:${PYTHON_VERSION}-slim-bullseye
 
+LABEL maintainer="Plone Community <dev@plone.org>" \
+      org.label-schema.name="server-prod-conf" \
+      org.label-schema.description="Plone $PLONE_VERSION development image using Python $PYTHON_VERSION" \
+      org.label-schema.vendor="Plone Foundation"
+
 # Create plone use, install run time dependencies, set up busybox
 RUN <<EOT
     useradd --system -m -d /app -U -u 500 plone
-    runDeps="git libjpeg62 libopenjp2-7 libpq5 libtiff5 libxml2 libxslt1.1 lynx netcat poppler-utils rsync wv busybox gosu libmagic1 make"
+    runDeps="ca-certificates git libjpeg62 libopenjp2-7 libpq5 libtiff5 libxml2 libxslt1.1 lynx netcat poppler-utils rsync wv busybox gosu libmagic1 make"
     apt-get update
     apt-get -y upgrade
     apt-get install -y --no-install-recommends $runDeps
@@ -20,8 +25,8 @@ EOT
 ENV DEBUG_MODE off
 # Set chameleon cache directory
 ENV CHAMELEON_CACHE /app/var/cache
-# Enable compilation of po files into mo files
-ENV zope_i18n_compile_mo_files true
+# Disable compilation of po files into mo files (This should be done in the builder image)
+ENV zope_i18n_compile_mo_files=
 
 # Expose /data as a volume
 VOLUME /data

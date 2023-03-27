@@ -3,11 +3,11 @@ ARG PYTHON_VERSION=3.11
 ARG PLONE_VERSION
 FROM plone/server-builder:${PLONE_VERSION}
 
+
 LABEL maintainer="Plone Community <dev@plone.org>" \
       org.label-schema.name="server-dev" \
-      org.label-schema.description="Plone development image using Python $PYTHON_VERSION" \
+      org.label-schema.description="Plone $PLONE_VERSION production configuration image using Python $PYTHON_VERSION" \
       org.label-schema.vendor="Plone Foundation"
-
 
 # Install plone.reload, create plone user
 RUN <<EOT
@@ -24,7 +24,7 @@ ENV PYTHONDONTWRITEBYTECODE 1
 # Enable Application server in debug mode
 ENV DEBUG_MODE on
 # Disable compilation of po files into mo files
-ENV zope_i18n_compile_mo_files false
+ENV zope_i18n_compile_mo_files=
 # Set chameleon cache directory
 ENV CHAMELEON_CACHE /app/var/cache
 

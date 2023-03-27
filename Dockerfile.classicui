@@ -12,7 +12,7 @@ FROM plone/server-prod-config:${PLONE_VERSION}
 
 LABEL maintainer="Plone Community <dev@plone.org>" \
       org.label-schema.name="plone-classicui" \
-      org.label-schema.description="Plone Classic UI image using Python $PYTHON_VERSION" \
+      org.label-schema.description="Plone $PLONE_VERSION Classic UI image using Python $PYTHON_VERSION" \
       org.label-schema.vendor="Plone Foundation"
 
 # Use /app as the workdir
