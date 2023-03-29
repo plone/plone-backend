@@ -116,6 +116,11 @@ create-tag: # Create a new tag using git
 	@echo "Creating new tag $(PLONE_VERSION)"
 	if git show-ref --tags v$(PLONE_VERSION) --quiet; then echo "$(PLONE_VERSION) already exists";else git tag -a v$(PLONE_VERSION) -m "Release $(PLONE_VERSION)" && git push && git push --tags;fi
 
+.PHONY: remove-tag
+remove-tag: # Remove an existing tag locally and remote
+	@echo "Removing tag v$(IMAGE_TAG)"
+	if git show-ref --tags v$(IMAGE_TAG) --quiet; then git tag -d v$(IMAGE_TAG) && git push origin :v$(IMAGE_TAG) && echo "$(IMAGE_TAG) removed";else echo "$(IMAGE_TAG) does not exist";fi
+
 commit-and-release: # Commit new version change and create tag
 	@echo "Commiting changes"
 	@git commit -am "Use Plone $(PLONE_VERSION)"
