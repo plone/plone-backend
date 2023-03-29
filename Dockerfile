@@ -15,6 +15,9 @@ WORKDIR /app
 # Copy /app from builder
 COPY --from=builder --chown=500:500 /app /app
 
+# Enable compilation of po files into mo files (This is added here for backward compatibility)
+ENV zope_i18n_compile_mo_files=true
+
 # Link /data (the exposed volume) into /app/var
 RUN <<EOT
     ln -s /data /app/var
