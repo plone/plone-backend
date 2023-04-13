@@ -4,7 +4,6 @@ FROM python:${PYTHON_VERSION}-slim-bullseye
 
 ARG PLONE_VERSION
 
-ENV PIP_VERSION=22.3.1
 ENV EXTRA_PACKAGES="relstorage==3.5.0 psycopg2==2.9.5 python-ldap==3.4.3"
 
 
@@ -33,7 +32,7 @@ RUN <<EOT
     busybox --install -s
     python -m venv /app
     curl -L -o /app/constraints.txt https://dist.plone.org/release/$PLONE_VERSION/constraints.txt
-    /app/bin/pip install -U "pip==${PIP_VERSION}" wheel
+    /app/bin/pip install -U pip wheel setuptools -c /app/constraints.txt
     /app/bin/pip install Plone ${EXTRA_PACKAGES} -c /app/constraints.txt
     bash -c 'mkdir -p /data/{filestorage,blobstorage,cache,logs}'
     /app/bin/python /compile_mo.py
