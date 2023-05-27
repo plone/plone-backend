@@ -11,6 +11,7 @@ LABEL maintainer="Plone Community <dev@plone.org>" \
 
 # Install plone.reload, create plone user
 RUN <<EOT
+    set -e
     /app/bin/pip install plone.reload -c /app/constraints.txt
     useradd --system -m -d /app -U -u 500 plone
     chown -R 500:500 /data /app

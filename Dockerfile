@@ -19,6 +19,4 @@ COPY --from=builder --chown=500:500 /app /app
 ENV zope_i18n_compile_mo_files=true
 
 # Link /data (the exposed volume) into /app/var
-RUN <<EOT
-    ln -s /data /app/var
-EOT
+RUN ln -s /data /app/var
