@@ -4,7 +4,7 @@ FROM python:${PYTHON_VERSION}-slim-bullseye
 
 ARG PLONE_VERSION
 
-ENV EXTRA_PACKAGES="relstorage==3.5.0 psycopg2==2.9.5 python-ldap==3.4.3"
+ENV EXTRA_PACKAGES="relstorage==3.5.0 psycopg2==2.9.5 python-ldap==3.4.3 ZEO"
 
 
 LABEL maintainer="Plone Community <dev@plone.org>" \
