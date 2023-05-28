@@ -4,9 +4,7 @@ ARG PLONE_VERSION
 FROM plone/server-builder:${PLONE_VERSION} as builder
 
 # Install robotframework support
-RUN <<EOT
-    /app/bin/pip install plone.app.robotframework>=2.0.0
-EOT
+RUN /app/bin/pip install plone.app.robotframework>=2.0.0
 
 FROM plone/server-prod-config:${PLONE_VERSION}
 
@@ -32,9 +30,7 @@ ENV APPLY_PROFILES=plone.app.contenttypes:plone-content,plone.restapi:default,pl
 # Packages to be used in configuration
 ENV CONFIGURE_PACKAGES=plone.app.contenttypes,plone.restapi,plone.volto,plone.volto.cors
 
-RUN <<EOT
-    ln -s /data /app/var
-EOT
+RUN ln -s /data /app/var
 
 # Also expose port 55001
 EXPOSE 55001

@@ -10,6 +10,7 @@ ENV EXTRA_PACKAGES="relstorage==3.5.0 psycopg2==2.9.5 python-ldap==3.4.3"
 RUN mkdir /wheelhouse
 
 RUN <<EOT
+    set -e
     apt-get update
     buildDeps="build-essential curl libbz2-dev libffi-dev libjpeg62-turbo-dev libldap2-dev libopenjp2-7-dev libpcre3-dev libpq-dev libsasl2-dev libssl-dev libtiff5-dev libxml2-dev libxslt1-dev wget unzip zlib1g-dev"
     apt-get install -y --no-install-recommends $buildDeps
@@ -26,6 +27,7 @@ COPY --chown=500:500 /helpers/pip-from-buildout-coredev.py ./
 
 # Generate pip-requirements.txt
 RUN <<EOT
+    set -e
     python pip-from-buildout-coredev.py
     pip wheel -r pip-requirements.txt -c pip-constraints.txt --wheel-dir=/wheelhouse
     pip wheel $EXTRA_PACKAGES -c pip-constraints.txt --wheel-dir=/wheelhouse
@@ -44,6 +46,7 @@ LABEL maintainer="Plone Community <dev@plone.org>" \
 COPY --from=builder /wheelhouse /wheelhouse
 
 RUN <<EOT
+    set -e
     useradd --system -m -d /app -U -u 500 plone
     runDeps="git libjpeg62 libopenjp2-7 libpq5 libtiff5 libxml2 libxslt1.1 lynx netcat poppler-utils rsync wv busybox libmagic1 gosu make"
     apt-get update
@@ -56,6 +59,7 @@ EOT
 WORKDIR /app
 
 RUN <<EOT
+    set -e
     python -m venv .
     ./bin/pip install -U "pip==${PIP_VERSION}"
     ./bin/pip install --force-reinstall --no-index --no-deps ${PIP_PARAMS} /wheelhouse/*
@@ -66,6 +70,7 @@ EOT
 COPY skeleton/ /app
 
 RUN <<EOT
+    set -e
     ln -s /data var
     find /data  -not -user plone -exec chown plone:plone {} \+
     find /app -not -user plone -exec chown plone:plone {} \+
