@@ -6,6 +6,8 @@ FROM base as builder
 ENV PIP_PARAMS=""
 ENV PIP_VERSION=22.3.1
 ENV EXTRA_PACKAGES="relstorage==3.5.0 psycopg2==2.9.5 python-ldap==3.4.3"
+# https://github.com/pypa/pip/issues/12079
+ENV _PIP_USE_IMPORTLIB_METADATA=0
 
 RUN mkdir /wheelhouse
 

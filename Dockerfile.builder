@@ -5,7 +5,8 @@ FROM python:${PYTHON_VERSION}-slim-bullseye
 ARG PLONE_VERSION
 
 ENV EXTRA_PACKAGES="relstorage==3.5.0 psycopg2==2.9.5 python-ldap==3.4.3 ZEO"
-
+# https://github.com/pypa/pip/issues/12079
+ENV _PIP_USE_IMPORTLIB_METADATA=0
 
 LABEL maintainer="Plone Community <dev@plone.org>" \
       org.label-schema.name="server-builder" \
