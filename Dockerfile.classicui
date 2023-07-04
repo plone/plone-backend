@@ -24,3 +24,5 @@ RUN ln -s /data /app/var
 
 # Setup default type for site creation to be classic
 ENV TYPE=classic
+# https://github.com/pypa/pip/issues/12079
+ENV _PIP_USE_IMPORTLIB_METADATA=0
