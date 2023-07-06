@@ -16,7 +16,10 @@ WORKDIR /app
 COPY --from=builder --chown=500:500 /app /app
 
 # Enable compilation of po files into mo files (This is added here for backward compatibility)
+
 ENV zope_i18n_compile_mo_files=true
+# https://github.com/pypa/pip/issues/12079
+ENV _PIP_USE_IMPORTLIB_METADATA=0
 
 # Link /data (the exposed volume) into /app/var
 RUN ln -s /data /app/var

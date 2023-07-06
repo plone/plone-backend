@@ -28,7 +28,8 @@ ENV DEBUG_MODE on
 ENV zope_i18n_compile_mo_files=
 # Set chameleon cache directory
 ENV CHAMELEON_CACHE /app/var/cache
-
+# https://github.com/pypa/pip/issues/12079
+ENV _PIP_USE_IMPORTLIB_METADATA=0
 # Expose Zope Port
 EXPOSE 8080
 
