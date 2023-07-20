@@ -3,9 +3,9 @@ FROM python:3.8-slim-buster as base
 FROM base as builder
 
 ENV PIP_PARAMS=""
-ENV PIP_VERSION=22.0.4
+ENV PIP_VERSION=23.2
 
-ENV PLONE_VERSION=5.2.12
+ENV PLONE_VERSION=5.2.13
 ENV PLONE_VOLTO="plone.volto==3.1.0a4"
 ENV EXTRA_PACKAGES="relstorage==3.4.5 psycopg2==2.9.3 python-ldap==3.4.0"
 
@@ -24,7 +24,7 @@ RUN pip wheel Paste Plone ${PLONE_VOLTO} ${EXTRA_PACKAGES} -c https://dist.plone
 FROM base
 
 ENV PIP_PARAMS=""
-ENV PIP_VERSION=22.0.4
+ENV PIP_VERSION=23.2
 
 LABEL maintainer="Plone Community <dev@plone.org>" \
       org.label-schema.name="plone-backend" \
@@ -34,6 +34,7 @@ LABEL maintainer="Plone Community <dev@plone.org>" \
 COPY --from=builder /wheelhouse /wheelhouse
 
 RUN <<EOT
+    set -e
     useradd --system -m -d /app -U -u 500 plone
     runDeps="git libjpeg62 libopenjp2-7 libpq5 libtiff5 libxml2 libxslt1.1 lynx poppler-utils rsync wv busybox libmagic1 gosu"
     apt-get update
@@ -46,6 +47,7 @@ EOT
 WORKDIR /app
 
 RUN <<EOT
+    set -e
     python -m venv .
     ./bin/pip install -U "pip==${PIP_VERSION}"
     ./bin/pip install --force-reinstall --no-index --no-deps ${PIP_PARAMS} /wheelhouse/*
@@ -56,6 +58,7 @@ EOT
 COPY --chown=500:500 skeleton/ /app
 
 RUN <<EOT
+    set -e
     ln -s /data var
     find /data  -not -user plone -exec chown plone:plone {} +
     find /app -not -user plone -exec chown plone:plone {} +
