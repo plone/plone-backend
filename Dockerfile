@@ -5,7 +5,7 @@ FROM base as builder
 ENV PIP_PARAMS=""
 ENV PIP_VERSION=23.2
 
-ENV PLONE_VERSION=5.2.13
+ENV PLONE_VERSION=5.2.14
 ENV PLONE_VOLTO="plone.volto==3.1.0a4"
 ENV EXTRA_PACKAGES="relstorage==3.4.5 psycopg2==2.9.3 python-ldap==3.4.0"
 
