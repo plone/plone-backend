@@ -27,6 +27,8 @@ fi
 [ -z ${DEFAULT_ZPUBLISHER_ENCODING+x} ] && export DEFAULT_ZPUBLISHER_ENCODING=utf-8
 [ -z ${COMPILE_MO_FILES+x} ] && export COMPILE_MO_FILES=true
 [ -z ${DEBUG_MODE+x} ] && export DEBUG_MODE=off
+[ -z ${ZOPE_FORM_MEMORY_LIMIT+x} ] && export ZOPE_FORM_MEMORY_LIMIT=4MB
+
 
 # ZODB ENV Vars
 [ -z ${ZODB_CACHE_SIZE+x} ] && export ZODB_CACHE_SIZE=50000
