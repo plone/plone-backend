@@ -156,6 +156,8 @@ elif  [[ "$1" == "create-site" ]]; then
   exec $sudo $VENVBIN/zconsole run etc/${CONF} /app/scripts/create_site.py
 elif  [[ "$1" == "console" ]]; then
   exec $sudo $VENVBIN/zconsole debug etc/${CONF}
+elif  [[ "$1" == "run" ]]; then
+  exec $sudo $VENVBIN/zconsole run etc/${CONF} "${@:2}"
 else
   # Custom
   exec "$@"
