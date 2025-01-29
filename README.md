@@ -28,7 +28,7 @@ These images are **not** Buildout based!
 | Plone Version | Tags | Dockerfile |
 | --- | --- | --- |
 | 6 | `6.0.13`, `6.0`, `6`, `latest` | [(6.0.x/Dockerfile)](https://github.com/plone/plone-backend/blob/v6.0.13/Dockerfile)|
-| 6.1 | `6.1.0b1`, `6.1` | [(6.1.x/Dockerfile)](https://github.com/plone/plone-backend/blob/v6.1.0b1/Dockerfile)|
+| 6.1 | `6.1.0b2`, `6.1` | [(6.1.x/Dockerfile)](https://github.com/plone/plone-backend/blob/v6.1.0b2/Dockerfile)|
 | 6 (nightly) | `nightly` |  [(Dockerfile.nightly)](https://github.com/plone/plone-backend/blob/6.0.x/Dockerfile.nightly) |
 
 ### Unsupported tags
