@@ -14,7 +14,7 @@ env:
 jobs:
 
   meta:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     outputs:
       BASE_IMAGE_NAME: ${{ steps.vars.outputs.BASE_IMAGE_NAME }}
       IS_LATEST: ${{ steps.vars.outputs.IS_LATEST }}

@@ -11,7 +11,7 @@ on:
 jobs:
 
   meta:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     outputs:
       SHA: ${{ steps.vars.outputs.SHA }}
       PLONE_VERSION: ${{ steps.vars.outputs.PLONE_VERSION }}
@@ -26,7 +26,7 @@ jobs:
           echo "PLONE_VERSION=$(cat version.txt)" >> $GITHUB_OUTPUT
 
   test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     environment: DOCKER_HUB
     needs:
       - meta

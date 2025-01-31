@@ -10,7 +10,7 @@ on:
 
 jobs:
   update-description:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     environment: DOCKER_HUB
     steps:
       - name: Checkout
