@@ -1,25 +1,25 @@
 # syntax=docker/dockerfile:1
-ARG PYTHON_VERSION=3.11
-FROM python:${PYTHON_VERSION}-slim-bullseye as base
-FROM base as builder
+ARG PYTHON_VERSION=3.12
+FROM python:${PYTHON_VERSION}-slim-bookworm AS base
+FROM base AS builder
 
 ENV PIP_PARAMS=""
-ENV PIP_VERSION=22.3.1
-ENV EXTRA_PACKAGES="relstorage==3.5.0 psycopg2==2.9.5 python-ldap==3.4.3"
+ENV PIP_VERSION=24.3.1
+ENV EXTRA_PACKAGES="relstorage==4.1.1 psycopg2==2.9.10 python-ldap==3.4.4"
 
 RUN mkdir /wheelhouse
 
 RUN <<EOT
     set -e
     apt-get update
-    buildDeps="build-essential curl libbz2-dev libffi-dev libjpeg62-turbo-dev libldap2-dev libopenjp2-7-dev libpcre3-dev libpq-dev libsasl2-dev libssl-dev libtiff5-dev libxml2-dev libxslt1-dev wget unzip zlib1g-dev"
+    buildDeps="build-essential curl libbz2-dev libffi-dev libjpeg62-turbo-dev libsasl2-dev libldap2-dev libopenjp2-7-dev libpcre3-dev libpq-dev libsasl2-dev libssl-dev libtiff6 libtiff5-dev libxml2-dev libxslt1-dev wget unzip zlib1g-dev"
     apt-get install -y --no-install-recommends $buildDeps
     pip install -U "pip==${PIP_VERSION}"
-    pip install -U "zc.buildout>=3.0.0rc1" "wheel"
+    pip install -U "zc.buildout==4.0" "wheel==0.45.1"
     rm -rf /var/lib/apt/lists/* /usr/share/doc
-    curl -L -o workspace.zip https://github.com/plone/buildout.coredev/archive/refs/heads/6.0.zip
+    curl -L -o workspace.zip https://github.com/plone/buildout.coredev/archive/refs/heads/6.1.zip
     unzip workspace.zip
-    mv buildout.coredev-6.0 /workspace
+    mv buildout.coredev-6.1 /workspace
 EOT
 
 WORKDIR /workspace
@@ -36,7 +36,7 @@ EOT
 FROM base
 
 ENV PIP_PARAMS=""
-ENV PIP_VERSION=22.0.4
+ENV PIP_VERSION=24.3.1
 
 LABEL maintainer="Plone Community <dev@plone.org>" \
       org.label-schema.name="plone-backend" \
@@ -48,7 +48,7 @@ COPY --from=builder /wheelhouse /wheelhouse
 RUN <<EOT
     set -e
     useradd --system -m -d /app -U -u 500 plone
-    runDeps="git libjpeg62 libopenjp2-7 libpq5 libtiff5 libxml2 libxslt1.1 lynx netcat poppler-utils rsync wv busybox libmagic1 gosu make"
+    runDeps="git libjpeg62 libopenjp2-7 libpq5 libtiff6 libxml2 libxslt1.1 lynx netcat-openbsd poppler-utils rsync wv busybox libmagic1 gosu make"
     apt-get update
     apt-get install -y --no-install-recommends $runDeps
     busybox --install -s
