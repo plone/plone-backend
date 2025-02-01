@@ -12,7 +12,7 @@ ARG PLONE_VERSION
 
 LABEL maintainer="Plone Community <dev@plone.org>" \
       org.label-schema.name="plone-backend" \
-      org.label-schema.description="Plone $PLONE-VERSION backend image using Python $PYTHON_VERSION" \
+      org.label-schema.description="Plone $PLONE_VERSION backend image using Python $PYTHON_VERSION" \
       org.label-schema.vendor="Plone Foundation"
 
 # Use /app as the workdir
