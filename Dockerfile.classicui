@@ -5,7 +5,7 @@ FROM plone/server-builder:${PLONE_VERSION} AS builder
 
 ARG PLONE_VERSION
 
-# Remove Volto support from builder image, this is Classic-UI
+# Remove Volto support from builder image, this is Classic UI
 RUN /app/bin/pip uninstall -y plone.volto
 
 FROM plone/server-prod-config:${PLONE_VERSION}
