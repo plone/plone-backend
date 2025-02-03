@@ -33,7 +33,8 @@ These images are **not** Buildout based!
 
 **Possible breaking changes in upcoming Plone 6.1 dependencies**
 
-Please note that the backend images in the 6.1.x series have several updated dependencies, which you should verify and test before using them in any existing project. Even if you extend from these images. The underlying OS has been switched from Debian 11 buster to 12 bookworm. Relstorage has a new major release going from 3.x to 4.1. And there are are minor updates for libldap, libtiff and psycopg2 OS and Python libraries.
+Please note that the backend images in the 6.1.x series have several updated dependencies, which you should verify and test before using them in any existing project. Even if you extend from these images. The underlying OS has been switched from Debian 11 buster to 12 bookworm. Python is updated from 
+3.11 to 3.12. Relstorage has a new major release going from 3.x to 4.1. And there are are minor updates for libldap, libtiff and psycopg2 OS and Python libraries.
 
 ### Unsupported tags
 
