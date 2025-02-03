@@ -2,7 +2,7 @@
 ARG PYTHON_VERSION=3.12
 FROM python:${PYTHON_VERSION}-slim-bookworm
 
-ARG PLONE_VERSION=6.1.0rc2
+ARG PLONE_VERSION
 
 ENV EXTRA_PACKAGES="relstorage==4.1.1 psycopg2==2.9.10 python-ldap==3.4.4 ZEO"
 
@@ -32,7 +32,7 @@ RUN <<EOT
     apt-get install -y --no-install-recommends $buildDeps
     busybox --install -s
     python -m venv /app
-    curl -L -o /app/constraints.txt https://dist.plone.org/release/6.1.0rc1/constraints.txt
+    curl -L -o /app/constraints.txt https://dist.plone.org/release/$PLONE_VERSION/constraints.txt
     /app/bin/pip install -U pip wheel setuptools -c /app/constraints.txt
     /app/bin/pip install Plone ${EXTRA_PACKAGES} -c /app/constraints.txt
     bash -c 'mkdir -p /data/{filestorage,blobstorage,cache,logs}'
