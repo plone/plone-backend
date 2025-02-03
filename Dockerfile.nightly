@@ -12,7 +12,7 @@ RUN mkdir /wheelhouse
 RUN <<EOT
     set -e
     apt-get update
-    buildDeps="build-essential curl libbz2-dev libffi-dev libjpeg62-turbo-dev libsasl2-dev libldap2-dev libopenjp2-7-dev libpcre3-dev libpq-dev libsasl2-dev libssl-dev libtiff6 libtiff5-dev libxml2-dev libxslt1-dev wget unzip zlib1g-dev"
+    buildDeps="build-essential curl libbz2-dev libffi-dev libjpeg62-turbo-dev libsasl2-dev libldap2-dev libopenjp2-7-dev libpcre3-dev libpq-dev libssl-dev libtiff6 libtiff5-dev libxml2-dev libxslt1-dev wget unzip zlib1g-dev"
     apt-get install -y --no-install-recommends $buildDeps
     pip install -U "pip==${PIP_VERSION}"
     pip install -U "zc.buildout==4.0" "wheel==0.45.1"
