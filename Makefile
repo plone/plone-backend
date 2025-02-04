@@ -22,12 +22,13 @@ MAIN_IMAGE_NAME=plone/plone-backend
 CLASSICUI_IMAGE_NAME=plone/plone-classicui
 BASE_IMAGE_NAME=plone/server
 PLONE_VERSION=$$(cat version.txt)
+PYTHON_VERSION=3.12
 IMAGE_TAG=${PLONE_VERSION}
 NIGHTLY_IMAGE_TAG=nightly
 
 # Code Quality
 CURRENT_FOLDER=$(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
-CODE_QUALITY_VERSION=2.1.0
+CODE_QUALITY_VERSION=2.1.1
 ifndef LOG_LEVEL
 	LOG_LEVEL=INFO
 endif
@@ -68,37 +69,37 @@ show-image: ## Print Version
 .PHONY: image-builder
 image-builder:  ## Build Base Image
 	@echo "Building $(BASE_IMAGE_NAME)-builder:$(IMAGE_TAG)"
-	@docker buildx build . --build-arg PLONE_VERSION=${PLONE_VERSION} -t $(BASE_IMAGE_NAME)-builder:$(IMAGE_TAG) -f Dockerfile.builder --load
+	@docker buildx build . --no-cache --build-arg PLONE_VERSION=${PLONE_VERSION} --build-arg PYTHON_VERSION=${PYTHON_VERSION} -t $(BASE_IMAGE_NAME)-builder:$(IMAGE_TAG) -f Dockerfile.builder --load
 
 .PHONY: image-dev
 image-dev:  ## Build Dev Image
 	@echo "Building $(BASE_IMAGE_NAME)-dev:$(IMAGE_TAG)"
-	@docker buildx build . --build-arg PLONE_VERSION=${PLONE_VERSION} -t $(BASE_IMAGE_NAME)-dev:$(IMAGE_TAG) -f Dockerfile.dev --load
+	@docker buildx build . --no-cache --build-arg PLONE_VERSION=${PLONE_VERSION} --build-arg PYTHON_VERSION=${PYTHON_VERSION} -t $(BASE_IMAGE_NAME)-dev:$(IMAGE_TAG) -f Dockerfile.dev --load
 
 .PHONY: image-prod-config
 image-prod-config:  ## Build Prod Image
 	@echo "Building $(BASE_IMAGE_NAME)-prod-config:$(IMAGE_TAG)"
-	@docker buildx build . --build-arg PLONE_VERSION=${PLONE_VERSION} -t $(BASE_IMAGE_NAME)-prod-config:$(IMAGE_TAG) -f Dockerfile.prod --load
+	@docker buildx build . --no-cache --build-arg PLONE_VERSION=${PLONE_VERSION} --build-arg PYTHON_VERSION=${PYTHON_VERSION} -t $(BASE_IMAGE_NAME)-prod-config:$(IMAGE_TAG) -f Dockerfile.prod --load
 
 .PHONY: image-classicui
 image-classicui:  ## Build Classic UI
 	@echo "Building $(CLASSICUI_IMAGE_NAME):$(IMAGE_TAG)"
-	@docker buildx build . --build-arg PLONE_VERSION=${PLONE_VERSION} -t $(CLASSICUI_IMAGE_NAME):$(IMAGE_TAG) -f Dockerfile.classicui --load
+	@docker buildx build . --no-cache --build-arg PLONE_VERSION=${PLONE_VERSION} --build-arg PYTHON_VERSION=${PYTHON_VERSION} -t $(CLASSICUI_IMAGE_NAME):$(IMAGE_TAG) -f Dockerfile.classicui --load
 
 .PHONY: image-acceptance
 image-acceptance:  ## Build Acceptance Image
 	@echo "Building $(BASE_IMAGE_NAME)-acceptance:$(IMAGE_TAG)"
-	@docker buildx build . --build-arg PLONE_VERSION=${PLONE_VERSION} -t $(BASE_IMAGE_NAME)-acceptance:$(IMAGE_TAG) -f Dockerfile.acceptance --load
+	@docker buildx build . --no-cache --build-arg PLONE_VERSION=${PLONE_VERSION} --build-arg PYTHON_VERSION=${PYTHON_VERSION} -t $(BASE_IMAGE_NAME)-acceptance:$(IMAGE_TAG) -f Dockerfile.acceptance --load
 
 .PHONY: image-main
 image-main:  ## Build main image
 	@echo "Building $(MAIN_IMAGE_NAME):$(IMAGE_TAG)"
-	@docker buildx build . --build-arg PLONE_VERSION=${PLONE_VERSION} -t $(MAIN_IMAGE_NAME):$(IMAGE_TAG) -f Dockerfile --load
+	@docker buildx build . --no-cache --build-arg PLONE_VERSION=${PLONE_VERSION} --build-arg PYTHON_VERSION=${PYTHON_VERSION} -t $(MAIN_IMAGE_NAME):$(IMAGE_TAG) -f Dockerfile --load
 
 .PHONY: image-nightly
 image-nightly:  ## Build Docker Image Nightly
 	@echo "Building $(MAIN_IMAGE_NAME):$(NIGHTLY_IMAGE_TAG)"
-	@docker build . -t $(MAIN_IMAGE_NAME):$(NIGHTLY_IMAGE_TAG) -f Dockerfile.nightly
+	@docker buildx build . --no-cache --build-arg PYTHON_VERSION=${PYTHON_VERSION} -t $(MAIN_IMAGE_NAME):$(NIGHTLY_IMAGE_TAG) -f Dockerfile.nightly --load
 
 .PHONY: build-images
 build-images:  ## Build Images

@@ -31,6 +31,11 @@ These images are **not** Buildout based!
 | 6.1 | `6.1.0rc1`, `6.1` | [(6.1.x/Dockerfile)](https://github.com/plone/plone-backend/blob/v6.1.0rc1/Dockerfile)|
 | 6 (nightly) | `nightly` |  [(Dockerfile.nightly)](https://github.com/plone/plone-backend/blob/6.0.x/Dockerfile.nightly) |
 
+**Possible breaking changes in upcoming Plone 6.1 dependencies**
+
+Please note that the backend images in the 6.1.x series have several updated dependencies, which you should verify and test before using them in any existing project. Even if you extend from these images. The underlying OS has been switched from Debian 11 buster to 12 bookworm. Python is updated from 
+3.11 to 3.12. Relstorage has a new major release going from 3.x to 4.1. And there are are minor updates for libldap, libtiff and psycopg2 OS and Python libraries.
+
 ### Unsupported tags
 
 **Note:**
