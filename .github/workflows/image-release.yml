@@ -40,7 +40,8 @@ on:
 jobs:
 
   release:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, ARM64, stable]
+
     environment: DOCKER_HUB
     steps:
       - name: Checkout
