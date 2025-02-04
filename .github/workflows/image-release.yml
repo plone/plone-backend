@@ -58,12 +58,13 @@ jobs:
           tags: |
             type=ref,event=branch
             type=ref,event=pr
-            type=pep440,pattern={{version}}
-            type=pep440,pattern={{major}}.{{minor}}.{{patch}}
-            type=pep440,pattern={{major}}.{{minor}}
-            type=pep440,pattern={{major}}
+            type=pep440,pattern={{version}}, value=${{ inputs.plone-version }}
+            type=pep440,pattern={{major}}.{{minor}}.{{patch}}, value=${{ inputs.plone-version }}
+            type=pep440,pattern={{major}}.{{minor}}, value=${{ inputs.plone-version }}
+            type=pep440,pattern={{major}}, value=${{ inputs.plone-version }}
             type=sha
             type=raw,value=latest,enable=${{ inputs.is-latest }}
+            type=raw,value=${{ inputs.plone-version }}
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -85,7 +86,7 @@ jobs:
           password: ${{ secrets.docker-registry-password }}
 
       - name: Build and push
-        uses: docker/build-push-action@v4
+        uses: docker/build-push-action@v6
         with:
           platforms: ${{ inputs.platforms }}
           context: .
