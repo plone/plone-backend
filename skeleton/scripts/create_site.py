@@ -57,7 +57,7 @@ if not DISTRIBUTION:
     if TYPE == "classic":
         DISTRIBUTION = "classic"
     elif TYPE == "volto":
-        DISTRIBUTION = "default"
+        DISTRIBUTION = "volto"
 
 # Load default site creation parameters
 answers_file = SCRIPT_DIR / f"{ANSWERS}.json"
