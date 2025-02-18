@@ -6,9 +6,10 @@ if [ -z "${PIP_PARAMS}" ]; then
   PIP_PARAMS=""
 fi
 
-# CLIENT HOME
-CLIENT_HOME="/data/$(hostname)/$(hostid)"
-export CLIENT_HOME=$CLIENT_HOME
+if [ -z "${CLIENT_HOME}" ]; then
+  CLIENT_HOME="/app/$(hostname)/$(hostid)"
+  export CLIENT_HOME=$CLIENT_HOME
+fi
 
 USER="$(id -u)"
 
