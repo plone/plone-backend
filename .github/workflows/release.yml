@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 env:
-  BASE_IMAGE_NAME: plone/server
+  BASE_IMAGE_NAME: codesyntax/server
   PLATFORMS: linux/amd64,linux/arm64
   IS_LATEST: false
 
@@ -47,65 +47,65 @@ jobs:
     secrets:
       ghcr-registry-username: ${{ github.actor }}
       ghcr-registry-password: ${{ secrets.GITHUB_TOKEN }}
-      docker-registry-username: ${{ secrets.DOCKERHUB_USERNAME }}
-      docker-registry-password: ${{ secrets.DOCKERHUB_TOKEN }}
+      # docker-registry-username: ${{ secrets.DOCKERHUB_USERNAME }}
+      # docker-registry-password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-  prod-conf-image:
-    uses: ./.github/workflows/image-release.yml
-    with:
-      plone-version: ${{ needs.meta.outputs.PLONE_VERSION }}
-      image-name: ${{ needs.meta.outputs.BASE_IMAGE_NAME }}-prod-config
-      dockerfile: Dockerfile.prod
-      platforms: ${{ needs.meta.outputs.PLATFORMS  }}
-      is-latest: ${{ needs.meta.outputs.IS_LATEST == 'true'  }}
-      load: false
-      push: true
-    secrets:
-      ghcr-registry-username: ${{ github.actor }}
-      ghcr-registry-password: ${{ secrets.GITHUB_TOKEN }}
-      docker-registry-username: ${{ secrets.DOCKERHUB_USERNAME }}
-      docker-registry-password: ${{ secrets.DOCKERHUB_TOKEN }}
-    needs:
-      - meta
+  # prod-conf-image:
+  #   uses: ./.github/workflows/image-release.yml
+  #   with:
+  #     plone-version: ${{ needs.meta.outputs.PLONE_VERSION }}
+  #     image-name: ${{ needs.meta.outputs.BASE_IMAGE_NAME }}-prod-config
+  #     dockerfile: Dockerfile.prod
+  #     platforms: ${{ needs.meta.outputs.PLATFORMS  }}
+  #     is-latest: ${{ needs.meta.outputs.IS_LATEST == 'true'  }}
+  #     load: false
+  #     push: true
+  #   secrets:
+  #     ghcr-registry-username: ${{ github.actor }}
+  #     ghcr-registry-password: ${{ secrets.GITHUB_TOKEN }}
+  #     # docker-registry-username: ${{ secrets.DOCKERHUB_USERNAME }}
+  #     # docker-registry-password: ${{ secrets.DOCKERHUB_TOKEN }}
+  #   needs:
+  #     - meta
 
-  dev-image:
-    uses: ./.github/workflows/image-release.yml
-    with:
-      plone-version: ${{ needs.meta.outputs.PLONE_VERSION }}
-      image-name: ${{ needs.meta.outputs.BASE_IMAGE_NAME }}-dev
-      dockerfile: Dockerfile.dev
-      platforms: ${{ needs.meta.outputs.PLATFORMS  }}
-      is-latest: ${{ needs.meta.outputs.IS_LATEST == 'true'  }}
-      load: false
-      push: true
-    secrets:
-      ghcr-registry-username: ${{ github.actor }}
-      ghcr-registry-password: ${{ secrets.GITHUB_TOKEN }}
-      docker-registry-username: ${{ secrets.DOCKERHUB_USERNAME }}
-      docker-registry-password: ${{ secrets.DOCKERHUB_TOKEN }}
-    needs:
-      - meta
-      - builder-image
+  # dev-image:
+  #   uses: ./.github/workflows/image-release.yml
+  #   with:
+  #     plone-version: ${{ needs.meta.outputs.PLONE_VERSION }}
+  #     image-name: ${{ needs.meta.outputs.BASE_IMAGE_NAME }}-dev
+  #     dockerfile: Dockerfile.dev
+  #     platforms: ${{ needs.meta.outputs.PLATFORMS  }}
+  #     is-latest: ${{ needs.meta.outputs.IS_LATEST == 'true'  }}
+  #     load: false
+  #     push: true
+  #   secrets:
+  #     ghcr-registry-username: ${{ github.actor }}
+  #     ghcr-registry-password: ${{ secrets.GITHUB_TOKEN }}
+  #     # docker-registry-username: ${{ secrets.DOCKERHUB_USERNAME }}
+  #     # docker-registry-password: ${{ secrets.DOCKERHUB_TOKEN }}
+  #   needs:
+  #     - meta
+  #     - builder-image
 
-  acceptance-image:
-    uses: ./.github/workflows/image-release.yml
-    with:
-      plone-version: ${{ needs.meta.outputs.PLONE_VERSION }}
-      image-name: ${{ needs.meta.outputs.BASE_IMAGE_NAME }}-acceptance
-      dockerfile: Dockerfile.acceptance
-      platforms: ${{ needs.meta.outputs.PLATFORMS  }}
-      is-latest: ${{ needs.meta.outputs.IS_LATEST == 'true'  }}
-      load: false
-      push: true
-    secrets:
-      ghcr-registry-username: ${{ github.actor }}
-      ghcr-registry-password: ${{ secrets.GITHUB_TOKEN }}
-      docker-registry-username: ${{ secrets.DOCKERHUB_USERNAME }}
-      docker-registry-password: ${{ secrets.DOCKERHUB_TOKEN }}
-    needs:
-      - meta
-      - builder-image
-      - prod-conf-image
+  # acceptance-image:
+  #   uses: ./.github/workflows/image-release.yml
+  #   with:
+  #     plone-version: ${{ needs.meta.outputs.PLONE_VERSION }}
+  #     image-name: ${{ needs.meta.outputs.BASE_IMAGE_NAME }}-acceptance
+  #     dockerfile: Dockerfile.acceptance
+  #     platforms: ${{ needs.meta.outputs.PLATFORMS  }}
+  #     is-latest: ${{ needs.meta.outputs.IS_LATEST == 'true'  }}
+  #     load: false
+  #     push: true
+  #   secrets:
+  #     ghcr-registry-username: ${{ github.actor }}
+  #     ghcr-registry-password: ${{ secrets.GITHUB_TOKEN }}
+  #     # docker-registry-username: ${{ secrets.DOCKERHUB_USERNAME }}
+  #     # docker-registry-password: ${{ secrets.DOCKERHUB_TOKEN }}
+  #   needs:
+  #     - meta
+  #     - builder-image
+  #     - prod-conf-image
 
   plone-backend:
     uses: ./.github/workflows/image-release.yml
@@ -113,8 +113,8 @@ jobs:
       plone-version: ${{ needs.meta.outputs.PLONE_VERSION }}
       image-name: |
         ghcr.io/plone/server
-        ghcr.io/plone/plone-backend
-        plone/plone-backend
+        ghcr.io/codesyntax/plone-backend
+        codesyntax/plone-backend
       dockerfile: Dockerfile
       platforms: ${{ needs.meta.outputs.PLATFORMS  }}
       is-latest: ${{ needs.meta.outputs.IS_LATEST == 'true'  }}
@@ -123,31 +123,31 @@ jobs:
     secrets:
       ghcr-registry-username: ${{ github.actor }}
       ghcr-registry-password: ${{ secrets.GITHUB_TOKEN }}
-      docker-registry-username: ${{ secrets.DOCKERHUB_USERNAME }}
-      docker-registry-password: ${{ secrets.DOCKERHUB_TOKEN }}
+      # docker-registry-username: ${{ secrets.DOCKERHUB_USERNAME }}
+      # docker-registry-password: ${{ secrets.DOCKERHUB_TOKEN }}
     needs:
       - meta
       - builder-image
       - prod-conf-image
 
-  plone-classicui:
-    uses: ./.github/workflows/image-release.yml
-    with:
-      plone-version: ${{ needs.meta.outputs.PLONE_VERSION }}
-      image-name: |
-        ghcr.io/plone/plone-classicui
-        plone/plone-classicui
-      dockerfile: Dockerfile.classicui
-      platforms: ${{ needs.meta.outputs.PLATFORMS  }}
-      is-latest: ${{ needs.meta.outputs.IS_LATEST == 'true'  }}
-      load: false
-      push: true
-    secrets:
-      ghcr-registry-username: ${{ github.actor }}
-      ghcr-registry-password: ${{ secrets.GITHUB_TOKEN }}
-      docker-registry-username: ${{ secrets.DOCKERHUB_USERNAME }}
-      docker-registry-password: ${{ secrets.DOCKERHUB_TOKEN }}
-    needs:
-      - meta
-      - builder-image
-      - prod-conf-image
+  # plone-classicui:
+  #   uses: ./.github/workflows/image-release.yml
+  #   with:
+  #     plone-version: ${{ needs.meta.outputs.PLONE_VERSION }}
+  #     image-name: |
+  #       ghcr.io/plone/plone-classicui
+  #       plone/plone-classicui
+  #     dockerfile: Dockerfile.classicui
+  #     platforms: ${{ needs.meta.outputs.PLATFORMS  }}
+  #     is-latest: ${{ needs.meta.outputs.IS_LATEST == 'true'  }}
+  #     load: false
+  #     push: true
+  #   secrets:
+  #     ghcr-registry-username: ${{ github.actor }}
+  #     ghcr-registry-password: ${{ secrets.GITHUB_TOKEN }}
+  #     # docker-registry-username: ${{ secrets.DOCKERHUB_USERNAME }}
+  #     # docker-registry-password: ${{ secrets.DOCKERHUB_TOKEN }}
+  #   needs:
+  #     - meta
+  #     - builder-image
+  #     - prod-conf-image
