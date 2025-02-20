@@ -161,6 +161,8 @@ elif  [[ "$1" == "console" ]]; then
   exec $sudo $VENVBIN/zconsole debug etc/${CONF}
 elif  [[ "$1" == "run" ]]; then
   exec $sudo $VENVBIN/zconsole run etc/${CONF} "${@:2}"
+elif  [[ "$1" == "addzopeuser" ]]; then
+  exec $sudo $VENVBIN/addzopeuser -c etc/${CONF} "${@:2}"
 else
   # Custom
   exec "$@"
