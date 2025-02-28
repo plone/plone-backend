@@ -6,9 +6,10 @@ if [ -z "${PIP_PARAMS}" ]; then
   PIP_PARAMS=""
 fi
 
-# CLIENT HOME
-CLIENT_HOME="/data/$(hostname)/$(hostid)"
-export CLIENT_HOME=$CLIENT_HOME
+if [ -z "${CLIENT_HOME}" ]; then
+  CLIENT_HOME="/data/$(hostname)/$(hostid)"
+  export CLIENT_HOME=$CLIENT_HOME
+fi
 
 USER="$(id -u)"
 
@@ -28,6 +29,8 @@ fi
 [ -z ${COMPILE_MO_FILES+x} ] && export COMPILE_MO_FILES=true
 [ -z ${DEBUG_MODE+x} ] && export DEBUG_MODE=off
 [ -z ${ZOPE_FORM_MEMORY_LIMIT+x} ] && export ZOPE_FORM_MEMORY_LIMIT=4MB
+[ -z ${ZOPE_FORM_DISK_LIMIT+x} ] && export ZOPE_FORM_DISK_LIMIT=1GB
+[ -z ${ZOPE_FORM_MEMFILE_LIMIT+x} ] && export ZOPE_FORM_MEMFILE_LIMIT=4KB
 
 
 # ZODB ENV Vars
@@ -158,6 +161,8 @@ elif  [[ "$1" == "console" ]]; then
   exec $sudo $VENVBIN/zconsole debug etc/${CONF}
 elif  [[ "$1" == "run" ]]; then
   exec $sudo $VENVBIN/zconsole run etc/${CONF} "${@:2}"
+elif  [[ "$1" == "addzopeuser" ]]; then
+  exec $sudo $VENVBIN/addzopeuser -c etc/${CONF} "${@:2}"
 elif  [[ "$1" == "pack" ]]; then
   if [[ -v ZEO_ADDRESS ]]; then
     exec $sudo $VENVBIN/zeopack -d "${2:-0}" ${ZEO_ADDRESS}
