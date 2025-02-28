@@ -158,6 +158,14 @@ elif  [[ "$1" == "console" ]]; then
   exec $sudo $VENVBIN/zconsole debug etc/${CONF}
 elif  [[ "$1" == "run" ]]; then
   exec $sudo $VENVBIN/zconsole run etc/${CONF} "${@:2}"
+elif  [[ "$1" == "pack" ]]; then
+  if [[ -v ZEO_ADDRESS ]]; then
+    exec $sudo $VENVBIN/zeopack -d "${2:-0}" ${ZEO_ADDRESS}
+  elif [[ -v RELSTORAGE_DSN ]]; then
+    exec $sudo $VENVBIN/zodbpack -d "${2:-0}" etc/relstorage_pack.conf
+  else
+    exec $sudo $VENVBIN/zconsole run etc/${CONF} /app/scripts/pack.py
+  fi
 else
   # Custom
   exec "$@"
