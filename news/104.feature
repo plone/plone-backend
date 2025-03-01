@@ -1,1 +1,1 @@
-Provide packing command @erral
+Provide command to pack ZODB. @erral
