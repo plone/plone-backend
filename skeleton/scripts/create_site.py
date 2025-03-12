@@ -69,9 +69,9 @@ if DISTRIBUTION:
 SITE_ID = os.getenv("SITE_ID")
 if SITE_ID:
     answers["site_id"] = SITE_ID
-SITE_LANGUAGE = os.getenv("SITE_LANGUAGE")
-if SITE_LANGUAGE:
-    answers["default_language"] = SITE_LANGUAGE
+SITE_DEFAULT_LANGUAGE = os.getenv("SITE_DEFAULT_LANGUAGE")
+if SITE_DEFAULT_LANGUAGE:
+    answers["default_language"] = SITE_DEFAULT_LANGUAGE
 SETUP_CONTENT = os.getenv("SETUP_CONTENT")
 if SETUP_CONTENT is not None:
     answers["setup_content"] = asbool(SETUP_CONTENT)
