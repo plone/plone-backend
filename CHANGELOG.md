@@ -1,3 +1,9 @@
+## 6.1.1rc2 (unreleased)
+
+
+- Nothing changed yet.
+
+
 ## 6.1.1rc1 (2025-03-17)
 
 ### Features (also collected from previous changes
