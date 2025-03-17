@@ -1,37 +1,33 @@
 [tool.towncrier]
+filename = "CHANGELOG.md"
 directory = "news/"
-filename = "CHANGES.md"
-start_string = "<!-- towncrier release notes start -->\n"
 title_format = "## {version} ({project_date})"
-template = "news/.changelog_template.jinja"
 underlines = ["", "", ""]
+template = "news/.towncrier_template.jinja"
+start_string = "<!-- towncrier release notes start -->\n"
+issue_format = "[#{issue}](https://github.com/plone/volto/issues/{issue})"
 
 [[tool.towncrier.type]]
 directory = "breaking"
-name = "Breaking changes:"
+name = "Breaking"
 showcontent = true
 
 [[tool.towncrier.type]]
 directory = "feature"
-name = "New features:"
+name = "Feature"
 showcontent = true
 
 [[tool.towncrier.type]]
 directory = "bugfix"
-name = "Bug fixes:"
+name = "Bugfix"
 showcontent = true
 
 [[tool.towncrier.type]]
 directory = "internal"
-name = "Internal:"
+name = "Internal"
 showcontent = true
 
 [[tool.towncrier.type]]
 directory = "documentation"
-name = "Documentation:"
-showcontent = true
-
-[[tool.towncrier.type]]
-directory = "tests"
-name = "Tests"
+name = "Documentation"
 showcontent = true
