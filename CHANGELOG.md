@@ -1,7 +1,7 @@
-## 6.1.1rc2 (unreleased)
+## 6.1.1rc2 (2025-03-21)
 
 
-- Nothing changed yet.
+- Upgrade to Plone 6.1.1rc2
 
 
 ## 6.1.1rc1 (2025-03-17)
