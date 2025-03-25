@@ -1,3 +1,9 @@
+## 6.1.1 (2025-03-25)
+
+
+- Upgrade to Plone 6.1.1 final.
+
+
 ## 6.1.1rc2 (2025-03-21)
 
 
@@ -10,6 +16,6 @@
 
 - Provide command to pack ZODB. @erral [#104](https://github.com/plone/volto/issues/104)
 
-### Bugfixes  
+### Bugfixes
 
 - Ensure that zope.conf customizations can never happen twice [Rudd-O] [#93](https://github.com/plone/volto/issues/93)
