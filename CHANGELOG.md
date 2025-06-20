@@ -3,6 +3,8 @@
 
 - Upgrade to Plone 6.1.2.
 
+- Compile po files in the sources folder, where by default the packages from mx.ini are downloaded @erral
+
 
 ## 6.1.1 (2025-03-25)
 
