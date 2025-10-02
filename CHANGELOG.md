@@ -1,3 +1,9 @@
+## 6.1.3 (2025-10-02)
+
+### Bugfix
+
+- Upgrade to Plone 6.1.3. [#613](https://github.com/plone/volto/issues/613)
+
 ## 6.1.2 (2025-06-20)
 
 
