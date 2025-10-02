@@ -122,6 +122,12 @@ remove-tag: # Remove an existing tag locally and remote
 	@echo "Removing tag v$(IMAGE_TAG)"
 	if git show-ref --tags v$(IMAGE_TAG) --quiet; then git tag -d v$(IMAGE_TAG) && git push origin :v$(IMAGE_TAG) && echo "$(IMAGE_TAG) removed";else echo "$(IMAGE_TAG) does not exist";fi
 
+.PHONY: towncrier
+towncrier: # Put news snippets in the changelog for the new version
+	@echo "Gathering news snippets for $(PLONE_VERSION)"
+	towncrier build --version=$(PLONE_VERSION)
+	@echo "If this looks right, you can call 'make commit-and-release'"
+
 commit-and-release: # Commit new version change and create tag
 	@echo "Commiting changes"
 	@git commit -am "Use Plone $(PLONE_VERSION)"
