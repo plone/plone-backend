@@ -28,7 +28,7 @@ jobs:
           echo "BASE_IMAGE_NAME=$BASE_IMAGE_NAME" >> $GITHUB_OUTPUT
           echo "PLATFORMS=$PLATFORMS" >> $GITHUB_OUTPUT
           echo "IS_LATEST=$IS_LATEST" >> $GITHUB_OUTPUT
-          echo "PYTHON_VERSIONS=$(cat versions.json)" >> $GITHUB_OUTPUT
+          echo "PYTHON_VERSIONS=$(jq -c . < versions.json)" >> $GITHUB_OUTPUT
 
   builder-image:
     needs:
