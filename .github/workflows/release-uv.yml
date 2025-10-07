@@ -8,6 +8,7 @@ env:
   BASE_IMAGE_NAME: plone/server
   PLATFORMS: linux/amd64,linux/arm64
   IS_LATEST: false
+  PUSH_BRANCH: "refs/heads/uv"
 
 jobs:
 
@@ -18,6 +19,7 @@ jobs:
       IS_LATEST: ${{ steps.vars.outputs.IS_LATEST }}
       PLATFORMS: ${{ steps.vars.outputs.PLATFORMS }}
       PYTHON_VERSIONS: ${{ steps.vars.outputs.PYTHON_VERSIONS }}
+      PUSH_BRANCH: ${{ steps.vars.outputs.PUSH_BRANCH }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -28,6 +30,7 @@ jobs:
           echo "BASE_IMAGE_NAME=$BASE_IMAGE_NAME" >> $GITHUB_OUTPUT
           echo "PLATFORMS=$PLATFORMS" >> $GITHUB_OUTPUT
           echo "IS_LATEST=$IS_LATEST" >> $GITHUB_OUTPUT
+          echo "PUSH_BRANCH=$PUSH_BRANCH" >> $GITHUB_OUTPUT
           echo "PYTHON_VERSIONS=$(jq -c . < versions.json)" >> $GITHUB_OUTPUT
 
   builder-image:
@@ -45,7 +48,7 @@ jobs:
       platforms: ${{ needs.config.outputs.PLATFORMS  }}
       is-latest: ${{ needs.config.outputs.IS_LATEST == 'true'  }}
       load: false
-      push: ${{ github.base_ref == 'uv' }}
+      push: ${{ github.ref == needs.config.outputs.PUSH_BRANCH }}
     secrets:
       ghcr-registry-username: ${{ github.actor }}
       ghcr-registry-password: ${{ secrets.GITHUB_TOKEN }}
@@ -65,7 +68,7 @@ jobs:
       platforms: ${{ needs.config.outputs.PLATFORMS  }}
       is-latest: ${{ needs.config.outputs.IS_LATEST == 'true'  }}
       load: false
-      push: ${{ github.base_ref == 'uv' }}
+      push: ${{ github.ref == needs.config.outputs.PUSH_BRANCH }}
     secrets:
       ghcr-registry-username: ${{ github.actor }}
       ghcr-registry-password: ${{ secrets.GITHUB_TOKEN }}
