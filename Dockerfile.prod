@@ -1,17 +1,15 @@
-# syntax=docker/dockerfile:1
+# syntax=docker/dockerfile:1.9
 ARG PYTHON_VERSION=3.12
-ARG PLONE_VERSION
-FROM python:${PYTHON_VERSION}-slim-bookworm
 
-ARG PYTHON_VERSION
-ARG PLONE_VERSION
+FROM python:${PYTHON_VERSION}-slim-trixie
+
+SHELL ["sh", "-exc"]
 
 LABEL maintainer="Plone Community <dev@plone.org>" \
       org.label-schema.name="server-prod-conf" \
-      org.label-schema.description="Plone $PLONE_VERSION development image using Python $PYTHON_VERSION" \
+      org.label-schema.description="Plone production image using Python $PYTHON_VERSION and UV" \
       org.label-schema.vendor="Plone Foundation"
 
-# Create plone use, install run time dependencies, set up busybox
 RUN <<EOT
     set -e
     useradd --system -m -d /app -U -u 500 plone
@@ -28,8 +26,10 @@ EOT
 
 # Disable debug mode
 ENV DEBUG_MODE=off
+
 # Set chameleon cache directory
-ENV CHAMELEON_CACHE=/app/var/cache
+ENV CHAMELEON_CACHE=/data/cache
+
 # Disable compilation of po files into mo files (This should be done in the builder image)
 ENV zope_i18n_compile_mo_files=
 

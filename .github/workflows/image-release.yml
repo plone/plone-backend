@@ -3,7 +3,7 @@ name: Release Image to Container registry
 on:
   workflow_call:
     inputs:
-      plone-version:
+      python-version:
         required: true
         type: string
       image-name:
@@ -58,13 +58,8 @@ jobs:
           tags: |
             type=ref,event=branch
             type=ref,event=pr
-            type=pep440,pattern={{version}}, value=${{ inputs.plone-version }}
-            type=pep440,pattern={{major}}.{{minor}}.{{patch}}, value=${{ inputs.plone-version }}
-            type=pep440,pattern={{major}}.{{minor}}, value=${{ inputs.plone-version }}
-            type=pep440,pattern={{major}}, value=${{ inputs.plone-version }}
             type=sha
-            type=raw,value=latest,enable=${{ inputs.is-latest }}
-            type=raw,value=${{ inputs.plone-version }}
+            type=raw,value=uv-${{ inputs.python-version }}
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -92,7 +87,7 @@ jobs:
           context: .
           file: ${{ inputs.dockerfile }}
           build-args: |
-            PLONE_VERSION=${{ inputs.plone-version }}
+            PYTHON_VERSION=${{ inputs.python-version }}
           push: ${{ inputs.push && github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}

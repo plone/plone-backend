@@ -21,22 +21,7 @@ YELLOW=`tput setaf 3`
 MAIN_IMAGE_NAME=plone/plone-backend
 CLASSICUI_IMAGE_NAME=plone/plone-classicui
 BASE_IMAGE_NAME=plone/server
-PLONE_VERSION=$$(cat version.txt)
-PYTHON_VERSION=3.12
-IMAGE_TAG=${PLONE_VERSION}
-NIGHTLY_IMAGE_TAG=nightly
-
-# Code Quality
-CURRENT_FOLDER=$(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
-CODE_QUALITY_VERSION=2.1.1
-ifndef LOG_LEVEL
-	LOG_LEVEL=INFO
-endif
-CURRENT_USER=$$(whoami)
-USER_INFO=$$(id -u ${CURRENT_USER}):$$(getent group ${CURRENT_USER}|cut -d: -f3)
-LINT=docker run --rm -e LOG_LEVEL="${LOG_LEVEL}" -v "${CURRENT_FOLDER}":/github/workspace plone/code-quality:${CODE_QUALITY_VERSION} check
-FORMAT=docker run --rm --user="${USER_INFO}" -e LOG_LEVEL="${LOG_LEVEL}" -v "${CURRENT_FOLDER}":/github/workspace plone/code-quality:${CODE_QUALITY_VERSION} format
-
+PYTHON_VERSIONS=$$(cat versions.json | jq -r '.[]')
 
 
 .PHONY: all
@@ -48,87 +33,30 @@ all: help
 help: # This help message
 	@grep -E '^[a-zA-Z_-]+:.*?# .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?# "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
-# Format
-.PHONY: format
-format: ## Format the codebase according to our standards
-	@echo "$(GREEN)==> Format Python helper$(RESET)"
-	$(FORMAT)
-
-.PHONY: lint
-lint: ## check code style
-	$(LINT)
-
 # Build image
-.PHONY: show-image
-show-image: ## Print Version
-	@echo "$(MAIN_IMAGE_NAME):$(IMAGE_TAG)"
-	@echo "$(MAIN_IMAGE_NAME):$(NIGHTLY_IMAGE_TAG)"
-	@echo "$(BASE_IMAGE_NAME)-(builder|dev|prod-config|acceptance):$(IMAGE_TAG)"
-	@echo "$(CLASSICUI_IMAGE_NAME):$(IMAGE_TAG)"
+.PHONY: show-images
+show-images: ## Print Image Names
+	@for v in $(PYTHON_VERSIONS); do \
+		echo "$(BASE_IMAGE_NAME)-builder:uv-$$v"; \
+		echo "$(BASE_IMAGE_NAME)-prod-config:uv-$$v"; \
+	done
 
 .PHONY: image-builder
 image-builder:  ## Build Base Image
-	@echo "Building $(BASE_IMAGE_NAME)-builder:$(IMAGE_TAG)"
-	@docker buildx build . --no-cache --build-arg PLONE_VERSION=${PLONE_VERSION} --build-arg PYTHON_VERSION=${PYTHON_VERSION} -t $(BASE_IMAGE_NAME)-builder:$(IMAGE_TAG) -f Dockerfile.builder --load
-
-.PHONY: image-dev
-image-dev:  ## Build Dev Image
-	@echo "Building $(BASE_IMAGE_NAME)-dev:$(IMAGE_TAG)"
-	@docker buildx build . --no-cache --build-arg PLONE_VERSION=${PLONE_VERSION} --build-arg PYTHON_VERSION=${PYTHON_VERSION} -t $(BASE_IMAGE_NAME)-dev:$(IMAGE_TAG) -f Dockerfile.dev --load
+	@for v in $(PYTHON_VERSIONS); do \
+		echo "Building $(BASE_IMAGE_NAME)-builder:uv-$$v"; \
+		docker buildx build . --no-cache --build-arg PYTHON_VERSION=$$v -t $(BASE_IMAGE_NAME)-builder:uv-$$v -f Dockerfile.builder --load; \
+	done
 
 .PHONY: image-prod-config
 image-prod-config:  ## Build Prod Image
-	@echo "Building $(BASE_IMAGE_NAME)-prod-config:$(IMAGE_TAG)"
-	@docker buildx build . --no-cache --build-arg PLONE_VERSION=${PLONE_VERSION} --build-arg PYTHON_VERSION=${PYTHON_VERSION} -t $(BASE_IMAGE_NAME)-prod-config:$(IMAGE_TAG) -f Dockerfile.prod --load
-
-.PHONY: image-classicui
-image-classicui:  ## Build Classic UI
-	@echo "Building $(CLASSICUI_IMAGE_NAME):$(IMAGE_TAG)"
-	@docker buildx build . --no-cache --build-arg PLONE_VERSION=${PLONE_VERSION} --build-arg PYTHON_VERSION=${PYTHON_VERSION} -t $(CLASSICUI_IMAGE_NAME):$(IMAGE_TAG) -f Dockerfile.classicui --load
-
-.PHONY: image-acceptance
-image-acceptance:  ## Build Acceptance Image
-	@echo "Building $(BASE_IMAGE_NAME)-acceptance:$(IMAGE_TAG)"
-	@docker buildx build . --no-cache --build-arg PLONE_VERSION=${PLONE_VERSION} --build-arg PYTHON_VERSION=${PYTHON_VERSION} -t $(BASE_IMAGE_NAME)-acceptance:$(IMAGE_TAG) -f Dockerfile.acceptance --load
-
-.PHONY: image-main
-image-main:  ## Build main image
-	@echo "Building $(MAIN_IMAGE_NAME):$(IMAGE_TAG)"
-	@docker buildx build . --no-cache --build-arg PLONE_VERSION=${PLONE_VERSION} --build-arg PYTHON_VERSION=${PYTHON_VERSION} -t $(MAIN_IMAGE_NAME):$(IMAGE_TAG) -f Dockerfile --load
-
-.PHONY: image-nightly
-image-nightly:  ## Build Docker Image Nightly
-	@echo "Building $(MAIN_IMAGE_NAME):$(NIGHTLY_IMAGE_TAG)"
-	@docker buildx build . --no-cache --build-arg PYTHON_VERSION=${PYTHON_VERSION} -t $(MAIN_IMAGE_NAME):$(NIGHTLY_IMAGE_TAG) -f Dockerfile.nightly --load
+	@for v in $(PYTHON_VERSIONS); do \
+		echo "Building $(BASE_IMAGE_NAME)-prod-config:uv-$$v"; \
+		docker buildx build . --no-cache --build-arg PYTHON_VERSION=$$v -t $(BASE_IMAGE_NAME)-prod-config:uv-$$v -f Dockerfile.prod --load; \
+	done
 
 .PHONY: build-images
 build-images:  ## Build Images
-	@echo "Building $(BASE_IMAGE_NAME)-(builder|dev|prod):$(IMAGE_TAG) images"
+	@echo "Building all UV-based images"
 	$(MAKE) image-builder
-	$(MAKE) image-dev
 	$(MAKE) image-prod-config
-	$(MAKE) image-acceptance
-	@echo "Building $(MAIN_IMAGE_NAME):$(IMAGE_TAG)"
-	$(MAKE) image-main
-	@echo "Building $(CLASSICUI_IMAGE_NAME):$(IMAGE_TAG)"
-	$(MAKE) image-classicui
-
-create-tag: # Create a new tag using git
-	@echo "Creating new tag $(PLONE_VERSION)"
-	if git show-ref --tags v$(PLONE_VERSION) --quiet; then echo "$(PLONE_VERSION) already exists";else git tag -a v$(PLONE_VERSION) -m "Release $(PLONE_VERSION)" && git push && git push --tags;fi
-
-.PHONY: remove-tag
-remove-tag: # Remove an existing tag locally and remote
-	@echo "Removing tag v$(IMAGE_TAG)"
-	if git show-ref --tags v$(IMAGE_TAG) --quiet; then git tag -d v$(IMAGE_TAG) && git push origin :v$(IMAGE_TAG) && echo "$(IMAGE_TAG) removed";else echo "$(IMAGE_TAG) does not exist";fi
-
-.PHONY: towncrier
-towncrier: # Put news snippets in the changelog for the new version
-	@echo "Gathering news snippets for $(PLONE_VERSION)"
-	towncrier build --version=$(PLONE_VERSION)
-	@echo "If this looks right, you can call 'make commit-and-release'"
-
-commit-and-release: # Commit new version change and create tag
-	@echo "Commiting changes"
-	@git commit -am "Use Plone $(PLONE_VERSION)"
-	make create-tag

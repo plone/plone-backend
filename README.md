@@ -16,38 +16,20 @@
 
 </div>
 
-Plone backend [Docker](https://docker.com) images using Python 3 and [pip](https://pip.pypa.io/en/stable/).
+Experimental Plone backend base container images using Python 3 and UV.
 
 **Note:**
-These are the official images for the [Plone 6](https://plone.org/) release, together with [plone-frontend](https://github.com/plone/plone-frontend).
-These images are **not** Buildout based!
+These are experimental images.
 
 ## Tags
-### Supported tags and respective Dockerfile links
 
-| Plone Version | Tags | Dockerfile |
+### Supported images, tags and respective Dockerfile links
+
+| Image Name | Tags | Dockerfile |
 | --- | --- | --- |
-| 6 | `6.0.14`, `6.0`, `6`, `latest` | [(6.0.x/Dockerfile)](https://github.com/plone/plone-backend/blob/v6.0.14/Dockerfile)|
-| 6.1 | `6.1.2`, `6.1` | [(6.1.x/Dockerfile)](https://github.com/plone/plone-backend/blob/v6.1.2/Dockerfile)|
-| 6 (nightly) | `nightly` |  [(Dockerfile.nightly)](https://github.com/plone/plone-backend/blob/6.0.x/Dockerfile.nightly) |
+| plone/server-builder | `uv-3.12`, `uv-3.13` | [(UV/Dockerfile)](https://github.com/plone/plone-backend/blob/uv/Dockerfile.builder)|
+| plone/server-prod-config | `uv-3.12`, `uv-3.13` | [(UV/Dockerfile)](https://github.com/plone/plone-backend/blob/uv/Dockerfile.prod)|
 
-**Possible breaking changes in upcoming Plone 6.1 dependencies**
-
-Please note that the backend images in the 6.1.x series have several updated dependencies, which you should verify and test before using them in any existing project. Even if you extend from these images. The underlying OS has been switched from Debian 11 buster to 12 bookworm. Python is updated from 
-3.11 to 3.12. Relstorage has a new major release going from 3.x to 4.1. And there are are minor updates for libldap, libtiff and psycopg2 OS and Python libraries.
-
-### Unsupported tags
-
-**Note:**
-These images for Plone 5 are **not** officially supported by the Plone community.
-
-
-| Plone Version | Tags | Dockerfile |
-| --- | --- | --- |
-| 5.2 | `5`, `5.2`, `5.2.14` | [(5.2.x/Dockerfile)](https://github.com/plone/plone-backend/blob/v5.2.14/Dockerfile) |
-
-
- See also the official [Buildout-based Plone 5 images](https://hub.docker.com/_/plone).
 
 ## Usage
 

@@ -1,0 +1,75 @@
+name: Release new UV-based container images
+
+on:
+  push:
+  workflow_dispatch:
+
+env:
+  BASE_IMAGE_NAME: plone/server
+  PLATFORMS: linux/amd64,linux/arm64
+  IS_LATEST: false
+
+jobs:
+
+  config:
+    runs-on: ubuntu-latest
+    outputs:
+      BASE_IMAGE_NAME: ${{ steps.vars.outputs.BASE_IMAGE_NAME }}
+      IS_LATEST: ${{ steps.vars.outputs.IS_LATEST }}
+      PLATFORMS: ${{ steps.vars.outputs.PLATFORMS }}
+      PYTHON_VERSIONS: ${{ steps.vars.outputs.PYTHON_VERSIONS }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set BASE_IMAGE_NAME, IS_LATEST, PLATFORMS, PYTHON_VERSIONS
+        id: vars
+        run: |
+          echo "BASE_IMAGE_NAME=$BASE_IMAGE_NAME" >> $GITHUB_OUTPUT
+          echo "PLATFORMS=$PLATFORMS" >> $GITHUB_OUTPUT
+          echo "IS_LATEST=$IS_LATEST" >> $GITHUB_OUTPUT
+          echo "PYTHON_VERSIONS=$(jq -c . < versions.json)" >> $GITHUB_OUTPUT
+
+  builder-image:
+    needs:
+      - config
+    uses: ./.github/workflows/image-release.yml
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ${{ fromJSON(needs.config.outputs.PYTHON_VERSIONS) }}
+    with:
+      python-version: ${{ matrix.python-version }}
+      image-name: ${{ needs.config.outputs.BASE_IMAGE_NAME }}-builder
+      dockerfile: Dockerfile.builder
+      platforms: ${{ needs.config.outputs.PLATFORMS  }}
+      is-latest: ${{ needs.config.outputs.IS_LATEST == 'true'  }}
+      load: false
+      push: ${{ github.base_ref == 'uv' }}
+    secrets:
+      ghcr-registry-username: ${{ github.actor }}
+      ghcr-registry-password: ${{ secrets.GITHUB_TOKEN }}
+      docker-registry-username: ${{ secrets.DOCKERHUB_USERNAME }}
+      docker-registry-password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+  prod-conf-image:
+    uses: ./.github/workflows/image-release.yml
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ${{ fromJSON(needs.config.outputs.PYTHON_VERSIONS) }}
+    with:
+      python-version: ${{ matrix.python-version }}
+      image-name: ${{ needs.config.outputs.BASE_IMAGE_NAME }}-prod-config
+      dockerfile: Dockerfile.prod
+      platforms: ${{ needs.config.outputs.PLATFORMS  }}
+      is-latest: ${{ needs.config.outputs.IS_LATEST == 'true'  }}
+      load: false
+      push: ${{ github.base_ref == 'uv' }}
+    secrets:
+      ghcr-registry-username: ${{ github.actor }}
+      ghcr-registry-password: ${{ secrets.GITHUB_TOKEN }}
+      docker-registry-username: ${{ secrets.DOCKERHUB_USERNAME }}
+      docker-registry-password: ${{ secrets.DOCKERHUB_TOKEN }}
+    needs:
+      - config
