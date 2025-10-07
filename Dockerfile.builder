@@ -1,12 +1,12 @@
 # syntax=docker/dockerfile:1.9
-FROM ubuntu:plucky
-
 ARG PYTHON_VERSION=3.12
+
+FROM python:${PYTHON_VERSION}-slim-trixie
 
 SHELL ["sh", "-exc"]
 ENV DEBIAN_FRONTEND=noninteractive
 RUN <<EOT
-    buildDeps="build-essential busybox ca-certificates curl git gosu libbz2-dev libffi-dev libjpeg-turbo8-dev libmagic1 libsasl2-dev libldap2-dev libopenjp2-7-dev libpcre3-dev libpq-dev libssl-dev libtiff6 libtiff5-dev libxml2-dev libxslt1-dev python3-setuptools python$PYTHON_VERSION-dev wget zlib1g-dev"
+    buildDeps="build-essential busybox ca-certificates curl git gosu libbz2-dev libffi-dev libjpeg62-turbo-dev libmagic1 libsasl2-dev libldap2-dev libopenjp2-7-dev libpq-dev libssl-dev libtiff6 libtiff5-dev libxml2-dev libxslt1-dev wget zlib1g-dev"
     apt-get update -qy
     apt-get install -qyy \
         -o APT::Install-Recommends=false \
