@@ -9,7 +9,7 @@ on:
 env:
   BASE_IMAGE_NAME: plone/server
   PLATFORMS: linux/amd64,linux/arm64
-  IS_LATEST: false
+  IS_LATEST: true
 
 jobs:
 
