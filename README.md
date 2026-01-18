@@ -30,12 +30,11 @@ These images are **not** Buildout based!
 | 6 | `6.0.14`, `6.0`, `6`, `latest` | [(6.0.x/Dockerfile)](https://github.com/plone/plone-backend/blob/v6.0.14/Dockerfile)|
 | 6.1 | `6.1.4`, `6.1` | [(6.1.x/Dockerfile)](https://github.com/plone/plone-backend/blob/v6.1.4/Dockerfile)|
 | 6.2 | `6.2.0a1`, `6.2` | [(6.2.x/Dockerfile)](https://github.com/plone/plone-backend/blob/v6.2.0a1/Dockerfile)|
-| 6 (nightly) | `nightly` |  [(Dockerfile.nightly)](https://github.com/plone/plone-backend/blob/6.0.x/Dockerfile.nightly) |
 
 **Possible breaking changes in upcoming Plone 6.2 dependencies**
 
 Please note that the backend images in the 6.2.x series may get several updated dependencies, which you should verify and test before using them in any existing project. Even if you extend from these images.
-Python may get updated from 3.12 to 3.13.
+Python has been updated from 3.12 to 3.13.
 
 ### Unsupported tags
 
