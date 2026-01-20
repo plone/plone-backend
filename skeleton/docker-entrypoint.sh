@@ -16,7 +16,9 @@ USER="$(id -u)"
 # Create directories to be used by Plone
 mkdir -p /data/filestorage /data/blobstorage /data/cache /data/log $CLIENT_HOME
 if [ "$USER" = '0' ]; then
-  find /data -not -user plone -exec chown plone:plone {} \+
+  if [[ ! -v SKIP_FIND_AND_CHOWN ]]; then
+    find /data -not -user plone -exec chown plone:plone {} \+
+  fi
   sudo="gosu plone"
 else
   sudo=""
