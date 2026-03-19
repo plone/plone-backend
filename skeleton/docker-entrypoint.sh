@@ -24,6 +24,8 @@ if [ "$USER" = '0' ]; then
     echo "Skipping deep permission check. (Pass FORCE_CHOWN=1 to force it)"
   fi
   sudo="gosu plone"
+else
+  sudo=""
 fi
 
 # MAIN ENV Vars
