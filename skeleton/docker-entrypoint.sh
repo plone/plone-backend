@@ -18,10 +18,7 @@ mkdir -p /data/filestorage /data/blobstorage /data/cache /data/log $CLIENT_HOME
 if [ "$USER" = '0' ]; then
   # Check ownership, OR check if we are explicitly forcing a fix
   if [ "$(stat -c '%U' /data)" != "plone" ] || [ "$FORCE_CHOWN" = "1" ]; then
-    echo "Fixing permissions on /data..."
     find /data -not -user plone -exec chown plone:plone {} \+
-  else
-    echo "Skipping deep permission check. (Pass FORCE_CHOWN=1 to force it)"
   fi
   sudo="gosu plone"
 else
