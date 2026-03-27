@@ -1,3 +1,9 @@
+## 6.2.0rc1 (2026-03-27)
+
+### Bugfix
+
+- Upgrade to Plone 6.2.0rc1.
+
 ## 6.2.0a1 (2026-01-21)
 
 ### Feature
