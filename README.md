@@ -29,7 +29,7 @@ These images are **not** Buildout based!
 | --- | --- | --- |
 | 6 | `6.0.14`, `6.0`, `6`, `latest` | [(6.0.x/Dockerfile)](https://github.com/plone/plone-backend/blob/v6.0.14/Dockerfile)|
 | 6.1 | `6.1.4`, `6.1` | [(6.1.x/Dockerfile)](https://github.com/plone/plone-backend/blob/v6.1.4/Dockerfile)|
-| 6.2 | `6.2.0a1`, `6.2` | [(6.2.x/Dockerfile)](https://github.com/plone/plone-backend/blob/v6.2.0a1/Dockerfile)|
+| 6.2 | `6.2.0rc1`, `6.2` | [(6.2.x/Dockerfile)](https://github.com/plone/plone-backend/blob/v6.2.0rc1/Dockerfile)|
 
 **Possible breaking changes in upcoming Plone 6.2 dependencies**
 
