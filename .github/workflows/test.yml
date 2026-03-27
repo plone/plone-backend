@@ -15,6 +15,7 @@ jobs:
     outputs:
       SHA: ${{ steps.vars.outputs.SHA }}
       PLONE_VERSION: ${{ steps.vars.outputs.PLONE_VERSION }}
+      DEBIAN_VERSION: ${{ steps.vars.outputs.DEBIAN_VERSION }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -24,6 +25,7 @@ jobs:
         run: |
           echo "SHA=sha-$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
           echo "PLONE_VERSION=$(cat version.txt)" >> $GITHUB_OUTPUT
+          echo "DEBIAN_VERSION=$(cat version-debian.txt)" >> $GITHUB_OUTPUT
 
   test:
     runs-on: ubuntu-latest
@@ -80,6 +82,7 @@ jobs:
           push: true
           build-args: |
             PLONE_VERSION=${{ needs.meta.outputs.PLONE_VERSION }}
+            DEBIAN_VERSION=${{ needs.meta.outputs.DEBIAN_VERSION }}
 
       - name: Build prod-config image for testing
         uses: docker/build-push-action@v4
@@ -98,6 +101,7 @@ jobs:
           push: true
           build-args: |
             PLONE_VERSION=${{ needs.meta.outputs.SHA }}
+            DEBIAN_VERSION=${{ needs.meta.outputs.DEBIAN_VERSION }}
 
       - name: Test
         run: |

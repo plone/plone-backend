@@ -22,6 +22,7 @@ MAIN_IMAGE_NAME=plone/plone-backend
 CLASSICUI_IMAGE_NAME=plone/plone-classicui
 BASE_IMAGE_NAME=plone/server
 PLONE_VERSION=$$(cat version.txt)
+DEBIAN_VERSION=$$(cat version-debian.txt)
 IMAGE_TAG=${PLONE_VERSION}
 NIGHTLY_IMAGE_TAG=nightly
 
@@ -68,7 +69,7 @@ show-image: ## Print Version
 .PHONY: image-builder
 image-builder:  ## Build Base Image
 	@echo "Building $(BASE_IMAGE_NAME)-builder:$(IMAGE_TAG)"
-	@docker buildx build . --build-arg PLONE_VERSION=${PLONE_VERSION} -t $(BASE_IMAGE_NAME)-builder:$(IMAGE_TAG) -f Dockerfile.builder --load
+	@docker buildx build . --build-arg PLONE_VERSION=${PLONE_VERSION} --build-arg DEBIAN_VERSION=${DEBIAN_VERSION} -t $(BASE_IMAGE_NAME)-builder:$(IMAGE_TAG) -f Dockerfile.builder --load
 
 .PHONY: image-dev
 image-dev:  ## Build Dev Image
@@ -78,7 +79,7 @@ image-dev:  ## Build Dev Image
 .PHONY: image-prod-config
 image-prod-config:  ## Build Prod Image
 	@echo "Building $(BASE_IMAGE_NAME)-prod-config:$(IMAGE_TAG)"
-	@docker buildx build . --build-arg PLONE_VERSION=${PLONE_VERSION} -t $(BASE_IMAGE_NAME)-prod-config:$(IMAGE_TAG) -f Dockerfile.prod --load
+	@docker buildx build . --build-arg PLONE_VERSION=${PLONE_VERSION} --build-arg DEBIAN_VERSION=${DEBIAN_VERSION} -t $(BASE_IMAGE_NAME)-prod-config:$(IMAGE_TAG) -f Dockerfile.prod --load
 
 .PHONY: image-classicui
 image-classicui:  ## Build Classic UI
@@ -98,7 +99,7 @@ image-main:  ## Build main image
 .PHONY: image-nightly
 image-nightly:  ## Build Docker Image Nightly
 	@echo "Building $(MAIN_IMAGE_NAME):$(NIGHTLY_IMAGE_TAG)"
-	@docker build . -t $(MAIN_IMAGE_NAME):$(NIGHTLY_IMAGE_TAG) -f Dockerfile.nightly
+	@docker build .  --build-arg DEBIAN_VERSION=${DEBIAN_VERSION} -t $(MAIN_IMAGE_NAME):$(NIGHTLY_IMAGE_TAG) -f Dockerfile.nightly
 
 .PHONY: build-images
 build-images:  ## Build Images

@@ -1,6 +1,7 @@
 # syntax=docker/dockerfile:1
 ARG PYTHON_VERSION=3.11
-FROM python:${PYTHON_VERSION}-slim-bullseye
+ARG DEBIAN_VERSION=bullseye
+FROM python:${PYTHON_VERSION}-slim-${DEBIAN_VERSION}
 
 ARG PLONE_VERSION
 
