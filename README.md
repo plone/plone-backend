@@ -36,6 +36,10 @@ These images are **not** Buildout based!
 Please note that the backend images in the 6.1.x series have several updated dependencies, which you should verify and test before using them in any existing project. Even if you extend from these images. The underlying OS has been switched from Debian 11 buster to 12 bookworm. Python is updated from
 3.11 to 3.12. Relstorage has a new major release going from 3.x to 4.1. And there are are minor updates for libldap, libtiff and psycopg2 OS and Python libraries.
 
+### Experimental UV-based images
+
+A parallel track of images built with [UV](https://docs.astral.sh/uv/) lives on the [`uv` branch](https://github.com/plone/plone-backend/tree/uv) and is published as `plone/server-builder:uv-<python>` and `plone/server-prod-config:uv-<python>` for Python 3.11, 3.12, 3.13 and 3.14. These images are rebuilt weekly (Mondays, 05:00 UTC) so they stay in sync with upstream Debian, Python, UV and Plone dependency updates.
+
 ### Unsupported tags
 
 **Note:**
