@@ -1,0 +1,1 @@
+Bumped GitHub Actions (`actions/checkout`, `docker/*`, `peter-evans/dockerhub-description`) to their latest major versions. @ericof
