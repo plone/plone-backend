@@ -22,6 +22,19 @@ else
   sudo=""
 fi
 
+# Instrumentation support
+if [[ -v INSTRUMENTATION_CMD ]] ; then
+  echo "Enabling Instrumentation using $INSTRUMENTATION_CMD command"
+  WSGI_CMD=("$VENVBIN/$INSTRUMENTATION_CMD" "$VENVBIN/runwsgi")
+else
+  WSGI_CMD=("$VENVBIN/runwsgi")
+fi
+
+# Allow pointing to a different Zope ini path
+if [ -z "${ZOPE_INI_PATH}" ]; then
+  ZOPE_INI_PATH=etc/zope.ini
+fi
+
 # MAIN ENV Vars
 [ -z ${SECURITY_POLICY_IMPLEMENTATION+x} ] && export SECURITY_POLICY_IMPLEMENTATION=C
 [ -z ${VERBOSE_SECURITY+x} ] && export VERBOSE_SECURITY=off
@@ -145,9 +158,9 @@ if [[ "$1" == "start" ]]; then
   if [[ -v LISTEN_PORT ]] ; then
     # Ensure the listen port can be set via container --environment.
     # Necessary to run multiple backends in a single Podman / Kubernetes pod.
-    sed -i "s/port = 8080/port = ${LISTEN_PORT}/" etc/zope.ini
+    sed -i "s/port = 8080/port = ${LISTEN_PORT}/" "${ZOPE_INI_PATH}"
   fi
-  exec $sudo $VENVBIN/runwsgi -v etc/zope.ini config_file=${CONF}
+  exec $sudo "${WSGI_CMD[@]}" -v "${ZOPE_INI_PATH}" config_file=${CONF}
 elif  [[ "$1" == "create-classic" ]]; then
   export TYPE=classic
   exec $sudo $VENVBIN/zconsole run etc/${CONF} /app/scripts/create_site.py
@@ -159,6 +172,8 @@ elif  [[ "$1" == "create-site" ]]; then
   exec $sudo $VENVBIN/zconsole run etc/${CONF} /app/scripts/create_site.py
 elif  [[ "$1" == "console" ]]; then
   exec $sudo $VENVBIN/zconsole debug etc/${CONF}
+elif  [[ "$1" == "export" ]]; then
+  exec $sudo $VENVBIN/plone-exporter etc/${CONF} "${@:2}" "${@:3}"
 elif  [[ "$1" == "import" ]]; then
   exec $sudo $VENVBIN/plone-importer etc/${CONF} "${@:2}" "${@:3}"
 elif  [[ "$1" == "run" ]]; then
