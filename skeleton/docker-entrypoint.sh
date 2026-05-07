@@ -64,6 +64,38 @@ elif  [[ -v ZEO_ADDRESS ]]; then
   [ -z ${ZEO_STORAGE+x} ] && export ZEO_STORAGE=1
   [ -z ${ZEO_CLIENT_CACHE_SIZE+x} ] && export ZEO_CLIENT_CACHE_SIZE=128MB
   [ -z ${ZEO_DROP_CACHE_RATHER_VERIFY+x} ] && export ZEO_DROP_CACHE_RATHER_VERIFY=false
+elif [[ -v ZODB_PGJSONB_DSN ]]; then
+  MSG="Using zodb-pgjsonb configuration"
+  CONF=zodb-pgjsonb.conf
+  # Check zodb-pgjsonb variables
+  [ -z ${ZODB_PGJSONB_HISTORY_PRESERVING+x} ] && export ZODB_PGJSONB_HISTORY_PRESERVING=false
+
+  if [[ -v ZODB_PGJSONB_Z3BLOBS_ENABLED && $ZODB_PGJSONB_Z3BLOBS_ENABLED == "true" ]]; then
+
+    if [[ -n "$ZODB_PGJSONB_S3BLOBS_ENDPOINT_URL" && \
+          -n "$ZODB_PGJSONB_S3BLOBS_BUCKET_NAME" && \
+          -n "$ZODB_PGJSONB_S3BLOBS_ACCESS_KEY" && \
+          -n "$ZODB_PGJSONB_S3BLOBS_SECRET_KEY" ]]; then
+
+      MSG="Using zodb-pgjsonb S3 blobs configuration"
+      CONF=zodb-pgjsonb-s3blobs.conf
+
+      [ -z ${ZODB_PGJSONB_S3BLOBS_USE_SSL+x} ] && export ZODB_PGJSONB_S3BLOBS_USE_SSL=false
+      [ -z ${ZODB_PGJSONB_S3BLOBS_REGION+x} ] && export ZODB_PGJSONB_S3BLOBS_REGION=none
+      [ -z ${ZODB_PGJSONB_S3BLOBS_PREFIX+x} ] && export ZODB_PGJSONB_S3BLOBS_PREFIX=
+      [ -z ${ZODB_PGJSONB_S3BLOBS_THRESHOLD+x} ] && export ZODB_PGJSONB_S3BLOBS_THRESHOLD=100KB
+      [ -z ${ZODB_PGJSONB_S3BLOBS_CACHE_DIR+x} ] && export ZODB_PGJSONB_S3BLOBS_CACHE_DIR=auto
+      [ -z ${ZODB_PGJSONB_S3BLOBS_CACHE_SIZE+x} ] && export ZODB_PGJSONB_S3BLOBS_CACHE_SIZE=1GB
+
+    else
+      # Baldintzaren bat betetzen ez bada, mezua eman eta script-a gelditu
+      echo "ERROR: You have enabled the usage of S3 blobs, but some required data is missing:"
+      echo "- Bucket: ${ZODB_PGJSONB_S3BLOBS_BUCKET_NAME:-MISSING}"
+      echo "- Access Key: ${ZODB_PGJSONB_S3BLOBS_ACCESS_KEY:-MISSING}"
+      echo "- Secret Key: ${ZODB_PGJSONB_S3BLOBS_SECRET_KEY:-MISSING}"
+      exit 1
+    fi
+  fi
 else
   MSG="Using default configuration"
   CONF=zope.conf
