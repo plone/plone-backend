@@ -18,6 +18,7 @@ mkdir -p /data/filestorage /data/blobstorage /data/cache /data/log $CLIENT_HOME
 if [ "$USER" = '0' ]; then
   # Check ownership, OR check if we are explicitly forcing a fix
   if [ "$(stat -c '%U' /data)" != "plone" ] || [ "$FORCE_CHOWN" = "1" ]; then
+    echo "Running chown to fix ownership of the data directory"
     find /data -not -user plone -exec chown plone:plone {} \+
   fi
   sudo="gosu plone"
