@@ -29,12 +29,16 @@ These images are **not** Buildout based!
 | --- | --- | --- |
 | 6 | `6.0.14`, `6.0`, `6`, `latest` | [(6.0.x/Dockerfile)](https://github.com/plone/plone-backend/blob/v6.0.14/Dockerfile)|
 | 6.1 | `6.1.4`, `6.1` | [(6.1.x/Dockerfile)](https://github.com/plone/plone-backend/blob/v6.1.4/Dockerfile)|
-| 6.2 | `6.2.0rc1`, `6.2` | [(6.2.x/Dockerfile)](https://github.com/plone/plone-backend/blob/v6.2.0rc1/Dockerfile)|
+| 6.2 | `6.2.0rc2`, `6.2` | [(6.2.x/Dockerfile)](https://github.com/plone/plone-backend/blob/v6.2.0rc2/Dockerfile)|
 
 **Possible breaking changes in upcoming Plone 6.2 dependencies**
 
 Please note that the backend images in the 6.2.x series may get several updated dependencies, which you should verify and test before using them in any existing project. Even if you extend from these images.
 Python has been updated from 3.12 to 3.13.
+
+### Experimental UV-based images
+
+A parallel track of images built with [UV](https://docs.astral.sh/uv/) lives on the [`uv` branch](https://github.com/plone/plone-backend/tree/uv) and is published as `plone/server-builder:uv-<python>` and `plone/server-prod-config:uv-<python>` for Python 3.11, 3.12, 3.13 and 3.14. These images are rebuilt weekly (Mondays, 05:00 UTC) so they stay in sync with upstream Debian, Python, UV and Plone dependency updates.
 
 ### Unsupported tags
 
