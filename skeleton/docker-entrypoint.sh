@@ -88,7 +88,7 @@ elif [[ -v ZODB_PGJSONB_DSN ]]; then
       [ -z ${ZODB_PGJSONB_S3BLOBS_CACHE_SIZE+x} ] && export ZODB_PGJSONB_S3BLOBS_CACHE_SIZE=1GB
 
     else
-      # Baldintzaren bat betetzen ez bada, mezua eman eta script-a gelditu
+      # If the required environment vars are missing, print an error message and exit
       echo "ERROR: You have enabled the usage of S3 blobs, but some required data is missing:"
       echo "- Bucket: ${ZODB_PGJSONB_S3BLOBS_BUCKET_NAME:-MISSING}"
       echo "- Access Key: ${ZODB_PGJSONB_S3BLOBS_ACCESS_KEY:-MISSING}"
