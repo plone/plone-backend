@@ -90,6 +90,7 @@ elif [[ -v ZODB_PGJSONB_DSN ]]; then
     else
       # If the required environment vars are missing, print an error message and exit
       echo "ERROR: You have enabled the usage of S3 blobs, but some required data is missing:"
+      echo "- Endpoint URL: ${ZODB_PGJSONB_S3BLOBS_ENDPOINT_URL:-MISSING}"
       echo "- Bucket: ${ZODB_PGJSONB_S3BLOBS_BUCKET_NAME:-MISSING}"
       echo "- Access Key: ${ZODB_PGJSONB_S3BLOBS_ACCESS_KEY:-MISSING}"
       echo "- Secret Key: ${ZODB_PGJSONB_S3BLOBS_SECRET_KEY:-MISSING}"
