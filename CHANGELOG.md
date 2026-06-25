@@ -1,3 +1,13 @@
+## 6.1.5 (2026-06-25)
+
+### Feature
+
+- Upgrade to Plone 6.1.5.
+
+### Internal
+
+- Added a scheduled workflow that dispatches the UV image build weekly to keep images in sync with upstream changes. @ericof [#203](https://github.com/plone/volto/issues/203)
+
 ## 6.1.4 (2026-01-16)
 
 ### Bugfix

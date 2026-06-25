@@ -1,1 +1,0 @@
-Added a scheduled workflow that dispatches the UV image build weekly to keep images in sync with upstream changes. @ericof
